@@ -79,7 +79,7 @@ const CardsPage = () => {
  
 
         // Récupère les cartes triées par id  
- /*
+ 
     const getCardsWithID = async () => {
             try {
                 setDisplayLoading(true); 
@@ -149,34 +149,8 @@ const CardsPage = () => {
           getCardsWithID();
       }, [ displayCards, filterName, filterText, inputValueMin, inputValueMax, inputManaCostMin, inputManaCostMax,
          filterColors, filterFormats, filterRarities, filterEditions, filterTypes, filterLegendary]);
-*/
-
-    // Récupérer le top 3 cartes 
-  const getTopCards = async () => { 
-    try {
-        setDisplayLoading(true);
-        const response = await axiosInstance.get('/f_all/getTop3Cards' );
-        
-        const listCards = response.data.map(
-                card => new Card (card.id, card.name, card.text, card.image, card.manaCost, card.value, card.formats,
-                                card.colors, card.type, card.legendary, card.rarity, card.edition,
-                                card.deckBuilders, card.decks, card.decksCommander, card.likeNumber,
-                                card.deckNumber, card.commanderNumber
-        ) )          
-
-        setCards(listCards)
-        setDisplayLoading(false);
-    }   
-    catch (error) {
-        setDisplayLoading(false);
-        console.log(error);
-    }
 
 
-}
-React.useEffect(() => {
-  getTopCards();
-}, []);
 
 
     const displayMoreCardsWithID = async () => {
@@ -1253,7 +1227,7 @@ React.useEffect(() => {
           { displayCards === "id" && (
               <div className='map-cards-section'>
                 {cards.map(card => ( 
-                    <div className="cards-details" key={card.id} style={{display:(maskBaseLand(card.id))}}>
+                    <div className="cards-details" key={card.id} >
                         <img className="cards-img" src={getImageUrl(card.image)} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         />
