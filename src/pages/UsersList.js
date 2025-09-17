@@ -2,8 +2,7 @@ import React from 'react';
 import { useEffect, useRef, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../context/authContext"
-import "./css/UsersList.css"
-import axios from "axios"
+import "./css/UsersList.css" 
 import axiosInstance from "../api/axiosInstance";
 import User from '../model/User';
 import Section from '../components/section';
@@ -18,7 +17,7 @@ import backgroundUserList from "../assets/background_cardsPage.jpg"
 import backgroundWhite from "../assets/background_white.png"
 import qs from 'qs';
 import loading from "../assets/loading.gif"
-import { getAvatarUrl } from '../utils/imageUtils';
+import { getAvatarUrl } from '../utils/imageUtils'; 
 
 
 
