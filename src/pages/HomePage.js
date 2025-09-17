@@ -117,7 +117,6 @@ const chooseCard = (id) => {
                 deck.deckBuilderName, deck.likeNumber, deck.cards, deck.commander
     ) )
         setDecks(listDecks)
-        console.log("deckbuilder : " + listDecks.deckBuilder.id)
         setDisplayLoading(false);
       }   
       catch (error) {
