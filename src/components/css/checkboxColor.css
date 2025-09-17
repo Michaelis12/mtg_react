@@ -1,0 +1,52 @@
+
+@media (min-width: 768px) {
+
+    .checkbox-colors {
+        width: 20%;
+        display: flex;  
+        flex-direction: row;
+        margin-left: 5%;
+        margin-right: 5%;
+        
+    }
+
+
+    li { 
+        color: black;
+        display: flex;  
+        align-items: center;
+    }
+
+    input {
+        width: 100px;
+    }
+
+    .color-img {
+        height: 150px;
+        width: auto;
+        margin-top: 14px;
+    }
+
+}
+
+@media (max-width: 480px) { 
+
+    .checkbox-colors {
+        width: 60%;
+        display: grid;  
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 75px;
+               
+        
+    }
+    .color-img {
+        height: 50px;
+        width: auto;
+        margin-top: 14px;
+    }
+
+    
+
+}
+
+

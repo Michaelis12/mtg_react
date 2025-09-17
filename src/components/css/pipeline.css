@@ -1,0 +1,28 @@
+.pipeline-forme {
+    width: 30%;
+    padding: 0.5%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #000000;
+    font-size: 3em;
+}
+
+
+@media (max-width: 1400px) {
+    .pipeline-forme {
+        height: 65px;
+        font-size: 2.5em;
+    }
+
+}
+
+@media (max-width: 1000px) {
+    .pipeline-forme {
+        height: 50px;
+        font-size: 2em;
+    }
+
+}

@@ -1,0 +1,32 @@
+.button-direction {
+    background-color: white;
+    border-radius: 50%;
+    border: 4px solid #000000; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em
+}  
+
+.button-direction:hover {
+     background-color: #5D3B8C;
+}
+
+.button-direction:disabled {
+    visibility: hidden;
+}
+
+@media (max-width: 1250px) {
+
+    .button-direction {
+        padding: 0.2em;
+        background-color: transparent;
+        border: none;
+    }
+
+    .button-direction:hover {
+        background-color: transparent;
+        color: black;
+    }
+
+}

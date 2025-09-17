@@ -1,0 +1,32 @@
+
+.open-button-large {
+    display: none;
+}
+
+@media (max-width: 700px) {
+  .open-button-large {
+      display: flex;
+      justify-content: space-between; /* Espace entre les deux éléments */
+      align-items: center; /* Aligne verticalement les éléments au centre */
+      border: 5px;
+      width: 90%;
+      margin-left: 5%;
+      margin-top: 5%;
+      height: 60px;
+      border: 1px solid #000000;
+      color: black;
+    }
+
+    
+    .button-text-large {
+      flex: 1; /* Prend l'espace restant, assurant que le texte soit centré */
+      text-align: center; /* Centre le texte */
+    }
+    
+    .button-icon {
+      margin-left: 10px; /* Ajoute un petit espace entre le texte et l'icône */
+    }
+
+  }
+
+   

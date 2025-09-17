@@ -1,0 +1,289 @@
+
+.background-accountPage {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  z-index: -1;
+  margin-top : -5%;
+}
+
+/* Eléments de l'update du profil*/
+
+
+.input-bio {
+  width: 100%;
+  height: 6em;
+  font-size: 1.5em;
+  padding: 2%;
+}
+
+
+.input-image-container {
+  width: 35vh;
+  max-width: 340px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 101;
+
+}
+
+
+.valid-edit-button {
+     padding: 15px;
+      background-color: #5D3B8C;
+      color: white;
+      width: 100%;
+  }
+
+.valid-edit-button:disabled {
+      background-color: white;
+  }
+
+
+@media (max-width: 1000px) {
+
+
+  .user-input-pseudo { 
+  border: 3px solid #000000;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  padding: 1%; 
+  padding-left: 5%;
+  padding-right: 5%;
+  padding: 6px 14px;
+  text-align: center;
+  font-size: 2em;
+}
+
+  .input-bio {
+    font-size: 1.2em;
+  }
+
+  .valid-edit-button {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+  }
+
+  .input-image {
+    margin-top: -80px;
+  }
+}
+
+
+@media (max-width: 800px) {
+  .user-input-pseudo { 
+  border: 3px solid #000000;
+  margin-top: 10px;
+  padding: 1%; 
+  padding-left: 5%;
+  padding-right: 5%;
+  text-align: center;
+  font-size: 1.8em;
+}
+
+}
+
+
+
+@media (max-width: 500px) {
+
+  .user-input-pseudo { 
+      font-size: 1.4em;
+}
+
+  .input-bio {
+    font-size: 0.8em;
+  }
+
+  .valid-edit-button {
+    padding: 10px;
+  }
+
+  .valid-edit-button-title {
+    font-size: 0.8em;
+    margin-bottom: 0;
+  }
+
+  .input-image {
+    font-size: 0.7em;
+    width: 100px;
+    margin-top: -60px;
+  }
+}
+
+
+
+
+
+
+/*Mapping cartes & decks*/
+
+
+
+.user-attributs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    border-top: 1px solid black;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    min-height: 40vh;
+    padding-top: 50px;
+    
+} 
+
+.attributs-map-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+}
+
+@media (max-width: 400px) {
+
+.user-attributs-container {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+}
+
+.open-buttons-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
+.deck-created-section, .deck-liked-section, .card-liked-section, .p-blank-section {
+  display: flex;  
+  flex-wrap: wrap;
+  gap: 0 50px;
+  justify-content: center;
+  width: 100%;                         
+  height: auto; 
+  margin-bottom: 1%; 
+} 
+
+
+
+.deck-public {
+  color: white;
+  padding: 5%;
+  border-radius: 30px;
+  width: 70px;
+  text-align: center;
+}
+
+/* Bordure des cartes mappées*/
+.cards-liked-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 2%;
+}
+
+/* Bordure des decks mappés*/
+
+
+
+.cards-liked-user:hover, .deck-details:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-liked-user-image {
+    height: 15vw;
+    min-height: 250px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.card-liked-user-image:hover {
+   transform: scale(1.05);
+   cursor: pointer;
+}
+
+.cards-details {
+  display: flex;
+  flex-direction: column ;
+  justify-content: center;
+}
+
+
+.icon-for-dislike:hover {
+  transform: scale(0.9);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+
+.setting-p-container {
+  display: flex;
+  flex-direction: row;
+  position : relative;
+  margin-top: 3%;
+  margin-bottom: 1%;
+}
+
+.setting-p-container-mobile {
+  display: none;
+}
+
+.setting-p {
+  color: black; 
+  cursor: pointer;
+  font-family: 'MedievalSharp', cursive; 
+}
+
+.setting-p:hover {
+  text-decoration: underline;
+}
+.setting-link {
+  text-decoration: none;
+}
+
+
+@media (max-width: 345px) {
+  .setting-p-container {
+    display: none;
+  }
+
+  .setting-p-container-mobile {
+  display: flex;
+  flex-direction: row;
+  position : relative;
+  margin-top: 3%;
+  margin-bottom: 1%;
+}
+
+.update-button {
+  border-radius: 0%;
+}
+
+.card-user {
+  width: 100vh;
+  margin-left: 0;
+}
+
+}
+
+.active-icon {
+  font-size: 3em;
+}

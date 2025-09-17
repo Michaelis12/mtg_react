@@ -1,0 +1,38 @@
+
+
+/* CSS au-dela de 768 px*/
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #5D3B8C;
+        height: 90px;
+    }
+
+    .link-home {
+        height: 80%;
+    }
+
+    .logo-site {
+        height: 100%;
+        display: flex;
+        margin-left: 15px;
+    }
+
+    .nav-bar {
+        margin-right: 50px;
+    }
+
+@media (max-width: 1000px) {
+
+    .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #5D3B8C;
+        height: 90px;
+    }
+
+  
+
+}

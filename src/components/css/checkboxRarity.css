@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+
+
+.compenant-checkbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.compenant-checkbox-map-large {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+} 
+
+
+.checkbox-input-container {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+
+
+li {
+  list-style-type: none;
+  padding-left: 0; /* Pour enlever le décalage à gauche */
+}
+
+
+/*Le style utilisé quand le component est appelé pour les raretés*/
+
+.checkbox-rarity-p {
+    padding: 5%;
+    color: white;
+    border-radius: 30px;
+    font-weight: bold;
+}
+
+
+@media (max-width: 500px) {
+
+    .checkbox-rarity-p {
+        font-size: 0.6em;
+    }
+
+}

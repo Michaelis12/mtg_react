@@ -1,0 +1,361 @@
+.new-card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3%;
+
+}
+
+.new-card-background {
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+}
+
+/*Form création de nouvelle carte desktop*/
+
+.add-card-desktop {
+    width: 70%;
+    border-radius: 30px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 2px solid black;
+  }
+
+.add-card-checkout {
+    width: 50%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-top: 1%;
+
+}
+
+
+
+  .new-card-img-checkout {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5%;
+    padding-top: 2%;
+    margin-bottom: 2%;
+
+}
+ 
+
+.setAttributs-card-img {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 30%;
+
+}
+
+
+.add-card-img {
+    height: 400px;
+    margin-bottom: 5%;
+}
+
+.title-card-form {
+    background-color: #5D3B8C;
+    color: white;
+    width: 100%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    text-align: center;
+}
+
+.new-card-input-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 3%;
+    padding-bottom: 3%; 
+}
+
+.input-groupe label {
+    padding-bottom:  2%;
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+    color: black;
+    font-weight: bold;
+}
+
+.name-input, .text-input, .img-input {
+    width: 90%;
+    margin-left: 5%;
+}
+
+.checkbox-container-colors {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 90%;
+    flex-wrap: wrap;
+    padding-bottom: 3%;
+    border-bottom: 2px solid #000000;
+ 
+}
+
+.form-color-img {
+    height: 70px;
+    width: auto;
+    margin-top: 14px;
+    padding: 15%;
+}
+
+.input-group-number {
+   display: flex; 
+   flex-direction: row;
+   justify-content: center;
+   width: 100%;
+   gap: 5%;
+   padding-bottom: 3%;
+   border-bottom: 1px black solid;
+}
+
+.input-number {
+    padding-bottom:  2%;
+    display: flex;
+    font-size: 30px;
+    color: black;
+    font-weight: bold;
+    border: 1px black solid;
+    
+}
+
+.checkbox-container-format {
+    width: 90%;
+    margin-left: 5%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    overflow: hidden;
+    flex-wrap: wrap;
+}
+
+.checkbox-container-rarity {
+    width: 90%;
+    display: flex; 
+    justify-content: center;
+    overflow: hidden;
+    flex-wrap: wrap;
+}
+
+.checkbox-container-types {
+    width: 90%;
+    margin-left: 5%;
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr);
+    overflow: hidden;
+    flex-wrap: wrap;
+}
+
+.input-groupe-optional {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    border-bottom: 2px solid #000000;
+}
+
+.legendary-label {
+    font-weight: bold;
+}
+
+.checkbox-legendary {
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+.input-groupe-final {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 3%;
+    padding-bottom: 3%; 
+}
+
+.input-groupe-final label {
+    padding-bottom:  2%;
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+    color: black;
+    font-weight: bold;
+}
+
+.checkbox-container-edition {
+    width: 90%;
+    margin-left: 5%;
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr);
+    overflow: hidden;
+    flex-wrap: wrap;
+}
+
+.create-card {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 25px;
+    
+  }
+
+  .create-card:disabled {
+    background-color: #d3d3d3;
+    color: black;
+    cursor: not-allowed; 
+  }
+
+
+  .alert-send-card {
+    margin-top: 1%;
+    font-size:1.4em;
+  }
+
+    @media (max-width: 1000px) {
+        .alert-send-card {
+            margin-top: 1%;
+            font-size: 1.2em;
+        }
+
+    }
+
+     @media (max-width: 500px) {
+        .alert-send-card {
+            font-size: 0.8em;
+        }
+
+    }
+   
+
+   @media (max-width: 1000px) {
+
+
+    .new-card-img-checkout {
+        flex-direction: column;
+        gap: 2%;
+        padding-top: 5%;
+        margin-bottom: 5%;
+    }
+
+    .setAttributs-card-img {
+        min-width: 50%;
+    }
+
+    .add-card-img {
+        height: 300px;
+        margin-bottom: 5%;
+    }
+   }
+
+  @media (max-width: 1000px) {
+
+    .add-card-desktop {
+        display: none;
+    }
+
+   .add-card-mobile {
+        display: flex;
+        flex-direction: column;
+        width: 95%; 
+        border-radius: 20px;
+        border: 1px solid #000000;
+        background-color: rgba(255, 255, 255, 0.9);
+        margin: 10px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+  }
+
+  .valid-form-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .input-number:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+
+
+
+@media (max-width: 500px) {
+  .input-group-number {
+        flex-direction: column;
+        align-items: center;
+
+      }
+
+    
+}
+
+ 
+
+@media (max-width: 450px) {
+
+  .new-card-container-mobile {
+    background-color: white;
+    width: 100%;
+    margin: 0%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    border: 2px solid black;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+  }
+
+  
+
+  .textarea-container {
+    border-radius : 0%;
+  }
+
+   .setAttributs-card-img {
+    width: 100%;
+   }
+
+  .add-card-img {
+    height: 200px;
+    width: auto;
+
+  }
+
+ 
+}
+
+
+.setAttributs-card-mobile {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+ 

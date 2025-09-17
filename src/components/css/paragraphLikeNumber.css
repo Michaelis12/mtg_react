@@ -1,0 +1,23 @@
+.paragraph-likenumber {
+    font-weight: bold;
+    font-size:larger;
+    padding: 2%;
+    border: 1px solid black;
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+    text-align: center;
+    margin: 0;
+}
+
+
+@media (max-width: 600px) {
+    .paragraph-likenumber {
+        font-size: 1em;
+        margin: 0;
+    }
+
+    .icon-like-number {
+        font-size : 20px;
+    }
+
+}

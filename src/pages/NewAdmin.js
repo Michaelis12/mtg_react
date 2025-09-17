@@ -1,0 +1,198 @@
+import BackgroundMTG from "../assets/background_zombie.jpg"
+import defaultImg from "../assets/default_avatar.jpg"
+import loading from "../assets/loading.gif"
+import React from 'react';
+import "./css/SignPage.css"
+import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from "../context/authContext"
+import axiosInstance from '../api/axiosInstance';
+import backgroundForm from "../assets/background_white.png"
+import Section from "../components/section";
+
+
+
+const NewAdmin = function () {  
+    
+    const [pseudo, setPseudo] = React.useState("");
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [newPassword, setNewPassword] = React.useState("");
+    const [confirmPassword, setConfirmPassword] = React.useState("");
+    const [confirmNewPassword, setConfirmNewPassword] = React.useState("");
+    const [verificationCode, setVerificationCode] = React.useState("");
+    const [avatar, setAvatar] = React.useState(defaultImg);
+    const [bio, setBio] = React.useState("Apprenti Deckbuilder");
+    const navigate = useNavigate();
+    const [existingAccount, setExistingAccount] = React.useState(true);
+    const [activeAccount, setActiveAccount] = React.useState(true);
+    const [forgotPassword, setForgotPassword] = React.useState(false);
+    const [sendCode, setSendCode] = React.useState(false);
+    const [changepassword, setChangePassword] = React.useState(false);
+    const [completeState, setCompleteState] = React.useState(false);
+    const [errorContent, setErrorContent] = React.useState(null);
+    const [borderPseudoColor, setBorderPseudoColor] = React.useState(null);
+    const [borderPasswordColor, setBorderPasswordColor] = React.useState(null);
+    const [displayLoading, setDisplayLoading] = React.useState(false);
+    const [alertAdminSend, setAlertAdminSend] = React.useState(false)
+  
+
+    // Vérifie que tous les champs sont remplis lors de l'inscription
+    const verifyState = () => {
+        if( pseudo.length > 4 && pseudo.length < 16 && email.length > 1 && password.length > 7 && confirmPassword.length > 7) {
+            setCompleteState(true)          
+        }
+        else {
+           setCompleteState(false) 
+        }
+    }
+    React.useEffect(() => {
+              verifyState();
+          }, [pseudo, email, password, confirmPassword]);
+
+
+     const pseudoStyle = () => {
+            if(errorContent !== null)
+                
+                if (errorContent.includes("pseudo")) {
+                    return 'red';
+                }
+            }
+        
+        React.useEffect(() => {
+                  pseudoStyle();
+              }, [errorContent]);
+    
+    
+          const emailStyle = () => {
+            if(errorContent !== null)
+                
+                if (errorContent.includes("email")) {
+                    return 'red';
+                }
+            }
+        
+            React.useEffect(() => {
+                    emailStyle();
+                }, [errorContent]);
+    
+          
+          
+          const passwordStyle = () => {
+            if(errorContent !== null)
+                
+                if (errorContent.includes("passe")) {
+                    return 'red';
+                }
+            }
+        
+            React.useEffect(() => {
+                    passwordStyle();
+                }, [errorContent]);
+
+
+    // Form ajout d'admin 
+    const addAdmin = async (e) => {
+    //e.preventDefault();
+       setErrorContent(null) 
+       setDisplayLoading(true)
+        const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,20}$/;
+        if(regex.test(password)) {
+                try{
+
+                    const user = {
+                    pseudo,
+                    email,
+                    password,
+                    confirmPassword, 
+                    avatar,
+                    bio 
+                    }
+
+                    const response = await axiosInstance.post('/f_admin/addAdmin', user, { withCredentials: true });
+                    setExistingAccount(true)
+                    setAlertAdminSend(true)
+                    setErrorContent(null)
+                    setDisplayLoading(false)
+
+
+                }catch (error) {
+                    setErrorContent(error.response.data)
+                    setDisplayLoading(false)
+
+                }
+            }
+        
+        else {
+            setErrorContent("Le mot de passe ne respecte pas les instructions")
+            setDisplayLoading(false)
+        }   
+
+
+    }
+
+return (
+    <Section> 
+            <div className="sign-container">
+            <img src={BackgroundMTG} className="background-sign" alt="Image 1" />
+            { displayLoading && (
+            <img src={loading} className="loading-img" alt="Image 1" />
+            )}
+            
+            {/* Form d'ajout de l'admin */}
+                <div className="login-container" style={{marginTop: '2%', marginBottom: '1%', backgroundImage: `url(${backgroundForm})`}}>
+                <h1 className="title-log">Ajouter un nouvel administrateur</h1>
+
+                <div className="alert-send-error-container">
+                        <h6 className="alert-send-error-auth">{errorContent}</h6>
+                    </div>
+                
+                <form className="sign-form" onSubmit={addAdmin} style={{marginTop: '2%'}}> 
+                    <div className="input-group">
+                        <label>Pseudo :</label>
+                        
+                        <input type="pseudo" id="pseudo" name="pseudo" placeholder="ex : MagicPlayer1"
+                        onChange={(e) => setPseudo(e.target.value)} style={{borderColor: pseudoStyle()}}/>
+                        <p className="instruction-para">  doit contenir entre 5 et 15 caractères</p>
+                    </div>
+                    <div className="input-group">
+                        <label >E-mail :</label>
+                        <input type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)}
+                        style={{borderColor: emailStyle()}}  required/>
+                    </div>
+                    <div className="input-group">
+                        <label>Mot de passe :</label>
+                        <input type="password" id="password" onChange={(e) => setPassword(e.target.value)}
+                        placeholder="entre 8 et 20 caractères avec au moins une majuscule et un caractère spécial"
+                        style={{borderColor: passwordStyle()}} required/>
+                        <p className="instruction-para">  doit contenir entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial  </p>
+                    </div>
+                    <div className="input-group">
+                        <label>Confirmation du mot de passe :</label>
+                        <input type="password" id="password" onChange={(e) => setConfirmPassword(e.target.value)}
+                        style={{borderColor: passwordStyle()}} required/>
+                    </div> 
+                    <div className="link-group">
+                        <button className="valid-form" type="submit" disabled={!completeState}
+                        ><h4>Ajouter</h4></button>
+                    </div>
+                    
+                </form>
+                
+                
+                </div>
+
+                { alertAdminSend && (
+                    <div className="alert-send-card-container">
+                    <h4 className="alert-send-card">Administrateur ajouté !</h4>
+                    </div>
+                )}
+        </div>
+        </Section>
+)
+}
+
+export default NewAdmin;
+
+
+

@@ -1,0 +1,17 @@
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.button-pass{
+    background-color: #D3D3D3; 
+    color: black;
+    margin-top: 10%; 
+    display: flex;
+    justify-content: center;
+    border-radius: 30px;
+    width: 200px;
+    font-size: 20px;  /* Agrandir la taille du texte */
+    
+}
+ 

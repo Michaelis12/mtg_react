@@ -1,0 +1,9 @@
+.buttonIcon {
+    border-radius: 50%;
+    border: 2px solid #000000;
+}  
+
+.buttonIcon:hover {
+     all: unset;
+     cursor: pointer;
+}

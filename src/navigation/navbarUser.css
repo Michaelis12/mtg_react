@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+.nav {
+    display: flex;
+    flex-direction: row;
+}
+
+.arrow-card, .arrow-deck {
+    position: absolute;
+    padding: 5px;
+}
+
+.p-navbar, .p-navbar-hv {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.4em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.p-navbar-hv {
+    border-bottom : 2px solid black;
+    color: black;
+}
+
+.p-navbar:hover {
+  text-decoration: underline;
+}
+
+.hv-user-nav {
+    position: absolute;
+    max-width: '18rem';
+    border : 2px solid black;
+    padding: 5px;
+    border-radius : 5px;
+    background-color:gray;
+    text-align: center;
+    margin-left: 20px;
+}
+
+.section-navbar-mobile:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .section-navbar-mobile:hover {
+    text-decoration: underline;
+  }
+}
+
+.p-navbar, .section-navbar-mobile {
+  font-family: 'MedievalSharp', cursive;
+}
+

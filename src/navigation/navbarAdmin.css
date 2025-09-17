@@ -1,0 +1,334 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+/* Contenu de la navbar */
+
+
+.nav {
+    display: flex;
+    flex-direction: row;
+    margin-right: 50px;
+}
+
+
+.p-navbar {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.4em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+} 
+
+.p-navbar:hover {
+  text-decoration: underline;
+}
+
+.nav-item {
+  position: relative; /* conteneur positionné */
+  display: flex;
+  justify-content: center ;
+
+}
+
+/* Contenu du hover */
+
+.hv-rule-nav {
+  position: absolute;
+  top: 100%;
+  left: -30%;
+  min-width: 200px;
+  border : 3px solid black;
+  padding: 5px;
+  border-radius : 5px;
+  background-color:white;
+  text-align: center;
+  z-index: 101;
+}
+
+.hv-card-nav {
+  position: absolute;
+  top: 100%;
+  left: -60%;
+  min-width: 200px;
+  border : 3px solid black;
+  padding: 5px;
+  border-radius : 5px;
+  background-color:white;
+  text-align: center;
+  z-index: 101;
+}
+
+.hv-deck-nav {
+  position: absolute;
+  top: 100%;
+  left: -60%;
+  min-width: 200px;
+  border : 3px solid black;
+  padding: 5px;
+  border-radius : 5px;
+  background-color:white;
+  text-align: center;
+  z-index: 101;
+}
+
+.hv-user-nav {
+  position: absolute;
+  top: 100%;
+  left: -60%;
+  min-width: 200px;
+  border : 3px solid black;
+  padding: 5px;
+  border-radius : 5px;
+  background-color:white;
+  text-align: center;
+  z-index: 101;
+}
+
+.hv-log-nav {
+  position: absolute;
+  top: 100%;
+  left: -10%;
+  min-width: 200px;
+  border : 3px solid black;
+  padding: 5px;
+  border-radius : 5px;
+  background-color:white;
+  text-align: center;
+  z-index: 101;
+}
+
+.hv-notifs-nav {
+  position: absolute;
+  top: 100%;
+  margin-left: -500%;
+  min-width: 300px;
+  max-width: 350px;
+  max-height: 400px;
+  overflow-y: auto;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 101;
+  padding: 10px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  margin-bottom: 8px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid black;
+  transition: all 0.2s ease;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.notification-item:hover {
+  background-color: #e9ecef;
+  transform: translateX(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.notification-item:last-child {
+  margin-bottom: 0;
+}
+
+.notification-item p {
+  flex: 1;
+  margin: 0;
+  padding-right: 10px;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+.notification-item svg {
+  cursor: pointer;
+  color: #6c757d;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.notification-item svg:hover {
+  color: #dc3545;
+  transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.btn-navbar {
+    width: 100%;
+    border-bottom: 2px solid black ;
+    background-color: white;
+    border-radius: 0%;
+}
+
+.btn-navbar:hover {
+    color: white;
+    background-color: #5D3B8C; 
+}
+
+
+/*Les paragraphes au sein du hoover*/
+.p-navbar-hv {
+    border-bottom : 2px solid black;
+    color: black;
+    width: auto;
+}
+
+
+/*Les paragraphes au sein du hoover quand on passe la souris dessus*/
+.p-navbar-hv:hover {
+    color: white;
+}
+
+.section-navbar-mobile:hover {
+  text-decoration: underline;
+}
+
+.alert-notif {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ff4757;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  animation: pulse 2s infinite;
+  z-index: 99;
+}
+
+.notification-blank-p {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5%;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@media (max-width: 1000px) {
+
+  .nav-container {
+    display: none;
+  }
+
+  .section-navbar-mobile {
+    width: 90%;
+    color: white;
+    background-color: black;
+    border-bottom: 2px solid white ;
+    border-radius: 0%;
+    font-size: larger;
+    font-family: 'MedievalSharp', cursive;
+    font-size: 1.2em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .section-navbar-mobile:hover {
+    text-decoration: underline;
+  }
+
+  .btn-navbar-mobile-hover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    margin-top: -21px;
+  }
+  .btn-navbar-mobile {
+    color: black;
+    background-color: #ccc;
+    border-bottom: 1px solid black;
+    width: 90%;
+  }
+
+  .notification-item-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 6px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #007bff;
+    transition: all 0.2s ease;
+  }
+
+  .notification-item-mobile:hover {
+    background-color: #e9ecef;
+  }
+
+  .notification-item-mobile p {
+    flex: 1;
+    margin: 0;
+    padding-right: 8px;
+    line-height: 1.3;
+    font-size: 13px;
+  }
+
+
+
+  .icon-fleche {
+    position: absolute;
+    right: 7%;
+  }
+
+  .nav-header {
+    flex-shrink: 0;
+    padding: 1rem;
+    border-bottom: 1px solid white;
+  }
+}
+
+.p-navbar, .section-navbar-mobile, .nav-item, .nav-header {
+  font-family: 'MedievalSharp', cursive;
+}
+

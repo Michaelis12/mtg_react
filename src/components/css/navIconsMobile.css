@@ -1,0 +1,16 @@
+
+.button-nav-mobile {
+        display: none;
+}
+
+
+@media (max-width: 1250px) {
+.button-nav-mobile {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+   
+}

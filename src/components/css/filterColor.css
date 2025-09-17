@@ -1,0 +1,22 @@
+
+
+.filter-colors {
+    display: flex;
+    flex-direction: column;
+}
+
+
+li {
+    color: black;
+    display: flex;  
+    align-items: center;
+}
+
+
+
+.filter-color-img {
+    height: 30px;
+    width: auto;
+    margin-top: 14px;
+}
+

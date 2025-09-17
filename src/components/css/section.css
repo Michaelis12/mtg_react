@@ -1,0 +1,15 @@
+.section {
+    display: flex;
+    flex-direction: column;
+    min-height: 88vh; 
+    position: relative;
+    overflow: hidden;
+    
+}
+
+@media (max-width: 450px) {
+    .section {
+        min-height:84vh; 
+    }
+
+}

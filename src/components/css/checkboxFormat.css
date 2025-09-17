@@ -1,0 +1,77 @@
+.checkbox-deck-format {
+    height: auto;  /* Permet aux éléments de grandir selon leur contenu */
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    place-items: center;
+    grid-auto-columns: auto;
+    gap: 30px;
+    margin: 2%;
+
+}
+
+.checkbox-input-format-container {
+    border: 2px solid black;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Pour espacer les éléments */
+    align-items: stretch; /* Étend chaque élément enfant pour que la hauteur soit la même */
+    /* La hauteur est dynamique mais tous les éléments auront la même hauteur */
+    height: 260px;
+    max-width: 500px;
+}
+
+.input-format-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 2%;
+    border-bottom: 2px solid black;
+    align-items: center; /* Centre la case à cocher verticalement */
+}
+
+.input-deck-format {
+    transform: scale(2.5);
+    margin-right: 20px;
+    position: relative;
+    bottom: 4px;
+}
+
+.new-deck-checkout-format {
+    color: white;
+    background:  linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border-radius: 30px;
+    padding: 8px;
+    font-size: 25px;
+    text-align: center; /* Centre le texte */
+}
+
+.format-text {
+    padding: 4%;
+    font-weight: bold;
+    text-align: center; /* Centre le texte */
+    flex-grow: 1; /* Permet au texte de prendre l'espace restant dans le conteneur */
+}
+
+
+@media (max-width: 500px) {
+
+    
+
+
+    .input-deck-format {
+        transform: scale(1.5);
+    }
+
+    .new-deck-checkout-format {
+        font-size: 18px;
+        margin-top: 2px;
+    }
+
+    .format-text {
+        font-size: smaller;
+    }
+
+}

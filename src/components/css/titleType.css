@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+.titleType {
+    color: white;
+    background-color: #5D3B8C;
+    width: 70%;
+    padding: 0.5%;
+    margin: 3% auto 2% auto;
+    text-align: center;
+    border: white solid 3px;
+    font-family: 'MedievalSharp', cursive;
+    font-size: clamp(1.2rem, 4vw, 2.5rem); /* taille auto-adaptative */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    line-height: 1.2;
+    word-wrap: break-word;
+    font-size: clamp(1rem, 5vw, 2.5rem);
+
+    
+}
+
+/* Responsive : ajuste la largeur et le padding */
+@media (max-width: 500px) {
+    .titleType {
+        width: 80%;
+        padding-top: 2%;
+        padding-bottom: 2%;
+        font-size: clamp(1rem, 6vw, 1.5rem); /* plus petit pour mobile */
+    }
+}

@@ -1,0 +1,38 @@
+.li-edition {
+    width: 300px;
+}
+
+
+.checkbox-edition-img {
+    width: 180px;
+}
+
+.filter-edition-img {
+    width: 140px;
+}
+
+.component-input-edition {
+  margin-right: 10px;
+}
+
+@media (max-width: 1600px) {
+  .li-edition {
+    width: 200px;
+  }
+
+  .filter-edition-img {
+    width: 80px;
+}
+} 
+
+@media (max-width: 1000px) {
+    .checkbox-edition-img {
+    width: 120px;
+}
+}
+
+@media (max-width: 500px) {
+    .checkbox-edition-img {
+    width: 80px;
+}
+}

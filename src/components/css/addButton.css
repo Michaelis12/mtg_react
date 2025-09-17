@@ -1,0 +1,59 @@
+.addButton {
+    border-radius: 50%; 
+    width: 40px;                  /* Largeur du bouton (ajustez la taille selon vos besoins) */
+    height: 40px;   
+    padding: 0;
+    border: 'none';  
+    background-color: #f8f9fa;
+}
+
+.addButton:hover {
+    cursor: pointer;
+    border: 'none';
+    background-color: #f8f9fa;
+}
+
+.addButton:disabled {
+    opacity: 0.5;
+}
+
+.addButton .icon {
+    position: absolute;           /* Permet de positionner l'icône à l'intérieur du bouton */
+    top: 50%;                     /* Centre verticalement (50% de la hauteur du bouton) */
+    left: 50%;                    /* Centre horizontalement (50% de la largeur du bouton) */
+    transform: translate(-50%, -50%);
+  font-size: 2rem;   /* Agrandit la taille de l'icône */
+} 
+
+
+.icon-add-card {
+  font-size: 1em;
+}
+
+.icon-add-card:hover {
+    transform: scale(0.9);
+    pointer-events: none;
+}
+
+
+
+/* Ce bouton est utilisé pour toutes les cartes de deck, il n'a pas besoin d'etre réduit de la meme manière dans tous les cas*/
+
+@media (max-width: 500px) {
+
+  .addButton {
+    width: 20px;                 
+    height: 20px; 
+    background-color: red;
+  }
+
+  .icon-add-card {
+  font-size: 0.5em;
+  }
+
+  .icon-add-card-form {
+  font-size: 0.7em;
+  }
+}
+
+

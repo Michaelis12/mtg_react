@@ -1,0 +1,18 @@
+.pencil-icon {
+    font-size: 30px;
+    margin-left: 5px;
+    transition: transform 0.2s ease-in-out;
+} 
+
+.pencil-icon:hover {
+    transform: scale(0.9); 
+    cursor: pointer;
+}
+
+  @media (max-width: 700px) {
+    .pencil-icon {
+        font-size: 14px;
+        
+    }
+  }
+
