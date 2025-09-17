@@ -3,7 +3,7 @@ import { CgCloseO  } from "react-icons/cg";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import backgroundWhite from "../assets/background_white.png"
 import ButtonValidPopup from "./buttonValidPopup";
-
+ 
 const PopupDelete = function (props) {
     return ( 
 
