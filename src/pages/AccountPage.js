@@ -508,16 +508,14 @@ const AccountPage = () => {
                 if(avatar === "") {
                     // Si pas d'avatar sélectionné, afficher l'avatar existant
                     if(deckBuilder.avatar && deckBuilder.avatar.startsWith('/uploads/')) {
-                        return `https://localhost:8443${deckBuilder.avatar}`;
-                        //return `https://mtg-spring.onrender.com${deckBuilder.avatar}`;
+                        return `https://mtg-spring.onrender.com${deckBuilder.avatar}`;
                     }
                     return deckBuilder.avatar;
                 }
                 else {
                     // Si un nouvel avatar a été sélectionné
                     if(avatar.startsWith('/uploads/')) {
-                        return `https://localhost:8443${avatar}`;
-                        //return `https://mtg-spring.onrender.com${avatar}`;
+                        return `https://mtg-spring.onrender.com${avatar}`;
                     }
                     return avatar;
                 }
@@ -911,7 +909,7 @@ const AccountPage = () => {
                                         <div className='deck-liked-section'>
                                             {decksLiked.map(deck => ( 
                                                     <div className="deck-details" id='decks-liked-user'  key={deck.id}>
-                                                            <img className="deck-pp" src={deck.image && deck.image.startsWith('/uploads/') ? `https://localhost:8443${deck.image}` : deck.image} alt="Deck avatar" onClick={() => navDeckLiked(deck.id)}
+                                                            <img className="deck-pp" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck avatar" onClick={() => navDeckLiked(deck.id)}
                                                             onMouseEnter={() => hoveredDeckLiked(deck.id, deck.name, deck.format)} onMouseOut={() => hoveredDeckLiked()}/>
                                                             <strong className="deck-named" style={{paddingTop:'5%'}}> {deck.name} </strong>
                                                             <button style={{marginBottom: '5%'}}><strong className="deck-db" onClick={() => chooseUser(deck.id)} 
@@ -934,7 +932,7 @@ const AccountPage = () => {
                                                             {detailsDeckLiked && detailsDeckLiked.id === deck.id && (
                                                                             <div className="hover-deck-card">
                                                                                         <div className="img-container">
-                                                                                                <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `https://localhost:8443${deck.image}` : deck.image} alt="Deck mtg"/>
+                                                                                                <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck mtg"/>
                                                                                         </div>
                                                                                                         <div className="deck-hover-body" >
                                                                                                             <div className='name-line'>

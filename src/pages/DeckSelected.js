@@ -986,7 +986,7 @@ const DeckSelected = () => {
                   
                                           <div className="deck-content">
                                                <img className="deck-selected-pp" style={{marginTop: '-5%'}}
-                                               src={deck.image && deck.image.startsWith('/uploads/') ? `https://localhost:8443${deck.image}` : deck.image} alt="Deck mtg"/>
+                                               src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck mtg"/>
                 
                                               <div className="deck-selected-attributs" >
                 
@@ -1044,7 +1044,7 @@ const DeckSelected = () => {
             <h2 className='deck-selected-card-medium-name'>{deck.name}</h2> 
             <div className="deck-selected-card-medium" style={{ backgroundImage: `url(${backgroundPopup})`}}>
                     <div className="img-container">
-                                          <img className="new-deck-img-mobile" src={deck.image && deck.image.startsWith('/uploads/') ? `https://localhost:8443${deck.image}` : deck.image} alt="Deck mtg"/>
+                                          <img className="new-deck-img-mobile" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck mtg"/>
                     </div>
                     <div className="card-medium-body" >
                     
@@ -1094,7 +1094,7 @@ const DeckSelected = () => {
             <h2 className='deck-card-mobile-name'>{deck.name}</h2>
             <div style={{ backgroundImage: `url(${backgroundPopup})`}} className="deck-card-mobile" >
                     <div className="img-container">
-                                          <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `https://localhost:8443${deck.image}` : deck.image} alt="Deck mtg"/>
+                                          <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck mtg"/>
                     </div>
 
                     <div className="deck-hover-body" >
@@ -1147,11 +1147,11 @@ const DeckSelected = () => {
                              </div>
                              <div className="cedh-background" id='creature-card' style={{ backgroundImage: `url(${backgroundCedh})`}}>
                               <div className="cedh-details">
-                                 <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://localhost:8443${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>chooseCedh(deckCedh.id)}
+                                 <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>chooseCedh(deckCedh.id)}
                                                              onMouseEnter={() => hoveredCard(deckCedh.id) } onMouseOut={() => hoveredCard()}/>
                                                              
                                  {detailsCard && detailsCard.id === deckCedh.id && (
-                                                             <img className="card-img-zoom" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://localhost:8443${deckCedh.image}` : deckCedh.image} alt="Card-image"
+                                                             <img className="card-img-zoom" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deckCedh.image}` : deckCedh.image} alt="Card-image"
                                                              />
                                  )}
                              </div>
@@ -1187,7 +1187,7 @@ const DeckSelected = () => {
                                                     </div>
                                                      
                                                      {detailsCard && detailsCard.id === land.id && (
-                                                     <img className="card-img-zoom" src={land.image && land.image.startsWith('/uploads/') ? `https://localhost:8443${land.image}` : land.image} alt="Card-image"/>
+                                                     <img className="card-img-zoom" src={land.image && land.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${land.image}` : land.image} alt="Card-image"/>
                                                      )} 
                                                  </div>
                                          
@@ -1212,7 +1212,7 @@ const DeckSelected = () => {
                                             <p className='p-card-length'>{numberCreature(creature.id)}</p>
                                         )}
                                         {detailsCard && detailsCard.id === creature.id && (
-                                            <img className="card-img-zoom" src={creature.image && creature.image.startsWith('/uploads/') ? `https://localhost:8443${creature.image}` : creature.image} alt="Card-image"/>
+                                            <img className="card-img-zoom" src={creature.image && creature.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${creature.image}` : creature.image} alt="Card-image"/>
                                         )} 
                                         </div>
                                     ))}
@@ -1237,7 +1237,7 @@ const DeckSelected = () => {
                                             <p className='p-card-length'>{numberEnchant(enchant.id)}</p>
                                         )}
                                         {detailsCard && detailsCard.id === enchant.id && (
-                                            <img className="card-img-zoom" src={enchant.image && enchant.image.startsWith('/uploads/') ? `https://localhost:8443${enchant.image}` : enchant.image} alt="Card-image"/>
+                                            <img className="card-img-zoom" src={enchant.image && enchant.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${enchant.image}` : enchant.image} alt="Card-image"/>
                                         )} 
                                         </div>
                                     ))}
@@ -1261,7 +1261,7 @@ const DeckSelected = () => {
                                             <p className='p-card-length'>{numberSpell(spell.id)}</p>
                                         )}
                                         {detailsCard && detailsCard.id === spell.id && (
-                                            <img className="card-img-zoom" src={spell.image && spell.image.startsWith('/uploads/') ? `https://localhost:8443${spell.image}` : spell.image} alt="Card-image"/>
+                                            <img className="card-img-zoom" src={spell.image && spell.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${spell.image}` : spell.image} alt="Card-image"/>
                                         )} 
                                         </div>
                                     ))}
@@ -1285,7 +1285,7 @@ const DeckSelected = () => {
                                             <p className='p-card-length'>{numberArtefact(artefact.id)}</p>
                                         )}
                                         {detailsCard && detailsCard.id === artefact.id && (
-                                            <img className="card-img-zoom" src={artefact.image && artefact.image.startsWith('/uploads/') ? `https://localhost:8443${artefact.image}` : artefact.image} alt="Card-image"/>
+                                            <img className="card-img-zoom" src={artefact.image && artefact.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${artefact.image}` : artefact.image} alt="Card-image"/>
                                         )} 
                                         </div>
                                     ))}
@@ -1315,7 +1315,7 @@ const DeckSelected = () => {
                                     )}
                                     {detailsCard && detailsCard.id === planeswalker.id && (
                                         <img className="card-img-zoom" 
-                                        src={planeswalker.image && planeswalker.image.startsWith('/uploads/') ? `https://localhost:8443${planeswalker.image}` : planeswalker.image} 
+                                        src={planeswalker.image && planeswalker.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${planeswalker.image}` : planeswalker.image} 
                                         alt="Card-image"/>
                                     )} 
                                     </div>

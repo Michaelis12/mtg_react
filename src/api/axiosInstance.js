@@ -3,8 +3,7 @@ import axios from 'axios';
 
 // Création de l'instance Axios
 const axiosInstance = axios.create({
-  baseURL: 'https://localhost:8443', // adapte si nécessaire
-  //baseURL: 'https://mtg-spring.onrender.com',
+  baseURL: 'https://mtg-spring.onrender.com',
   withCredentials: true,              // cookies JWT et session
 });
 
