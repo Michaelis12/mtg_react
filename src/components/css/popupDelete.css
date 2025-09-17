@@ -1,0 +1,96 @@
+
+
+.popup-bckg {
+    position: fixed; /* Le popup se fixe à l'écran */
+    top: 0; /* En haut de la page */
+    left: 0; /* À gauche de la page */
+    width: 100vw; /* Prend toute la largeur de la fenêtre */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 100;
+    gap: 30px;
+}
+
+
+.popup-avert {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    border: 1px solid #000000;
+    background-color: white;
+    opacity: 1;
+}
+
+.popup-header-container {
+    width: 100%;
+    background-color: #5D3B8C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3%;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+.avert-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.avert-title {
+    text-align: center;
+}
+
+.avert-p1 {
+    text-align: center;
+    margin-top: 7%;
+}
+
+.avert-p2 {
+    text-align: center;
+    margin-top: 2%;
+    margin-bottom: 7%;
+}
+
+.avert-buttons {
+    display: flex;
+    gap: 2rem; 
+    justify-content: center;
+}
+
+
+
+.no-button {
+    background-color: white; 
+    color: black;
+    display: flex;
+    justify-content: center;
+    border-radius: 30px;
+    border: 2px solid black;
+    font-size: 20px;
+    
+}
+
+.valid-delete-user {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border-top: solid black 2px;
+    background-color: red;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}

@@ -380,7 +380,7 @@ const NewDeck = () => {
             setDisplayLoading(false);
         } catch (e) {
             setDisplayLoading(false);
-            navigate('/sign')
+            //navigate('/sign')
         }     
     }
 
