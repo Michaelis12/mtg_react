@@ -1227,7 +1227,7 @@ const CardsPage = () => {
           { displayCards === "id" && (
               <div className='map-cards-section'>
                 {cards.map(card => ( 
-                    <div className="cards-details" key={card.id} >
+                    <div className="cards-details" key={card.id} style={{display:(maskBaseLand(card.id))}}>
                         <img className="cards-img" src={getImageUrl(card.image)} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         />
