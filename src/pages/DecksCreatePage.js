@@ -563,7 +563,7 @@ const DecksCreatePage = () => {
                     {displayFilterFormats && (
                     <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
                       <Checkbox attributs={formats} onChange={(event) => selectFormats(event.target.value)} filter={filterFormats}
-                      onPush={removeFormats}/>
+                      onPush={removeFormats} classNameP='checkbox-format-p'/>
                     </div>
                     )}                 
                   </div>

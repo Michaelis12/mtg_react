@@ -90,8 +90,6 @@ const CardsPage = () => {
                     return;
                 }
 
-                console.log("hello")
-
 
                 // Contient les RequestParams de la requete
                 const params = {
@@ -125,7 +123,9 @@ const CardsPage = () => {
                                 card.colors, card.type, card.legendary, card.rarity, card.edition,
                                 card.deckBuilders, card.decks, card.decksCommander, card.likeNumber,
                                 card.deckNumber, card.commanderNumber
-                ) )                
+                ) )   
+                
+                console.log("listCards : " + listCards)
                  
                 setCards(listCards)
                 setHasMore(!response.data.isLast);
@@ -134,6 +134,8 @@ const CardsPage = () => {
                 setNewCardLikedId([]);
                 setNewCardDislikedId([]);
                 setDisplayLoading(false);
+
+                console.log("cards : " + cards)
                 
             }   
             catch (error) {
@@ -1070,7 +1072,7 @@ const CardsPage = () => {
                     <Checkbox attributs={formats} onChange={(event) => selectFormats(event.target.value)} filter={filterFormats}
                     onPush={removeFormats} classNameP='checkbox-format-p'/>
                   </div>
-                  )}                 
+                  )}                  
                 </div>
 
              
