@@ -47,25 +47,6 @@ const AccountPage = () => {
     const [userLikes, setUserLikes] = useState([])
     const { authLogOut } = useContext(AuthContext);
 
-    // Récupérer le CSRF token pour l'intégrer dans le cookie
-    useEffect(() => {
-    const fetchCsrfToken = async () => {
-        try {
-        await axiosInstance.get("/f_csrf/csrf");
-        setDisplayLoading(false);
-        } catch (err) {
-        console.error("Erreur récupération CSRF", err);
-        }
-        finally {
-            setDisplayLoading(false);
-        }
-    };
-
-    fetchCsrfToken();
-    }, []);
-
-
-
         
         // Afficher les decks
             
