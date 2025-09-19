@@ -884,7 +884,7 @@ const CardSelected = () => {
                             <Title title={`Utilisé dans ${decksNumber} Decks`}/>
                         </div>
 
-                <div className='cards-buttons-order-container'>
+                <div className='cards-buttons-order-container' style={{zIndex: '1000'}}>
                 <ButtonSelect className={"button-date"} onClick={() => displayIdDecks()} text={"Dernières parutions"}
                                         backgroundColor={getBgDate()} color={getColorDate()}/>
                 <ButtonSelect className={"button-top"} onClick={() => displayTopDecks()} text={"Les plus populaires"} 

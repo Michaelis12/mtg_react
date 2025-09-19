@@ -57,7 +57,7 @@ const ArticlesPage = function () {
     }
   }
   
-  return (
+  return ( 
     <Section>
       { displayLoading && (
         <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />

@@ -822,18 +822,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 }
             }
             
-            // Fonctions de navigation pour le popup de zoom
-            const prevCard = () => {
-                if (currentCardIndex > 0) {
-                    setCurrentCardIndex(currentCardIndex - 1);
-                }
-            }
-            
-            const nextCard = () => {
-                if (currentCardIndex < hand.length - 1) {
-                    setCurrentCardIndex(currentCardIndex + 1);
-                }
-            }
             
             // Gérer l'activation/désactivation des boutons de navigation
             React.useEffect(() => {
@@ -841,11 +829,53 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 setNextButtonActive(currentCardIndex < hand.length - 1);
             }, [currentCardIndex, hand.length]);
             
-            // Fonction pour ouvrir le popup de zoom
-            const openZoomPopup = (index) => {
-                setCurrentCardIndex(index);
+            // Ouvre le popup de zoom pour une carte de la main (index) ou un land (objet)
+            const openZoomPopup = (cardOrIndex) => {
+                if (typeof cardOrIndex === 'number') {
+                    setCardImage(hand[cardOrIndex]?.image || null);
+                    setCardID(hand[cardOrIndex]?.id);
+                    setNavigateListID([]);
+                } else if (cardOrIndex && cardOrIndex.image) {
+                    setCardImage(cardOrIndex.image);
+                    setCardID(cardOrIndex.id);
+                    switch(cardOrIndex.type) {
+                        case "TERRAIN":
+                            setNavigateListID(deckLandsUnit.map(card => card.id));
+                            setListImage(deckLandsUnit.map(card => card.image));
+                            break;
+                        case "CREATURE":
+                            setNavigateListID(deckCreaturesUnit.map(card => card.id));
+                            setListImage(deckCreaturesUnit.map(card => card.image));
+                            break;
+                        case "ENCHANTEMENT":
+                            setNavigateListID(deckEnchantsUnit.map(card => card.id));
+                            setListImage(deckEnchantsUnit.map(card => card.image));
+                            break;
+                        case "EPHEMERE":
+                        case "RITUEL":
+                        case "BATAILLE":
+                            setNavigateListID(deckSpellsUnit.map(card => card.id));
+                            setListImage(deckSpellsUnit.map(card => card.image));
+                            break;
+                        case "ARTEFACT":
+                            setNavigateListID(deckArtefactsUnit.map(card => card.id));
+                            setListImage(deckArtefactsUnit.map(card => card.image));
+                            break;
+                        case "PLANESWALKER":
+                            setNavigateListID(deckPlaneswalkersUnit.map(card => card.id));
+                            setListImage(deckPlaneswalkersUnit.map(card => card.image));
+                            break;
+                        default:
+                            setNavigateListID([]);
+                            setListImage([])
+                    }
+                } else {
+                    setCardImage(null);
+                    setCardID(null);
+                    setNavigateListID([]);
+                }
                 setDisplayZoomPopup(true);
-            }
+            };
 
         // Zoom pour afficher les cartes dans la partie mobile
 
@@ -854,6 +884,62 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             const [cardID, setCardID] = useState(null);
             const [navigateListID, setNavigateListID] = useState([]);
             const [listImage, setListImage] = useState([]);
+
+
+              // Boutons navigation cartes
+            const prevCard = () => {
+                                       const currentIndex = navigateListID.indexOf(cardID);
+                                       const currentImage = listImage.indexOf(cardImage);
+           
+                                       if (currentIndex > 0) {
+                                           setCardID(navigateListID[currentIndex - 1]);
+                                           setCardImage(listImage[currentImage - 1]);
+                                       }
+                     
+            }; 
+                       
+                               
+            useEffect(() => {
+                const desacPrevCard = () => {
+                                   const firstID = navigateListID[0];
+                                   if (cardID === firstID) {
+                                       setPrevCardButtonActive(false)
+                                       console.log(prevCardButtonActive)
+                                   }
+                                   else {
+                                       setPrevCardButtonActive(true)
+                                       console.log(prevCardButtonActive)
+                                   }
+            }
+                desacPrevCard() }, [cardID]);
+
+
+             // Navigue vers la carte suivante dans a liste
+            const nextCard =  () => {
+                                        const currentIndex = navigateListID.indexOf(cardID);
+                                         const currentImage = listImage.indexOf(cardImage);
+            
+                                        if (currentIndex >= 0 && currentIndex < navigateListID.length - 1) {
+                                            setCardID(navigateListID[currentIndex + 1]);
+                                            setCardImage(listImage[currentImage + 1]);
+                                        }
+                        
+            };
+      
+                                
+            // Navigue vers la carte précédente dans a liste
+             useEffect(() => {
+                const desacNextCard = () => {
+                                            const lastID = navigateListID[navigateListID.length - 1];
+            
+                                            if (cardID === lastID) {
+                                                setNextCardButtonActive(false)
+                                            }
+                                            else {
+                                                setNextCardButtonActive(true)
+                                            }
+                }
+                desacNextCard() }, [cardID]);
         
  
                     
@@ -1238,7 +1324,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
         <div className='decks-types-map'> 
 
-             {/*Mapping des terrains*/}
+             
             { deckLands.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
                     <TitleType title={"Terrains (" + deckLands.length + ")"}/>
@@ -1248,17 +1334,16 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             return (
                                 <div className="land-text-details" id='land-card' key={land.id}
                                     style={isMobile ? { fontSize: '0.85em', padding: '6px 4px', margin: '4px 0' } : {}}>
-                                    <h5 className='land-text-name'
-                                        onMouseEnter={() => hoveredCard(land.id)}
-                                        onMouseOut={() => hoveredCard()}
-                                        onClick={() => chooseLand(land.id)}>{isMobile ? land.name.slice(0, 16) + (land.name.length > 16 ? '…' : '') : land.name}</h5>                                    
-                                    {/* Si le terrain est basique 
-                                    {land.id < 8 && (
-                                        <p className="p-cards-deck-length" style={isMobile ? { marginTop: '4px', fontSize: '0.85em' } : { marginTop: '10px' }}>
-                                            {isMobile ? 'basique' : 'terrain basique'}
-                                        </p>
-                                    )}
-                                    */}
+                                    
+                                    <div className='card-link-desktop'>
+                                        <h5 className='land-text-name' onMouseEnter={() => hoveredCard(land.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseLand(land.id)}>{land.name}</h5>
+                                    </div>
+
+                                    <div className='card-link-mobile'>
+                                        <h5 className='land-text-name'  onClick={()=> openZoomPopup(land)} >{land.name}</h5>
+                                    </div>
+
+
                                     {detailsCard && detailsCard.id === land.id && (
                                             <img className="card-img-zoom" style={isMobile ? { maxWidth: '80vw', maxHeight: '40vw' } : {}} src={land.image && land.image.startsWith('/uploads/') ? `https://localhost:8443${land.image}` : land.image} alt="Card-image" />
                                         )}
@@ -1305,7 +1390,14 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     <div className='deck-text-map'>
                             {deckCreaturesUnit.map(creature => ( 
                                 <div className="land-text-details" id='land-card'  key={creature.id}>
-                                    <h5 className='land-text-name' onMouseEnter={() => hoveredCard(creature.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseCreature(creature.id)}>{creature.name}</h5>
+                                    
+                                    <div className='card-link-desktop'>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(creature.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseCreature(creature.id)}>{creature.name}</h5>
+                                        </div>
+                                        <div className='card-link-mobile'>
+                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(creature)} >{creature.name}</h5>
+                                        </div>
+                                    
                                     <div className='deckbuilding-number-container'>
                                         { format !== "COMMANDER" && ( 
                                         <div className='deckbuilding-text-number'>                              
@@ -1338,8 +1430,13 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     <div className='deck-text-map'>
                             {deckEnchantsUnit.map(enchant => ( 
                                 <div className="land-text-details" id='land-card'  key={enchant.id}>
-                                    <h5 className='land-text-name' onMouseEnter={() => hoveredCard(enchant.id) } onMouseOut={() => hoveredCard()} 
-                                    onClick={()=>chooseEnchant(enchant.id)} >{enchant.name}</h5>
+                                    
+                                    <div className='card-link-desktop'>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(enchant.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseEnchant(enchant.id)}>{enchant.name}</h5>
+                                        </div>
+                                    <div className='card-link-mobile'>
+                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(enchant)} >{enchant.name}</h5>
+                                    </div>
 
                                     <div className='deckbuilding-number-container'>
                                         { format !== "COMMANDER" && ( 
@@ -1372,7 +1469,13 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     <div className='deck-text-map'>
                             {deckSpellsUnit.map(spell => ( 
                                 <div className="land-text-details" id='land-card'  key={spell.id}>
-                                    <h5 className='land-text-name' onMouseEnter={() => hoveredCard(spell.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseSpell(spell.id)} >{spell.name}</h5>
+                                    
+                                    <div className='card-link-desktop'>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(spell.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseSpell(spell.id)}>{spell.name}</h5>
+                                        </div>
+                                        <div className='card-link-mobile'>
+                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(spell)} >{spell.name}</h5>
+                                        </div>
                                     
                                      <div className='deckbuilding-text-number'>
                                         { format !== "COMMANDER" && (
@@ -1404,7 +1507,14 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     <div className='deck-text-map'>
                             {deckArtefactsUnit.map(artefact => ( 
                                 <div className="land-text-details" id='land-card'  key={artefact.id}>
-                                    <h5 className='land-text-name' onMouseEnter={() => hoveredCard(artefact.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseArtefact(artefact.id)} >{artefact.name}</h5>
+
+                                        <div className='card-link-desktop'>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(artefact.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseArtefact(artefact.id)}>{artefact.name}</h5>
+                                        </div>
+                                       <div className='card-link-mobile'>
+                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(artefact)} >{artefact.name}</h5>
+                                       </div>
+
                                      <div className='deckbuilding-number-container'>
                                         { format !== "COMMANDER" && (
                                         <div className='deckbuilding-text-number'>                              
@@ -1435,12 +1545,17 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     <div className='deck-text-map'>
                             {deckPlaneswalkersUnit.map(planeswalker => ( 
                                 <div className="land-text-details" id='land-card' key={planeswalker.id}>
-                                    <h5 className='land-text-name' 
+                                    <div className='card-link-desktop'>
+                                        <h5 className='land-text-name' 
                                         onMouseEnter={() => hoveredCard(planeswalker.id)} 
                                         onMouseOut={() => hoveredCard()} 
                                         onClick={() => choosePlaneswalker(planeswalker.id)}>
                                         {planeswalker.name}
-                                    </h5>
+                                        </h5>
+                                    </div>
+                                    <div className='card-link-mobile'>
+                                        <h5 className='land-text-name' onClick={()=> openZoomPopup(planeswalker)} >{planeswalker.name}</h5>
+                                    </div>
                                     <div className='deckbuilding-number-container'>
                                     { format !== "COMMANDER" && (
                                     <div className='deckbuilding-text-number'>                              
@@ -1752,23 +1867,24 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
     
     </div>                                      
 
-
+                {/* Popup de zoom carte mobile */}
                 {displayZoomPopup && cardImage && (
-                    <div className='popup-bckg'>                                
+                                                        <div className='popup-bckg'>                                
                                                                 <img className="card-selected-image-zoom" src={getImageUrl(cardImage)} alt="Card mtg"/>
                                                                 <button className='nav-card-button' onClick={()=>(navigate(`/cardSelected`, { state: { cardID: cardID, ListCard: navigateListID  }}))}>Afficher détails</button>
-                                                                <div className='button-nav-mobile' style={{position : 'fixed', marginTop: '73vh', zIndex: '102', color: 'white'}} >   
+                                                                <div className='button-nav-mobile' style={{position : 'fixed', marginTop: '48vh', zIndex: '102', color: 'white'}} >   
                                                                     <IconButtonHover onClick={() => prevCard()} disabled={!prevCardButtonActive}
-                                                                    icon={<MdOutlinePlayArrow className='icon-nav' style={{ transform: 'scaleX(-1)' }} />} />
+                                                                    icon={<MdOutlinePlayArrow className='icon-nav' color="white" style={{ transform: 'scaleX(-1)' }} />} />
                                                                     <IconButtonHover onClick={() => nextCard()}  disabled={!nextCardButtonActive}
-                                                                    icon={<MdOutlinePlayArrow className='icon-nav' />} />                   
+                                                                    icon={<MdOutlinePlayArrow className='icon-nav' color="white" />} />                   
                                                                 </div>
                                                                
-                                                                <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> closePopup()}/>
-                    </div>
-                )}
+                                                                <CgCloseO className='icon-close-popup' style={{zIndex: '103'}} color='white' size={'5em'} onClick={()=> closePopup()}/>
+                                                        </div>
+                                )} 
             
-
+                
+                {/* Popup affichage d'une main */}
                 { popupHand && (
                             <div className='popup-bckg'> 
                                 <div className='hand-background' style={{
@@ -1814,7 +1930,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             </div>
                 )}
                             
-
+                {/* Popup publication du deck */}
                 {popupPub && (
                     <div className='popup-bckg'>
                         

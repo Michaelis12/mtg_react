@@ -754,7 +754,6 @@ const DeckSelected = () => {
             // Ouvre le popup de zoom pour une carte de la main (index) ou un land (objet)
             const openZoomPopup = (cardOrIndex) => {
                 if (typeof cardOrIndex === 'number') {
-                    // main: index
                     setCardImage(hand[cardOrIndex]?.image || null);
                     setCardID(hand[cardOrIndex]?.id);
                     setNavigateListID([]);
@@ -863,8 +862,8 @@ const DeckSelected = () => {
                             }
                             desacNextCard() }, [cardID]);
 
-                
-             const closePopup =  () => {
+    // Fermer le popup           
+    const closePopup =  () => {
 
                 setCardID(null);
                 setCardImage(null);
@@ -874,10 +873,8 @@ const DeckSelected = () => {
                  setPrevCardButtonActive(false)
                 setNextCardButtonActive(false)
             
-            };
+};
             
-
-        // Afficher un zoom sur une carte
 
 
     // Graphique de répartition des cartes par types
@@ -1609,22 +1606,23 @@ const DeckSelected = () => {
                 </div>
  
        
-
+                {/* Popup de zoom carte mobile */}
                 {displayZoomPopup && cardImage && (
                                         <div className='popup-bckg'>                                
                                                 <img className="card-selected-image-zoom" src={getImageUrl(cardImage)} alt="Card mtg"/>
                                                 <button className='nav-card-button' onClick={()=>(navigate(`/cardSelected`, { state: { cardID: cardID, ListCard: navigateListID  }}))}>Afficher détails</button>
-                                                <div className='button-nav-mobile' style={{position : 'fixed', marginTop: '73vh', zIndex: '102', color: 'white'}} >   
+                                                <div className='button-nav-mobile' style={{position : 'fixed', marginTop: '48vh', zIndex: '102', color: 'white'}} >   
                                                     <IconButtonHover onClick={() => prevCard()} disabled={!prevCardButtonActive}
-                                                    icon={<MdOutlinePlayArrow className='icon-nav' style={{ transform: 'scaleX(-1)' }} />} />
+                                                    icon={<MdOutlinePlayArrow className='icon-nav' color="white" style={{ transform: 'scaleX(-1)' }} />} />
                                                     <IconButtonHover onClick={() => nextCard()}  disabled={!nextCardButtonActive}
-                                                    icon={<MdOutlinePlayArrow className='icon-nav' />} />                   
+                                                    icon={<MdOutlinePlayArrow className='icon-nav' color="white" />} />                   
                                                 </div>
                                                
-                                                <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> closePopup()}/>
+                                                <CgCloseO className='icon-close-popup' style={{zIndex: '103'}} color='white' size={'5em'} onClick={()=> closePopup()}/>
                                         </div>
                 )} 
 
+                {/* Popup publication du deck */}
                 {popupHand && (
                         <div className='popup-bckg'>
                             <div className='hand-background' style={{
