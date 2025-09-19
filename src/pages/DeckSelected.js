@@ -15,11 +15,9 @@ import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
 import incolore from "../assets/incolore-mtg.png"
 import Card from '../model/Card';
-import Deck from '../model/Deck';
-import NavIconsMobile from '../components/navIconsMobile';
 import { FaHeart, FaRegHeart  } from 'react-icons/fa';
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
-import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
+import { GiCardRandom } from "react-icons/gi";
 import { SlRefresh } from "react-icons/sl";
 import { CgCloseO  } from "react-icons/cg";
 import { MdOutlinePlayArrow } from "react-icons/md";
@@ -742,7 +740,6 @@ const DeckSelected = () => {
                 }
             }
 
-            const [displayDetailsDeck, setDisplayDetailsDeck]= React.useState(false)
 
             // Ajout des états pour le zoom de la main et du land
             const [displayZoomPopup, setDisplayZoomPopup] = useState(false);
@@ -752,15 +749,11 @@ const DeckSelected = () => {
             const [listImage, setListImage] = useState([]);
 
             // Ouvre le popup de zoom pour une carte de la main (index) ou un land (objet)
-            const openZoomPopup = (cardOrIndex) => {
-                if (typeof cardOrIndex === 'number') {
-                    setCardImage(hand[cardOrIndex]?.image || null);
-                    setCardID(hand[cardOrIndex]?.id);
-                    setNavigateListID([]);
-                } else if (cardOrIndex && cardOrIndex.image) {
-                    setCardImage(cardOrIndex.image);
-                    setCardID(cardOrIndex.id);
-                    switch(cardOrIndex.type) {
+            const openZoomPopup = (card) => {
+                if (card !== null) {
+                    setCardImage(card.image);
+                    setCardID(card.id);
+                    switch(card.type) {
                         case "TERRAIN":
                             setNavigateListID(deckLandsUnit.map(card => card.id));
                             setListImage(deckLandsUnit.map(card => card.image));
@@ -1130,6 +1123,15 @@ const DeckSelected = () => {
                                                 
                     </div> 
             </div> 
+
+
+            {/* Afficher une main piochée dans le deck */}
+            <div className='admin-users-button'>
+                <button className='update-deck-container' onClick={()=>displayHand()}>
+                    <GiCardRandom className='icon-update-user' />
+                    <h5 className='update-user-p'>Piocher une main</h5>
+                </button>
+            </div>
 
 
                  <Title  title={"Cartes du deck"}/> 
@@ -1634,7 +1636,7 @@ const DeckSelected = () => {
                                                          <div className="cards-hand-details" key={index}>
                                                              <img className="cards-draw-img" src={getImageUrl(card.image)} alt="Card-image"
                                                              onMouseEnter={() => hoveredCard(card.id)} onMouseOut={() => hoveredCard()}
-                                                             onClick={() => openZoomPopup(index)}
+                                                             onClick={() => openZoomPopup(card)}
                                                              />
                                                              
                                                          </div>
@@ -1646,15 +1648,23 @@ const DeckSelected = () => {
                                                      <h5 style={{color: 'white', position: 'relative', top: '2px', fontFamily: 'MedievalSharp, cursive'}}> Pioche</h5> 
                             <SlRefresh color='white' size={"1.5em"}/></button>               
                             <CgCloseO className='icon-close-popup-desktop'
-                                                 color='white' size={'5em'} onClick={()=> setPopupHand(false)} style={{position: 'fixed',
+                                                 color='white' size={'5em'} onClick={()=> {setPopupHand(false); setHand([])}}  style={{position: 'fixed',
                                                      bottom: '10'
                             }}/> 
                             <CgCloseO className='icon-close-popup-mobile'
-                                                 color='white' size={'3em'} onClick={()=> setPopupHand(false)} style={{position: 'fixed',
+                                                 color='white' size={'3em'} onClick={()=> {setPopupHand(false); setHand([])}}  style={{position: 'fixed',
                                                      bottom: '10'
                             }}/> 
                         </div>
                     )}
+
+                {/* Popup de zoom sur une carte de la main */}
+                {displayZoomPopup && hand.length > 0 && (
+                    <div className='popup-bckg'>                                
+                                                <img className="card-selected-image-zoom" src={getImageUrl(cardImage)} alt="Card mtg"/>
+                                                <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayZoomPopup(false)}/>
+                    </div>
+                )}
                                         
             </Section> 
         )

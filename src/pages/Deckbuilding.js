@@ -778,9 +778,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             
             const [popupHand, setPopupHand]= React.useState(false)
             const [hand, setHand]= React.useState([])
+
             
             // États pour le popup de zoom et la navigation
-            const [displayCardPopup, setDisplayCardPopup] = React.useState(false)
             const [displayZoomPopup, setDisplayZoomPopup] = React.useState(false)
             const [currentCardIndex, setCurrentCardIndex] = React.useState(0)
             const [prevButtonActive, setPrevButtonActive] = React.useState(false)
@@ -829,13 +829,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 setNextButtonActive(currentCardIndex < hand.length - 1);
             }, [currentCardIndex, hand.length]);
             
-            // Ouvre le popup de zoom pour une carte de la main (index) ou un land (objet)
+            // Ouvre le popup de zoom pour une carte de la main (index) ou un type de carte (objet)
             const openZoomPopup = (cardOrIndex) => {
-                if (typeof cardOrIndex === 'number') {
-                    setCardImage(hand[cardOrIndex]?.image || null);
-                    setCardID(hand[cardOrIndex]?.id);
-                    setNavigateListID([]);
-                } else if (cardOrIndex && cardOrIndex.image) {
+                if (cardOrIndex && cardOrIndex.image) {
+                    console.log(cardOrIndex.id)
+                    console.log(cardOrIndex.image)
                     setCardImage(cardOrIndex.image);
                     setCardID(cardOrIndex.id);
                     switch(cardOrIndex.type) {
@@ -904,11 +902,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                    const firstID = navigateListID[0];
                                    if (cardID === firstID) {
                                        setPrevCardButtonActive(false)
-                                       console.log(prevCardButtonActive)
                                    }
                                    else {
                                        setPrevCardButtonActive(true)
-                                       console.log(prevCardButtonActive)
                                    }
             }
                 desacPrevCard() }, [cardID]);
@@ -951,11 +947,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 const firstID = navigateListID[0];
                                 if (cardID === firstID) {
                                     setPrevCardButtonActive(false)
-                                    console.log(prevCardButtonActive)
                                 }
                                 else {
                                     setPrevCardButtonActive(true)
-                                    console.log(prevCardButtonActive)
                                 }
                         }
                         desacPrevCard() }, [cardID]);
@@ -980,7 +974,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     }
                                     desacNextCard() }, [cardID]);
         
-                        
+                     
+                                    
+                    // Fermer le popup de zoom
                      const closePopup =  () => {
         
                         setCardID(null);
@@ -1255,17 +1251,21 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             <div className='deckbuilding-buttons-container'>                       
                         
                 <div className='admin-users-button'>
+
+                {/* Naviguer vers la page d'ajout de cartes */}
                 <button className='update-deck-container' onClick={()=>navigateCards()} 
                 >
                     <GiCardPlay className='icon-update-user' />
                     <h5 className='update-user-p'>Ajouter des cartes</h5>
                 </button> 
-
+                
+                {/* Afficher une main piochée dans le deck */}
                 <button className='update-deck-container' onClick={()=>displayHand()}>
                     <GiCardRandom className='icon-update-user' />
                     <h5 className='update-user-p'>Piocher une main</h5>
                 </button>
-
+                
+                {/* Passer le deck en public */}
                 {!deck.isPublic && ( 
                     <div className='public-container'>
                             <button className="pub-deck-container" 
@@ -1279,6 +1279,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                
                     </div>                
                 )}
+
+                {/* Passer le deck en privé */}
                 {deck.isPublic && (
                     <button className='update-deck-container' onClick={()=>privateDeck()}>
                         <RiGitRepositoryPrivateLine  className='icon-update-user' />
@@ -1332,8 +1334,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                         {deckLandsUnit.map(land => {
                             const isMobile = window.innerWidth < 500;
                             return (
-                                <div className="land-text-details" id='land-card' key={land.id}
-                                    style={isMobile ? { fontSize: '0.85em', padding: '6px 4px', margin: '4px 0' } : {}}>
+                                <div className="land-text-details" id='land-card' key={land.id}>
                                     
                                     <div className='card-link-desktop'>
                                         <h5 className='land-text-name' onMouseEnter={() => hoveredCard(land.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseLand(land.id)}>{land.name}</h5>
@@ -1896,7 +1897,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                         <div className="cards-hand-details" key={index}>
                                             <img className="cards-draw-img" src={getImageUrl(card.image)} alt="Card-image"
                                             onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
-                                            onClick={() => openZoomPopup(index)}
+                                            onClick={() => openZoomPopup(card)}
                                             />
                                             
                                         </div>
@@ -1909,12 +1910,12 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 <SlRefresh color='white' size={"1.5em"}/></button>
 
                                 <CgCloseO className='icon-close-popup-desktop'
-                                color='white' size={'5em'} onClick={()=> setPopupHand(false)} style={{position: 'fixed',
+                                color='white' size={'5em'} onClick={()=> {setPopupHand(false); setHand([])}} style={{position: 'fixed',
                                     bottom: '10'
                                 }}/> 
 
                                 <CgCloseO className='icon-close-popup-mobile'
-                                color='white' size={'3em'} onClick={()=> setPopupHand(false)} style={{position: 'fixed',
+                                color='white' size={'3em'} onClick={()=> {setPopupHand(false); setHand([])}} style={{position: 'fixed',
                                     bottom: '10'
                                 }}/>
                             </div>
@@ -1922,10 +1923,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
 
                         
-                {/* Popup de zoom avec navigation */}
+                {/* Popup de zoom sur une carte de la main */}
                 {displayZoomPopup && hand.length > 0 && (
                             <div className='popup-bckg'>                                
-                                <img className="card-selected-image-zoom" src={getImageUrl(hand[currentCardIndex].image)} alt="Card mtg"/>
+                                <img className="card-selected-image-zoom" src={getImageUrl(cardImage)} alt="Card mtg"/>
                                 <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayZoomPopup(false)}/>
                             </div>
                 )}
@@ -1936,7 +1937,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                         
                         <div className='set-attributs-deck'>
                             <div className='pub-title-container'>
-                                <h1 className='pub-title'>Deck publié, félicitations</h1>
+                                <h1 className='pub-title'>Deck publié</h1>
                             </div>
                             <MdPublishedWithChanges size={'5em'} color=" #5D3B8C" />
                             <button  type="button" className="valid-form" onClick={() => {setPopupPub(false);}}>
