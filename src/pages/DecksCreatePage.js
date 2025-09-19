@@ -1,7 +1,6 @@
 import React from 'react';
 import { useEffect, useRef, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from "../context/authContext"
 import Section from '../components/section';
 import Deck from '../model/Deck';
 import Title from '../components/title';
@@ -10,16 +9,17 @@ import InputValue from '../components/inputValue';
 import InputManaCoast from '../components/inputManaCoast';
 import Checkbox from '../components/checkbox';
 import CheckboxColor from '../components/checkboxColor';
-import IconButton from '../components/buttonIcon';
 import OpenButton from '../components/openButton';
-import ButtonSelect from '../components/buttonSelect';
-import ParagraphLikeNumber from '../components/paragraphLikeNumber';
 import FooterSection from '../components/footerSection';
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { CgCloseO } from "react-icons/cg";
 import { FaHeart, FaRegHeart  } from 'react-icons/fa';
+import { FaPencilAlt } from "react-icons/fa";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import backgroundCardsPage from "../assets/background_deck_select_page.png"
-import backgroundWhite from "../assets/background_white.png";
+import backgroundPopup from "../assets/background_white.png"
+import ButtonValidPopup from "../components/buttonValidPopup";
+import PopupDelete from '../components/popupDelete';
 import white from "../assets/white-mtg.png"
 import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
@@ -28,10 +28,8 @@ import black from "../assets/black-mtg.png"
 import incolore from "../assets/incolore-mtg.png"
 import axiosInstance from "../api/axiosInstance";
 import loading from "../assets/loading.gif"
-import { getDeckImageUrl } from '../utils/imageUtils';
 import { getImageUrl } from '../utils/imageUtils';
 import IconButtonHover from '../components/buttonIconHover';
-import ButtonModif from '../components/iconModif';
 import { FaPlus } from 'react-icons/fa';
 import "./css/DecksPage.css";
 
@@ -182,7 +180,6 @@ const DecksCreatePage = () => {
                         console.error('Erreur de chargement des decks :', error);
                         } finally {
                         setDisplayLoading(false);
-  // Pagination decks likés par nb de likes
                         }
                 };  
 
@@ -212,45 +209,6 @@ const DecksCreatePage = () => {
         const hoveredDeck = (id, name, format) => {
             setDetailsDeck({ id, name, format }); 
         }
-/*
-        // Naviguer vers un deck
-         const chooseDeck = (id) => {
-          sessionStorage.setItem('dcpFilterName', JSON.stringify(filterName));
-          sessionStorage.setItem('dcpInputValueMin', JSON.stringify(inputValueMin));
-          sessionStorage.setItem('dcpInputValueMax', JSON.stringify(inputValueMax));
-          sessionStorage.setItem('dcpInputManacostMin', JSON.stringify(inputManaCostMin));
-          sessionStorage.setItem('dcpInputManacostMax', JSON.stringify(inputManaCostMax));
-          sessionStorage.setItem('dcpFilterColors', JSON.stringify(filterColors));
-          sessionStorage.setItem('dcpFilterFormats', JSON.stringify(filterFormats));
-
-          const deckIds = decks.map(deck => deck.id);
-          navigate(`/deckSelected`, { state: { deckID: id, ListDeck: deckIds }})
-               };
-
-        // Naviguer vers un user
-        const chooseUser = async (deckID) => { 
-
-          try {
-            setDisplayLoading(true);
-            sessionStorage.setItem('dpFilterName', JSON.stringify(filterName));
-            sessionStorage.setItem('dpInputValueMin', JSON.stringify(inputValueMin));
-            sessionStorage.setItem('dpInputValueMax', JSON.stringify(inputValueMax));
-            sessionStorage.setItem('dpInputManacostMin', JSON.stringify(inputManaCostMin));
-            sessionStorage.setItem('dpInputManacostMax', JSON.stringify(inputManaCostMax));
-            sessionStorage.setItem('dpFilterColors', JSON.stringify(filterColors));
-            sessionStorage.setItem('dpFilterFormats', JSON.stringify(filterFormats));
-                  
-            const response = await axiosInstance.get(`f_all/getDeckUser?deckID=${deckID}` );
-
-            navigate(`/userSelected`, { state: { userID: response.data }})
-            setDisplayLoading(false);
-            } 
-          catch (error) {
-            setDisplayLoading(false);
-            console.log(error);
-          }
-        }
-*/
         
         // Récupère le contenu depuis le storage si l'user revient de deckSelected
                       useEffect(() => {
@@ -504,7 +462,111 @@ const DecksCreatePage = () => {
           const removeFormats = () => {
             setFilterFormats(formats)
           }
+
+        // Afficher les popup d'edit du deck 
+
+        const [popupUpdate, setPopupUpdate] = useState(false);
+        const [popupDelete, setPopupDelete] = useState(null);
+        const [deckID, setDeckID] = useState("");
+        const [deckName, setDeckName] = useState("");
+        const [deckImage, setDeckImage] = useState("");
+
+
+
+          // Ouvrir l'edit 
+          const openEdit = (id, name, image) => {
+              setDeckID(id)
+              setDeckName(name)
+              setDeckImage(image)
+              setPopupUpdate(true)
+          }
+
+          const [isImageUpdate, setIsImageUpdate] = React.useState(false) 
           
+                  // Entrer une nouvelle image
+                  const selectImage = async (event) => {
+                      const file = event.target.files[0];
+                      
+                      if (file) {
+                          try {
+                              const formData = new FormData();
+                              formData.append('file', file);
+                              
+                              const uploadRes = await axiosInstance.post(`/f_all/uploadImage`, formData, {
+                                  headers: {
+                                      'Content-Type': 'multipart/form-data',
+                                  },
+                                  withCredentials: true
+                              });
+                              
+                          // Stocker le chemin retourné au lieu du base64
+                          setDeckImage(uploadRes.data);
+                          } catch (error) {
+                              console.error("Erreur lors de l'upload de l'image:", error);
+                              alert("Erreur lors de l'upload de l'image");
+                          }
+                      }
+                      setIsImageUpdate(true)
+                  }
+          
+          
+          // Annuler l'édit 
+          const cancelEdit = () => {
+                      setDeckName("")
+                      setDeckImage("")
+                      setPopupUpdate(false)
+                      if(isImageUpdate) {
+                          setIsImageUpdate(false)
+                      }
+          }
+
+        
+        
+          // Valider l'edit 
+          const editDeck = async () => {
+                    try {
+                        setDisplayLoading(true);
+                        const newDeck = {};
+        
+                        newDeck.name = deckName;
+                        newDeck.image = deckImage;
+        
+                        const request = await axiosInstance.put(`/f_user/updateDeck?deckID=${deckID}`, newDeck, { withCredentials: true });
+
+                        setDeckID("")
+                        setDeckName("")
+                        setDeckImage("")
+                        setPopupUpdate(false)
+                        setIsImageUpdate(false)
+                        setDisplayLoading(false);
+        
+                    }   
+                    catch (error) {
+                        setDisplayLoading(false);
+                        console.log(error);
+                    }
+        
+            
+          } 
+
+
+          // Supprimer le deck
+          const deleteDeck = async () => {
+                      try {
+                          setDisplayLoading(true);
+                          const request = await axiosInstance.delete(`/f_user/deleteDeck?deckID=${popupDelete}`, { withCredentials: true });
+          
+                          setPopupDelete(null)             
+                          setDisplayLoading(false);
+          
+                      }   
+                      catch (error) {
+                          setDisplayLoading(false);
+                          console.log(error);
+                      }
+          
+              
+                  }
           
 
         let filterZIndex = 99;
@@ -545,7 +607,7 @@ const DecksCreatePage = () => {
                       <CgCloseO className='filter-reset' onClick={()=> ResetFilterManaCost()} size={'2.5em'}/>
                     </div>
                     )} 
-                  </div>
+                  </div>  
 
                   <div className="filter-colors-container">
                   <OpenButton text="Filtrer par couleur" icon={arrowColorSens} onClick={OpenFilterColor} />
@@ -563,7 +625,7 @@ const DecksCreatePage = () => {
                     {displayFilterFormats && (
                     <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
                       <Checkbox attributs={formats} onChange={(event) => selectFormats(event.target.value)} filter={filterFormats}
-                      onPush={removeFormats}/>
+                      onPush={removeFormats} classNameP="card-format"/>
                     </div>
                     )}                 
                   </div>
@@ -594,6 +656,12 @@ const DecksCreatePage = () => {
                                 {deck.isPublic && (
                                     <h6 className='deck-public' style={{backgroundColor: 'green'}}>public</h6>
                                 )}
+
+                                <div className='cards-page-icon-container'>                           
+                                  <FaPencilAlt className='cards-admin-icon' onClick={()=>openEdit(deck.id, deck.name, deck.image)}
+                                  size={'2em'}/>
+                                  <RiDeleteBin6Line className='cards-admin-icon' onClick={()=>setPopupDelete(deck.id)}  size={'2em'}/>
+                                </div>
 
                                 {detailsDeck && detailsDeck.id === deck.id && (
                                         <div className="hover-deck-card" style={{zIndex: '1'}}>
@@ -636,8 +704,6 @@ const DecksCreatePage = () => {
                                              }}/>
                                     <h5 style={{padding:'5%'}}><strong>Nouveau deck</strong></h5>                              
                                 </div>
-                            <h6 className='deck-public' style={{visibility: 'hidden'}}>privé</h6>
-                            <ButtonModif style={{visibility: 'hidden'}} />
                             </div>
                   </div>
 
@@ -648,8 +714,40 @@ const DecksCreatePage = () => {
                 
                 </div>
 
-  
-   
+            {/* Ouvre le popup d'update d'une carte */}
+            { popupUpdate && (
+                                <div className='popup-bckg'>
+                                 <div className='set-attributs-deck' style={{ backgroundImage: `url(${backgroundPopup})`}}>
+                                            <div className='textarea-container'>
+                                                <textarea className="input-name" id="deck-name" name="deck-name" rows="3" cols="33" 
+                                                        style={{marginBottom:'5%'}}
+                                                        maxLength={25} onChange={(e) => setDeckName(e.target.value)} >
+                                                            {deckName}
+                                                </textarea>
+                                            </div>
+                                            <input 
+                                            className='input-deck-img'
+                                            style={{position:'absolute', marginTop:'-5%'}}
+                                            type="file"
+                                            accept="image/*" 
+                                            onChange={(e) => selectImage(e)}
+                                            />
+                                            <img className='deck-selected-img' src={deckImage && deckImage.startsWith('/uploads/') ? `https://localhost:8443${deckImage}` : deckImage} alt="deck-img" />
+                                            
+                                            <ButtonValidPopup onClick={()=>editDeck()}/>
+                                  </div>
+                                 <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>cancelEdit()}/> 
+                                </div>
+                                
+                            )}  
+            
+             {/* Ouvre le popup de suppression d'une carte */}
+            {popupDelete && (
+                                    
+              <PopupDelete title="Supprimer le deck ?" 
+              text='La suppression du deck est irréversible. Toutes les données seront définitivement perdues.'
+              onClick={()=>deleteDeck()} back={() => setPopupDelete(null)}/>
+            )}
 
 
           <FooterSection/>               

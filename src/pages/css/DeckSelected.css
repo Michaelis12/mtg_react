@@ -514,6 +514,55 @@ button:hover {
 
 }
 
+
+
+/*Bouton de pioche*/
+
+
+.draw-deck-container {
+  border: 2px solid black;
+  border-radius: 10px;
+  gap: 10px;
+} 
+
+
+.icon-draw-deck {
+  font-size: 3em;
+  margin-top: 2px;
+}
+
+.draw-deck-p {
+  font-size: 2em;
+
+}
+
+@media (max-width: 1500px) {
+  .icon-draw-deck {
+  font-size: 2em;
+  margin-top: 2px;
+}
+
+.draw-deck-p {
+  font-size: 1.5em;
+
+}
+}
+
+
+@media (max-width: 500px) {
+
+  .icon-draw-deck {
+  font-size: 1em;
+  margin-top: 0px;
+  } 
+
+  .draw-deck-p {
+  font-size: 0.8em;
+
+  }
+
+}
+
 /*Card du deck pour les formats medium*/
 
 

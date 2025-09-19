@@ -970,7 +970,7 @@ const DeckSelected = () => {
                  </div>            
 
             {/*La carte format desktop*/}
-            <div className='card-selected-container'> 
+            <div className='card-selected-container' style={{marginBottom: '3%'}}> 
                 <div className="deck-card-desktop" style={{ backgroundImage: `url(${backgroundPopup})`}}>
                                           <h1 className='deck-name'>{deck.name}</h1>
                   
@@ -1127,11 +1127,11 @@ const DeckSelected = () => {
 
             {/* Afficher une main piochée dans le deck */}
             <div className='admin-users-button'>
-                <button className='update-deck-container' onClick={()=>displayHand()}>
-                    <GiCardRandom className='icon-update-user' />
-                    <h5 className='update-user-p'>Piocher une main</h5>
+                <button className='draw-deck-container' onClick={()=>displayHand()}>
+                    <GiCardRandom className='icon-draw-deck' />
+                    <h5 className='draw-deck-p'>Piocher une main</h5>
                 </button>
-            </div>
+            </div> 
 
 
                  <Title  title={"Cartes du deck"}/> 

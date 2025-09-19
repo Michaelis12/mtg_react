@@ -1125,7 +1125,7 @@ const CardsPageAdmin = () => {
                     }
           }
         
-
+    // Modifier la carte
     const editCard = async (id) => {
       try {
               setDisplayLoading(true);

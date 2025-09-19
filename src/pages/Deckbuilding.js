@@ -4,7 +4,6 @@ import { useLocation ,  useNavigate} from 'react-router-dom';
 import "./css/Deckbuilding.css";
 import Card from '../model/Card';
 import addCardBackground from "../assets/deckbuilding_add.jpg"
-import drawBackground from "../assets/hand_card.jpg"
 import backgroundRedGreen from "../assets/background_cardsPage2.jpg"
 import backgroundHand from "../assets/background_hand.png"
 import backgroundPopup from "../assets/background_white.png"
@@ -1212,7 +1211,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                 
                                     </div> 
                             </div>
-
+                
+                {/*Popup d'edit du deck*/}
                 { updateDeck && (
                     <div className='popup-bckg'>
                      <div className='set-attributs-deck' style={{ backgroundImage: `url(${backgroundPopup})`}}>
@@ -1239,6 +1239,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     
                 )}  
 
+                {/*Popup de suppression du deck*/}
                 {displayPopup && (
                         
                             <PopupDelete title="Supprimer le deck ?" 
