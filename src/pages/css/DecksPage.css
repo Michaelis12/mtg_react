@@ -41,7 +41,7 @@
  
 .deck-pp { 
     width: 150px;   /* Définit la taille de l'image (ajustez selon vos besoins) */
-    min-height: 150px;
+    height: 150px;
     border-radius: 50%; /* Rend l'image circulaire */
     object-fit: cover;
     cursor: pointer; /* Change le curseur en main lorsqu'on passe dessus */

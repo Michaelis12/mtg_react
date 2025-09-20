@@ -228,7 +228,7 @@ const CardsLikedPage = () => {
                     types : filterTypes,
                     legendary : filterLegendary
                     
-                };
+                }; 
                 
         const response = await axiosInstance.get('/f_user/getCardsLikedFiltredPaged', {
           params,

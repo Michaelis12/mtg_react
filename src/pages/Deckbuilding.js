@@ -198,7 +198,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         const deleteDeck = async () => {
             try {
                 setDisplayLoading(true);
-                console.log("cc")
                 const request = await axiosInstance.delete(`/f_user/deleteDeck?deckID=${id}`, { withCredentials: true });
 
                 setDisplayPopup(false)

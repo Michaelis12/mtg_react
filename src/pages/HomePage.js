@@ -18,8 +18,12 @@ import deckImage from "../assets/hand_card.jpg"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import loading from "../assets/loading.gif"
 import { getImageUrl } from '../utils/imageUtils';
-
-
+import white from "../assets/white-mtg.png"
+import blue from "../assets/blue-mtg.png"
+import green from "../assets/green-mtg.png"
+import red from "../assets/red-mtg.png"
+import black from "../assets/black-mtg.png"
+ 
 
 const HomePage = function () {
   const [cards, setCards] = React.useState([])
@@ -173,8 +177,27 @@ const navNewDeck = () => {
                 <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
             )}
       <img src={BackgroundPage} className="background-image" alt="background" />
-      <img src={BanniereMTG} className="background-home" alt="background" />
-      <img src={LogoMTG} className="image-logo" alt="logo" />
+      
+      {/*<img src={BanniereMTG} className="background-home" alt="background" />*/}
+      <div className="logo-container">
+        <img src={LogoMTG} className="image-logo" alt="logo" />
+      </div>
+      
+      <div className="background-colors" style={{ backgroundImage: `url(${BanniereMTG})`,backgroundSize: "cover",       // l’image recouvre tout le container
+        backgroundPosition: "center",  // centrée
+        backgroundRepeat: "no-repeat"}}>
+       <div className="colors-container">
+          <img src={white} className="homepage-color" alt="logo" />
+          <img src={blue} className="homepage-color" alt="logo" />
+          <img src={black} className="homepage-color" alt="logo" />
+          <img src={red} className="homepage-color" alt="logo" />
+          <img src={green} className="homepage-color" alt="logo" />
+      </div>
+    </div>
+
+
+
+
 
       <div className="home-nav-container">
         <div className="home-nav-card-container"> 
