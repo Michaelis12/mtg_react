@@ -485,9 +485,11 @@ const AccountPage = () => {
                 if (pseudo !== "") newDeckBuilder.pseudo = pseudo;
                 if (bio !== "") newDeckBuilder.bio = bio;
                 if (avatar !== "") newDeckBuilder.avatar = avatar;
-
+                /*
                 const request = await axiosInstance.put(`/f_user/updateAccount`, newDeckBuilder,
                 { withCredentials: true }); 
+                */
+                const request = await axiosInstance.put(`/f_user/updateAccount`, newDeckBuilder); 
                  
                 
                 setUpdateProfil(false);
