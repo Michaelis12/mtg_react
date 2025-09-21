@@ -12,9 +12,9 @@ const axiosInstance = axios.create({
 let csrfToken = null;
 
 // Interceptor pour ajouter le CSRF token si nécessaire
+
 axiosInstance.interceptors.request.use(
   async (config) => {
-    // Si c'est une requête mutative (POST, PUT, DELETE) et qu'on n'a pas encore de token
     if (["post", "put", "delete"].includes(config.method) && !csrfToken) {
       try {
         const response = await axiosInstance.get("/f_csrf/csrf");
@@ -24,7 +24,6 @@ axiosInstance.interceptors.request.use(
       }
     }
 
-    // Si on a un token, on l’ajoute à la requête
     if (csrfToken) {
       config.headers["X-XSRF-TOKEN"] = csrfToken;
     }
