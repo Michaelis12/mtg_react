@@ -472,7 +472,7 @@ const AccountPage = () => {
                  
                 
                 setUpdateProfil(false);
-                setDisplayLoading(false)
+                setDisplayLoading(false);
                 setPseudo("");
                 setBio("");
                 setAvatar("");
