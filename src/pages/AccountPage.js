@@ -485,12 +485,11 @@ const AccountPage = () => {
                 if (pseudo !== "") newDeckBuilder.pseudo = pseudo;
                 if (bio !== "") newDeckBuilder.bio = bio;
                 if (avatar !== "") newDeckBuilder.avatar = avatar;
-                /*
+                
+
                 const request = await axiosInstance.put(`/f_user/updateAccount`, newDeckBuilder,
                 { withCredentials: true }); 
-                */
-                const request = await axiosInstance.put(`/f_user/updateAccount`, newDeckBuilder); 
-                 
+                              
                 
                 setUpdateProfil(false);
                 setDisplayLoading(false)
@@ -511,7 +510,6 @@ const AccountPage = () => {
                     // Si pas d'avatar sélectionné, afficher l'avatar existant
                     if(deckBuilder.avatar && deckBuilder.avatar.startsWith('/uploads/')) {
                         return `https://localhost:8443${deckBuilder.avatar}`;
-                        //return `https://mtg-spring.onrender.com${deckBuilder.avatar}`;
                     }
                     return deckBuilder.avatar;
                 }
@@ -519,7 +517,6 @@ const AccountPage = () => {
                     // Si un nouvel avatar a été sélectionné
                     if(avatar.startsWith('/uploads/')) {
                         return `https://localhost:8443${avatar}`;
-                        //return `https://mtg-spring.onrender.com${avatar}`;
                     }
                     return avatar;
                 }
