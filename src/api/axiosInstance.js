@@ -19,7 +19,7 @@ function getCookie(name) {
 // Interceptor pour ajouter le CSRF token
 axiosInstance.interceptors.request.use(
   async (config) => {
-    if (["post", "put", "delete"].includes(config.method)) {
+    if (["post", "put", "delete"].includes((config.method || "").toLowerCase())) {
       const token = getCookie("XSRF-TOKEN");
       if (token) {
         config.headers["X-XSRF-TOKEN"] = token;
