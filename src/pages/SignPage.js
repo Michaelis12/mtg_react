@@ -172,7 +172,6 @@ const SignPage = function () {
                     password
                 }  
 
-                await axiosInstance.get("/f_csrf/csrf")
     
                 const response = await axiosInstance.post('/f_all/login', user);  
     
