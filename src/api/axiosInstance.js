@@ -6,32 +6,28 @@ const axiosInstance = axios.create({
   timeout: 30000,
   maxContentLength: 5 * 1024 * 1024,
   maxBodyLength: 5 * 1024 * 1024,
-});
+}); 
 
-// Petit cache local du CSRF token
-let csrfToken = null;
+// Helper pour lire un cookie
+function getCookie(name) {
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith(name + "="))
+    ?.split("=")[1];
+}
 
-// Interceptor pour ajouter le CSRF token si nécessaire
-
+// Interceptor pour ajouter le CSRF token
 axiosInstance.interceptors.request.use(
   async (config) => {
-    if (["post", "put", "delete"].includes(config.method) && !csrfToken) {
-      try {
-        const response = await axiosInstance.get("/f_csrf/csrf");
-        csrfToken = response.data.token || response.headers["x-xsrf-token"];
-      } catch (err) {
-        console.error("Impossible de récupérer le CSRF token", err);
+    if (["post", "put", "delete"].includes(config.method)) {
+      const token = getCookie("XSRF-TOKEN");
+      if (token) {
+        config.headers["X-XSRF-TOKEN"] = token;
       }
     }
-
-    if (csrfToken) {
-      config.headers["X-XSRF-TOKEN"] = csrfToken;
-    }
-
     return config;
   },
   (error) => Promise.reject(error)
 );
 
 export default axiosInstance;
-

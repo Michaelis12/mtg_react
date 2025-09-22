@@ -171,8 +171,10 @@ const SignPage = function () {
                     email,
                     password
                 }  
+
+                await axiosInstance.get("/f_csrf/csrf")
     
-                const response = await axiosInstance.post('/f_all/login', user, { withCredentials: true });  
+                const response = await axiosInstance.post('/f_all/login', user);  
     
                 const authentification = response.data; 
                 
