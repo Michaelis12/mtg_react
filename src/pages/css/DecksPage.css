@@ -212,8 +212,11 @@
 
     .deck-db-button {
         width: 100%;
-        padding: 0%;
+        padding: 10%;
         padding-bottom: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .deck-db {
@@ -232,7 +235,7 @@
 
     }
 
-    .deck-pp {
+    .deck-pp { 
         min-height: 100px;
         width: 100px;
         border: 2px solid black;

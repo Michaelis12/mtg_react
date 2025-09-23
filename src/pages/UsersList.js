@@ -5,7 +5,7 @@ import { AuthContext } from "../context/authContext"
 import "./css/UsersList.css" 
 import axiosInstance from "../api/axiosInstance";
 import User from '../model/User';
-import Section from '../components/section';
+import Section from '../components/sectionMap';
 import Checkbox from '../components/checkboxActivity';
 import SearchBar from '../components/searchBar';
 import OpenButton from '../components/openButton';
@@ -15,7 +15,7 @@ import { FaRegEye } from "react-icons/fa";
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import backgroundUserList from "../assets/background_cardsPage.jpg"
 import backgroundWhite from "../assets/background_white.png"
-import qs from 'qs';
+import OpenButtonLarge from '../components/openButtonLarge';
 import loading from "../assets/loading.gif"
 import { getAvatarUrl } from '../utils/imageUtils'; 
 
@@ -27,7 +27,6 @@ const UsersList = () => {
     const [users, setUsers] = React.useState([])
     const [activities, setActivities] = React.useState([])
     const navigate = useNavigate();
-    const { getCookie } = useContext(AuthContext);
     const [displayLoading, setDisplayLoading] = useState(false);
 
     // Filtre Users
@@ -47,20 +46,6 @@ const UsersList = () => {
         try {
             setDisplayLoading(true);
 
-
-            /*
-            const response = await axiosInstance.get('/f_admin/getUsers', {
-            withCredentials: true, headers: { "X-XSRF-TOKEN": csrfToken },
-            params: {
-                pseudo: filterName,
-                email: filterEmail,
-                activities: filterActivities, // Doit être un tableau
-            },
-            paramsSerializer: params => qs.stringify(params, {
-                arrayFormat: 'brackets' // ⬅️ correspond à activities[]
-            }),
-        }); 
-        */
 
             const params = {
                                 page: 0,
@@ -198,7 +183,7 @@ const UsersList = () => {
 
      // Affichage de couleur d'arrière-plan en fonction de l'activité
      const getBackgroundColor = (activity ) => {
-        if(activity === "PUBLISHER") {
+       if(activity === "PUBLISHER") {
             return 'rgba(255, 165, 0)'
         }
         if(activity === "CREATOR") {
@@ -206,16 +191,15 @@ const UsersList = () => {
         }
         
         if(activity === "VIEWVER") {
-            return 'rgba(180, 180, 180)'
+            return 'rgba(93, 59, 140)'
         }
         if(activity === "INACTIVE") {
-            return 'rgba(255,0,0)'
+            return 'rgba(180,180,180)'
         }
-        
 
-        
-
-        
+        if(activity === "BANNED") {
+            return 'rgba(255,0,0)'
+        }       
        
     }
 
@@ -263,26 +247,72 @@ const UsersList = () => {
             recupStorage();
         }, []);
 
+
+        // Filtres mobile
+        
+        
+        const [arrowFiltersSens, setArrowFiltersSens] = React.useState(<SlArrowDown/>)
+        const [displayFilters, setDisplayFilters] = React.useState(false)
+                
+        const OpenFilters = () => {
+            setArrowFiltersSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));
+            setDisplayFilters(!displayFilters)
+        }
+
     return (
-        <Section> 
+        <Section>  
             { displayLoading && (
                 <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
             )}
             <img src={backgroundUserList} className="background-image" alt="background" />
-            <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} placeholder={" Chercher un pseudonyme"}/>
-            <SearchBar value={filterEmail} onChange={(event) => (setFilterEmail(event.target.value))} placeholder={" Chercher un email"}
-            style={{marginBottom: '30px'}}/>
 
-            <div className='filters-line'>
-                <div className="filter-activity-container">
-                    <OpenButton text="Filtrer par activité" icon={arrowActivitySens} onClick={OpenFilterActivity} />
-                    { displayFilterActivity && (
-                        <div className='user-activity-filter-container' >
-                            <Checkbox attributs={activities} onChange={(event) => selectActivities(event.target.value)} 
-                            filter={filterActivities} onPush={removeActivities}/>
-                        </div>
-                    )}
+
+
+             {/* Searchbar desktop*/}
+            <div className="search-line">
+                <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} placeholder={" Chercher un pseudonyme"}/>
+                <SearchBar value={filterEmail} onChange={(event) => (setFilterEmail(event.target.value))} placeholder={" Chercher un email"}
+                style={{marginBottom: '30px'}}/>
+            </div>
+
+            {/* Bouton ouverture des filtres*/}
+            <OpenButtonLarge text="Afficher les filtres" icon={arrowFiltersSens} onClick={OpenFilters}/>
+
+            <div className="filters-container">
+
+                {/* Filtres desktop */}
+                <div className='filters-line'>
+                    <div className="filter-activity-container">
+                        <OpenButton text="Filtrer par activité" icon={arrowActivitySens} onClick={OpenFilterActivity} />
+                        { displayFilterActivity && (
+                            <div className='user-activity-filter-container' >
+                                <Checkbox attributs={activities} onChange={(event) => selectActivities(event.target.value)} 
+                                filter={filterActivities} onPush={removeActivities}/>
+                            </div>
+                        )}
+                    </div>
                 </div>
+
+                {/* Filtres mobile */}
+                {displayFilters && (
+                        <div className="filters-line-mobile">
+                            <div className='filter-mobile-container' style={{ backgroundImage: `url(${backgroundWhite})`}} >
+                            <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} placeholder={" Chercher un pseudonyme"}/>
+                            <SearchBar value={filterEmail} onChange={(event) => (setFilterEmail(event.target.value))} placeholder={" Chercher un email"}
+                            />
+                            <div className="filter-value-container">
+                            <OpenButton text="Filtrer par activité" icon={arrowActivitySens} onClick={OpenFilterActivity} />
+                            { displayFilterActivity && (
+                            <div className='add-card-filter-container' >
+                                <Checkbox attributs={activities} onChange={(event) => selectActivities(event.target.value)} 
+                                filter={filterActivities} onPush={removeActivities}/>
+                            </div>
+                            )}
+                            </div>
+                            </div>
+                        </div>
+                )}
+
             </div>
 
 

@@ -11,7 +11,7 @@ import defaultImg from "../assets/mtg-card-back.jpg"
 import backgroundCardsPage from "../assets/background_cardsPage2.jpg"
 import backgroundPopup from "../assets/background_white.png"
 import backgroundWhite from "../assets/background_white.png";
-import Section from '../components/section';
+import Section from '../components/sectionMap';
 import Title from '../components/title';
 import OpenButton from '../components/openButton';
 import OpenButtonLarge from '../components/openButtonLarge';

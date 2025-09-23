@@ -173,6 +173,9 @@ const navNewDeck = () => {
 
     return (
       <Section>
+
+      <div className="home-page-container">
+
       { displayLoading && (
                 <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
             )}
@@ -196,47 +199,56 @@ const navNewDeck = () => {
     </div>
 
 
-
-
-
       <div className="home-nav-container">
         <div className="home-nav-card-container"> 
-          <h1 className="part-title"> Rechercher une carte </h1>
+          <div className="title-section-container-desktop" style={{width:'100%'}}>
+            <Title title={"Rechercher une carte"} style={{width:'80%'}}/> 
+          </div>
+          <div className="title-section-container-mobile" style={{width:'100%'}}>
+            <Title title={"Rechercher une carte"} /> 
+          </div>
           <img className='home-image' onClick={() =>navigate(`/cards`)} src={cardsImage}  alt="background" />
         </div>
 
          <div className="home-nav-deck-container"> 
-          <h1 className="part-title">Créer votre deck</h1>
+          <div className="title-section-container-desktop" style={{width:'100%'}}>
+            <Title title={"Créer votre deck"} style={{width:'80%'}}/> 
+          </div>
+          <div className="title-section-container-mobile" style={{width:'100%'}}>
+            <Title title={"Créer votre deck"} /> 
+          </div>
           <img  className='home-image'src={deckImage}  onClick={() => navNewDeck()}  alt="background" />         
         </div>
       </div> 
       
-      <Title title={"Top Cartes"}/> 
-      <div className="top-cards" style={{
-            backgroundImage: `url(${BackgroundTopCards})`, 
-            backgroundSize: 'cover',
-            backgroundPosition: 'top',
-            borderRadius: '10px',
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
-          }}>
-          {cards.map(card => (
-            <div className="top3-card-details" key={card.id}>
-                  <img className="top3_cards-img" src={getImageUrl(card.image)} alt="Card-image" 
-                  onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard()} 
-                  onClick={() => chooseCard(card.id)}/>
-                  <br/>
-                  <h2 className="top-card-likeNumber" >{card.likeNumber} 
-                    <FaHeart color="red" style={{position:'relative'}}/></h2>
-                    {detailsCard && detailsCard.id === card.id && (
-                                        <img className="card-img-zoom" src={getImageUrl(card.image)} alt="Card-image"/>
-                                        )} 
-            </div>
+      <div style={{width:'100%'}}>
+        <Title title={"Top Cartes"}/> 
+        <div className="top-cards" style={{
+              backgroundImage: `url(${BackgroundTopCards})`, 
+              backgroundSize: 'cover',
+              backgroundPosition: 'top',
+              borderRadius: '10px',
+              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+            }}>
+            {cards.map(card => (
+              <div className="top3-card-details" key={card.id}>
+                    <img className="top3_cards-img" src={getImageUrl(card.image)} alt="Card-image" 
+                    onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard()} 
+                    onClick={() => chooseCard(card.id)}/>
+                    <br/>
+                    <h2 className="top-card-likeNumber" >{card.likeNumber} 
+                      <FaHeart color="red" style={{position:'relative'}}/></h2>
+                      {detailsCard && detailsCard.id === card.id && (
+                                          <img className="card-img-zoom" src={getImageUrl(card.image)} alt="Card-image"/>
+                                          )} 
+              </div>
+                )
               )
-            )
-          }
-      </div> 
+            }
+        </div>
+      </div>  
  
- 
+      <div style={{width:'100%'}}>
         <Title title={"Top Decks"}/>
         <div className="top-decks" style={{
             backgroundImage: `url(${BackgroundTopCards})`, 
@@ -290,9 +302,49 @@ const navNewDeck = () => {
                 
           </div>
             )
-          ) 
-        }
+        )}
+        {decks.map(deck => ( 
+                                        <div className="deck-details"  key={deck.id}>
+                                            <img className="deck-pp" src={getImageUrl(deck.image)} alt="Deck avatar" onClick={() => chooseDeck(deck.id)}
+                                            onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } onMouseOut={() => hoveredDeck()} />
+                                            <strong className="decks-name"> {deck.name} </strong>
+                                          <button className="deck-db-button" onClick={() => chooseUser(deck.id)}><strong className="deck-db"> de {deck.deckBuilderName}</strong></button>
+        
+                                            <h2 className="top-deck-likeNumber">{deck.likeNumber} <FaHeart color="red" style={{position:'relative'}}/></h2>
+        
+                                            {detailsDeck && detailsDeck.id === deck.id && (
+                                            <div className="hover-deck-card">
+                                                  <div className="img-container">
+                                                      <img className="hover-deck-card-img" src={getImageUrl(deck.image)} alt="Deck mtg"/>
+                                                  </div>
+                                                          <div className="deck-hover-body" >
+                                                            <div className='name-line'>
+                                                              <h1 className="hover-deck-name"> {deck.name}</h1>
+                                                            </div>
+                                                            <div className='color-line'>                        
+                                                                <h2 className='color'> Couleurs : </h2> 
+                                                                {deck.colors && deck.colors.length > 0 && Array.isArray(colors) && (
+                                                                    <div className='mapping-color'>
+                                                                      {deck.colors.map((color)  => (
+                                                                    <img src={getColorPics(color)} className="color-img-select" style={{display:(displayColor(color))}} alt={color}/>                                
+                                                                ))}
+                                                                    </div>
+                                                                )} 
+                                                            </div>
+                                                            <div className='format-line'>              
+                                                                <h2 className='format'> Format : </h2> 
+                                                                <h2 className='card-format' style={{ backgroundColor: 'green' }}>{deck.format}</h2>
+                                                            </div>
+                                                            
+                                                        </div>                                                
+                                                      </div>
+                                            )}
+                                        </div>                         
+        ))}
         </div>
+      </div>
+
+    </div>
     </Section>
   
 

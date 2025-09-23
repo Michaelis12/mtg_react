@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useRef, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../context/authContext"
-import Section from '../components/section';
+import Section from '../components/sectionMap';
 import Deck from '../model/Deck';
 import Title from '../components/title';
 import SearchBar from '../components/searchBar';
@@ -719,7 +719,9 @@ const DecksLikedPage = () => {
             
             {/* Filtres desktop */}
             <div className="filters-container">
-                <div className="filters-line">
+
+               {/* Filtres desktop */}
+              <div className="filters-line">
                   
                   <div className="filter-value-container">
                   <OpenButton text="Filtrer par valeur €" icon={arrowValueSens} onClick={OpenFilterValue} />

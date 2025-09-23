@@ -232,12 +232,11 @@
 
   .alert-send-card {
     margin-top: 1%;
-    font-size:1.4em;
+    font-size: 1.4em;
   }
 
     @media (max-width: 1000px) {
         .alert-send-card {
-            margin-top: 1%;
             font-size: 1.2em;
         }
 

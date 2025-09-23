@@ -25,11 +25,18 @@
 
     .form-control-rounded {
     width : 600px;
+    height: 45px;
     }
+
 
   }
 
   @media (max-width: 700px) {
+
+
+    .form-control-rounded {
+    width : 500px;
+    }
 
     .input-container {
       margin-top: 0px;
@@ -48,7 +55,6 @@
 
     .form-control-rounded {
       width : 250px;
-      height: 45px;
       font-size: 0.9em;
       text-align: center;
     }

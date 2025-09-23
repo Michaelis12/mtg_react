@@ -7,6 +7,13 @@
     width: 100%;
 }
 
+
+.home-page-container {
+        display: flex;
+        flex-direction: column;
+        gap: 5vh;
+    }
+
 /*Bannière de la page*/
 
 .logo-container {
@@ -234,24 +241,25 @@
 
 }
 
+/*Liens vers les espaces du site*/
 
 
- 
-.part-title {
-    color : white;
-    background-color:  #5D3B8C;
-    border-radius: 30px;
-    padding: 1%;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    border: white solid 3px;
-    margin-top: 3%;
-    margin-bottom: 5%;
-    font-family: 'MedievalSharp', cursive;
-    font-size: 3em;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+.title-section-container-desktop {
+    display: flex
+}
+
+.title-section-container-mobile {
+    display: none
+}
+
+@media (max-width: 1250px) {
+    .title-section-container-desktop {
+        display: none
+    }
+
+    .title-section-container-mobile {
+        display: flex
+    }
 }
 
 .home-nav-container {
@@ -287,12 +295,18 @@
 
 
 .top3_cards-img {
-    width: 100%;   /* L'image prend 100% de la largeur de son conteneur */
-    height: auto;  /* Maintient les proportions de l'image */
-    max-width: 300px; /* Limite la taille de l'image à 300px de large */
-    object-fit: cover; /* Assure que l'image couvre l'espace sans être déformée */
-    cursor: pointer; /* Change le curseur en main lorsqu'on passe dessus */
-    border-radius: 10px; /* Arrondi les coins de l'image */
+    width: 100%;   
+    height: auto; 
+    max-width: 300px; 
+    object-fit: cover; 
+    cursor: pointer; 
+}
+
+@media (max-width: 768px) {
+    .top3_cards-img {
+        max-width: 180px; 
+    }
+ 
 }
 
 .deck-img { 
@@ -356,6 +370,33 @@
     
 }
 
+@media (max-width: 768px) {
+
+    .top3-decks-attributs { 
+        width: 100%;
+        border: 2px solid black;
+    }
+
+    .top3-card-details, .top3-deck-details {
+        padding: 5px;
+        margin: 5px;
+        gap: 0px;
+    }
+    .top-card-likeNumber, .top-deck-likeNumber {
+        font-size: 1em;
+        gap: 5px;
+    }
+
+    .top3-decks-button {
+        padding: 2%;
+    }
+
+    .top-decks-deckBuilderName {
+        font-size: 0.6em;
+    }
+
+}
+
 
 .top-cards, .top-decks {
     display: flex;
@@ -366,6 +407,12 @@
 }
 
 /* Top Decks*/
+
+@media (max-width: 768px) {
+    .top3-decks-name {
+        font-size: 1em;
+    }
+}
 
 
 .top-deck-details {
@@ -442,7 +489,7 @@
     gap: 10px
 } 
 
-.hover-top3deck-name{
+.hover-top3deck-name {
     font-size: 2.5rem;
     word-wrap: break-word;    /* Coupe les mots si nécessaire */
     overflow-wrap: break-word;
@@ -450,7 +497,7 @@
 }
 
 
-.attribut-topDeck{
+.attribut-topDeck {
     font-size: 1.5rem;
     color: grey;
     font-style: italic;
@@ -465,16 +512,38 @@
     object-fit: cover;
   }
 
+
+@media (max-width: 1250px) {
+    .home-nav-container {
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    .home-nav-card-container, .home-nav-deck-container {
+        width: 100%;
+    }
+
+    .home-image {
+      width: 70%;  
+    }
+
+
+}
+
 /* Media query pour les écrans de 768px et moins (tablettes et mobiles) */
 @media (max-width: 768px) {
 
-    .home-nav-container {
+
+    .home-page-container {
+        display: flex;
         flex-direction: column;
+        gap: 50px;
     }
 
-    .home-nav-card-container, .home-nav-deck-container, .home-image {
-        width: 100%;
+    .home-image {
+      width: 90%;  
     }
+
     .top-cards, .top-decks {
         flex-direction: column; /* Aligne les cartes en colonne sur les petits écrans */
         align-items: center; /* Centre les cartes */
@@ -501,8 +570,14 @@
         width: 50%;
     }
     
-    .card-imgs, .deck-img {
-        max-width: 60%; /* Les images prennent toute la largeur sur les petits écrans */
+    .card-imgs {
+        max-width: 60%; 
+    }
+
+    .deck-img {
+      height: 180px;
+      width: 180px;
+      border: 2px solid black;
     }
 
     .top-cards, .top-decks {

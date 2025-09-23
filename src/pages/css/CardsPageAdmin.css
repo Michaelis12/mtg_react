@@ -291,7 +291,9 @@
 .input-manacost, .input-value {
     display: flex;
     flex-direction: row;
-    width: 40%;
+    width: 60%;
+    min-width: 150px;
+    text-align: center;
 }
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useRef, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Section from '../components/section';
+import Section from '../components/sectionMap';
 import Deck from '../model/Deck';
 import Title from '../components/title';
 import SearchBar from '../components/searchBar';
@@ -10,13 +10,15 @@ import InputManaCoast from '../components/inputManaCoast';
 import Checkbox from '../components/checkbox';
 import CheckboxColor from '../components/checkboxColor';
 import OpenButton from '../components/openButton';
+import OpenButtonLarge from '../components/openButtonLarge';
 import FooterSection from '../components/footerSection';
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { CgCloseO } from "react-icons/cg";
 import { FaHeart, FaRegHeart  } from 'react-icons/fa';
 import { FaPencilAlt } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import backgroundCardsPage from "../assets/background_deck_select_page.png"
+import { TbFilterCancel } from "react-icons/tb";
+import backgroundCardsPage from "../assets/background_deck_create.jpg"
 import backgroundPopup from "../assets/background_white.png"
 import ButtonValidPopup from "../components/buttonValidPopup";
 import PopupDelete from '../components/popupDelete';
@@ -249,6 +251,18 @@ const DecksCreatePage = () => {
                 
                       recupStorage();
                   }, []);
+
+
+        // Filtres mobile
+        
+        
+        const [arrowFiltersSens, setArrowFiltersSens] = React.useState(<SlArrowDown/>)
+        const [displayFilters, setDisplayFilters] = React.useState(false)
+                
+        const OpenFilters = () => {
+            setArrowFiltersSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));
+            setDisplayFilters(!displayFilters)
+        }
     
 
 
@@ -577,19 +591,28 @@ const DecksCreatePage = () => {
                 <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
             )}
             <img src={backgroundCardsPage} className="background-image" alt="background" />
-            <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} placeholder={"Chercher un deck ou un deckbuilder"}
-            style={{marginBottom: '30px'}} />
+
+             {/* Searchbar desktop*/}
+            <div className="search-line">   
+                <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} placeholder={"Chercher un deck"}
+                style={{marginBottom: '30px'}} />
+            </div>
+
+            {/* Bouton ouverture des filtres*/}
+            <OpenButtonLarge text="Afficher les filtres" icon={arrowFiltersSens} onClick={OpenFilters}/>
             
             <div className="filters-container">
+
+                {/* Filtres desktop */}
                 <div className="filters-line">
                   
                   <div className="filter-value-container">
                     <OpenButton text="Filtrer par valeur €" icon={arrowValueSens} onClick={OpenFilterValue} />
                     {displayFilterValue && (
                       <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                        <InputValue style={{width: '150px'}} value={inputValueMin}
+                        <InputValue  value={inputValueMin}
                         onChange={(event) => (setInputValueMin(event.target.value))} placeholder={"min"}/>
-                        <InputValue style={{width: '150px'}} value={inputValueMax}
+                        <InputValue  value={inputValueMax}
                         onChange={(event) => (setInputValueMax(event.target.value))} placeholder={"max"}/>
                         <CgCloseO className='filter-reset' onClick={()=> ResetFilterValue()} size={'2.5em'}/>
                       </div>
@@ -600,9 +623,9 @@ const DecksCreatePage = () => {
                     <OpenButton text="Filtrer par cout de mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />
                     {displayFilterManaCost && (
                     <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                      <InputManaCoast style={{width: '150px'}}  value={inputManaCostMin}
+                      <InputManaCoast  value={inputManaCostMin}
                         onChange={(event) => (setInputManaCostMin(event.target.value))} placeholder={"min"}/>
-                      <InputManaCoast style={{width: '150px'}} value={inputManaCostMax}
+                      <InputManaCoast value={inputManaCostMax}
                       onChange={(event) => (setInputManaCostMax(event.target.value))} placeholder={"max"}/>
                       <CgCloseO className='filter-reset' onClick={()=> ResetFilterManaCost()} size={'2.5em'}/>
                     </div>
@@ -631,6 +654,59 @@ const DecksCreatePage = () => {
                   </div>
 
                 </div>
+
+                {/* Filtres mobile */}
+                {displayFilters && (
+                    <div className="filters-line-mobile">
+                      <div className='filter-mobile-container' style={{ backgroundImage: `url(${backgroundPopup})`}} >
+                        <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} 
+                        placeholder={"Chercher un deck"} style={{marginTop: '20px'}} />
+                        <div className="filter-value-container">
+                          <OpenButton  text="Filtrer par valeur €" icon={arrowValueSens} onClick={OpenFilterValue} />
+                          {displayFilterValue && (
+                            <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
+                              <InputValue value={inputValueMin}
+                              onChange={(event) => (setInputValueMin(event.target.value))} placeholder={"min"}/>
+                              <InputValue  value={inputValueMax}
+                              onChange={(event) => (setInputValueMax(event.target.value))} placeholder={"max"}/>
+                              <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterValue()} />
+                            </div>
+                          )}
+                        </div>
+                        <div className="filter-manaCost-container">
+                          <OpenButton text="Filtrer par cout en mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />
+                          {displayFilterManaCost && (
+                            <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
+                              <InputManaCoast  value={inputManaCostMin}
+                                onChange={(event) => (setInputManaCostMin(event.target.value))} placeholder={"min"}/>
+                              <InputManaCoast  value={inputManaCostMax}
+                              onChange={(event) => (setInputManaCostMax(event.target.value))} placeholder={"max"}/>
+                              <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterManaCost()} />
+                            </div>
+                          )}
+                        </div>
+                        <div className="filter-colors-container">
+                          <OpenButton text="Filtrer par couleur" icon={arrowColorSens} onClick={OpenFilterColor} />
+                          { displayFilterColors && (
+                            <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
+                              <CheckboxColor attributs={colors} onChange={(event) => selectColors(event.target.value)} filter={filterColors}
+                              image={getColorPics} onPush={removeColors} />
+                            </div>
+                          )}
+                        </div>
+                        <div className="filter-formats-container">
+                          <OpenButton text="Filtrer par format" icon={arrowFormatSens} onClick={OpenFilterFormat} />
+                          {displayFilterFormats && (
+                            <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
+                              <Checkbox attributs={formats} onChange={(event) => selectFormats(event.target.value)} filter={filterFormats}
+                              onPush={removeFormats} classNameP='checkbox-format-p'/>
+                            </div>
+                          )}                 
+                        </div>
+                      </div>
+                    </div>
+                )}
+                
             </div>
 
 

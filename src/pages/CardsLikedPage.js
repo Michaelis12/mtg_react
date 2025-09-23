@@ -6,7 +6,7 @@ import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { FaHeart, FaRegHeart  } from 'react-icons/fa';
 import backgroundCardsPage from "../assets/background_cardsPage.jpg"
 import backgroundWhite from "../assets/background_white.png";
-import Section from '../components/section';
+import Section from '../components/sectionMap';
 import Title from '../components/title';
 import OpenButton from '../components/openButton';
 import IconButton from '../components/buttonIcon'

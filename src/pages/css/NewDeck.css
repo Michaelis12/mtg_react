@@ -448,6 +448,11 @@
 
 @media (max-width: 750px) {
 
+  .new-deck-img-mobile { 
+    width: 150px;
+    height: 150px;
+  }
+
     .color-img-new-deck {
         height: 30px;
         width: 30px;

@@ -438,12 +438,12 @@ const NewCard = function () {
                         <div className="input-mana-cost-card">
                         <h5 className='card-line-title'  style={{marginTop: '5px'}}>Cout en mana :</h5>
                         <input className="input-card-number" type="number" id="cout-mana" name="cout-mana" 
-                            onChange={(e) => setManaCost(e.target.value)} required/>
+                            value={manaCost} onChange={(e) => setManaCost(e.target.value)} required/>
                         </div>
 
                         <div className="input-value-card" style={{marginTop: '3%'}}>
                         <h5 className='card-line-title' style={{marginTop: '5px'}}>Valeur € :</h5>
-                        <input className="input-card-number" type="number" 
+                        <input className="input-card-number" type="number" value={value}
                         step="0.01" onChange={(e) => setValue(e.target.value)} required />
                     </div>
                     </div>
@@ -770,6 +770,7 @@ const NewCard = function () {
                                 type="number" 
                                 id="cout-mana" 
                                 name="cout-mana" 
+                                value={manaCost}
                                 onChange={(e) => setManaCost(e.target.value)} 
                                 disabled={type === "TERRAIN"}
                                 required
@@ -779,25 +780,29 @@ const NewCard = function () {
                                 className="input-card-number" 
                                 type="number" 
                                 step="0.01" 
+                                value={value}
                                 onChange={(e) => setValue(e.target.value)}
                                 required 
                             />
                         </div>
                     </div>
+
+                     <div className='valid-button-container' style={{padding: '5%'}}>
+                    <ButtonValidPopup disabled={!completeState} onClick={() => addCard()} />
+                    {/* Alertes */}
+                    { alertCardSend &&(
+                        <h4 className="alert-send-card" style={{color: 'green'}}>Carte publiée !</h4>
+                    )}
+                    { alertCardDontSend && (
+                        <h5 className="alert-send-card" style={{color: 'red'}}>Échec de l'envoi</h5>
+                    )}
+                </div>
+                
                 </div>
                 
                 
 
-                <div className='valid-button-container' style={{padding: '5%'}}>
-                    <ButtonValidPopup disabled={!completeState} onClick={() => addCard()} />
-                    {/* Alertes */}
-                    { alertCardSend &&(
-                        <h4 className="alert-send-card" style={{color: 'green', position : 'absolute', marginTop: "65px"}}>Carte publiée !</h4>
-                    )}
-                    { alertCardDontSend && (
-                        <h5 className="alert-send-card" style={{color: 'red', position : 'absolute', marginTop: "100px"}}>Échec de l'envoi</h5>
-                    )}
-                </div>
+               
 
         </div>
 
@@ -805,7 +810,8 @@ const NewCard = function () {
         
         
     </div>
-
+    
+     {/* Popup publication */}
     {popupPub && (
                         <div className='popup-bckg'>
                             

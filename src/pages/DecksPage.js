@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useRef, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../context/authContext"
-import Section from '../components/section';
+import Section from '../components/sectionMap';
 import OpenButtonLarge from '../components/openButtonLarge';
 import Deck from '../model/Deck';
 import Title from '../components/title';
@@ -30,7 +30,6 @@ import incolore from "../assets/incolore-mtg.png"
 import axiosInstance from "../api/axiosInstance";
 import loading from "../assets/loading.gif"
 import { getDeckImageUrl } from '../utils/imageUtils';
-
 import "./css/DecksPage.css";
 
 
@@ -742,9 +741,11 @@ const DecksPage = () => {
             {/* Bouton ouverture des filtres*/}
             <OpenButtonLarge text="Afficher les filtres" icon={arrowFiltersSens} onClick={OpenFilters}/>
             
-            {/* Filtres desktop */}
+            
             <div className="filters-container">
-                <div className="filters-line">
+              
+              {/* Filtres desktop */}
+              <div className="filters-line">
                   
                   <div className="filter-value-container">
                   <OpenButton text="Filtrer par valeur €" icon={arrowValueSens} onClick={OpenFilterValue} />
@@ -795,9 +796,8 @@ const DecksPage = () => {
 
               </div>
 
-
               {/* Filtres mobile */}
-                {displayFilters && (
+              {displayFilters && (
                     <div className="filters-line-mobile">
                       <div className='filter-mobile-container' style={{ backgroundImage: `url(${backgroundWhite})`}} >
                         <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} 
@@ -846,7 +846,8 @@ const DecksPage = () => {
                         </div>
                       </div>
                     </div>
-                )}
+              )}
+
             </div>
 
 
@@ -914,10 +915,9 @@ const DecksPage = () => {
                                                 </div>                                                
                                               </div>
                                     )}
-                </div>
-                          
+                                </div>                         
                             ))}
-                                  
+                                   
                     </div>   
               )} 
 

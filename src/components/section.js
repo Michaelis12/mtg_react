@@ -6,7 +6,7 @@ const Section = function ({children}, props) {
     return (
         <section className='section' style={props.style}>
         {children}
-        </section>
+        </section> 
     )
 }
 

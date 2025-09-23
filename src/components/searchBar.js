@@ -1,5 +1,4 @@
 import "./css/searchBar.css"
-import { IoIosSearch } from "react-icons/io";
 
 
 const SearchBar = function (props) {

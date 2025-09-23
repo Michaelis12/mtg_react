@@ -6,7 +6,7 @@ import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { FaHeart, FaRegHeart  } from 'react-icons/fa';
 import backgroundCardsPage from "../assets/background_cardsPage2.jpg"
 import backgroundWhite from "../assets/background_white.png"
-import Section from '../components/section';
+import Section from '../components/sectionMap';
 import Title from '../components/title';
 import OpenButtonLarge from '../components/openButtonLarge';
 import OpenButton from '../components/openButton';
@@ -194,22 +194,6 @@ const CardsPage = () => {
       }
     }
 
-/*
-  // 👇 Gestion du scroll infini
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const fullHeight = document.documentElement.scrollHeight;
-
-      if (scrollTop + windowHeight >= fullHeight - 5 && hasMore && !isLoading) {
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [hasMore, isLoading]);
-*/
 
         // Récupère les cartes triées par popularité 
         const getCardsWithLikes = async () => {

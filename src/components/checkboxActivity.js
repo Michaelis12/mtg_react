@@ -29,7 +29,7 @@ const CheckboxActivity = function (props) {
        
     }
     
-
+ 
     return ( 
         <div className="compenant-checkbox">
             <div className="compenant-checkbox-map">
@@ -41,7 +41,7 @@ const CheckboxActivity = function (props) {
                     className='p-user-activity'>{attribut}</p></li>           
             ))}
             </div>
-            <TbFilterCancel className='compenant-reset' style={props.iconStyle} onClick={props.onPush} size={'2.5em'}/>
+            <TbFilterCancel className='compenant-reset' style={props.iconStyle} onClick={props.onPush} />
        </div>
 
     ) 

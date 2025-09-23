@@ -36,3 +36,11 @@
   
 
 }
+
+@media (max-width: 500px) {
+
+    .nav-bar {
+        margin-right: 0px;
+    } 
+
+}
