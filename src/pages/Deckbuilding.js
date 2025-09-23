@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useLocation ,  useNavigate} from 'react-router-dom';
 import "./css/Deckbuilding.css";
 import Card from '../model/Card';
-import addCardBackground from "../assets/deckbuilding_add.jpg"
+import deckPile from "../assets/deck_pile.png"
 import backgroundRedGreen from "../assets/background_cardsPage2.jpg"
 import backgroundHand from "../assets/background_hand.png"
 import backgroundPopup from "../assets/background_white.png"
@@ -830,8 +830,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             // Ouvre le popup de zoom pour une carte de la main (index) ou un type de carte (objet)
             const openZoomPopup = (cardOrIndex) => {
                 if (cardOrIndex && cardOrIndex.image) {
-                    console.log(cardOrIndex.id)
-                    console.log(cardOrIndex.image)
+
                     setCardImage(cardOrIndex.image);
                     setCardID(cardOrIndex.id);
                     switch(cardOrIndex.type) {
@@ -1087,7 +1086,14 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             {/*La carte format desktop*/}
                             <div className='card-selected-container'> 
                                 <div className="deck-card-desktop" style={{ backgroundImage: `url(${backgroundPopup})`, marginTop: '1%'}}>
-                                                          <h1 className='deck-name'>{deck.name}</h1> 
+                                                          <h1 className='deck-name'>{deck.name} 
+                                                                   {!deck.isPublic && (
+                                                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
+                                                                    )} 
+                                                                    {deck.isPublic && (
+                                                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
+                                                                    )} 
+                                                            </h1> 
                                   
                                                           <div className="deck-content">
                                                                <img className="deckbuilding-pp" style={{marginTop: '-5%'}}
@@ -1095,7 +1101,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 
                                                               <div className="deck-selected-attributs" >
                                 
-                                                                  
+                                                    
                                                                   <div className='card-line-attribut'>
                                                                       <h4 className='deck-selected-line-title'> Format : </h4>
                                                                       <p className='deck-selected-format' style={{marginTop: '-5px'}}>{deck.format} </p>
@@ -1139,6 +1145,12 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     </div>
                                     <div className="card-medium-body" >
                                     
+                                    {!deck.isPublic && (
+                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
+                                    )}
+                                    {deck.isPublic && (
+                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
+                                    )}
                                                                 
                                     <div className='attribut-mobile-container'>
                                                                       <h4 className='deck-selected-line-title'> Format : </h4>
@@ -1180,6 +1192,13 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     </div>
                 
                                     <div className="deck-hover-body" >
+
+                                                {!deck.isPublic && (
+                                                    <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
+                                                )}
+                                                {deck.isPublic && (
+                                                    <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
+                                                )}
      
                                                 <div className='attribut-mobile-container'>                        
                                                                     <h4 className='attribut-line-title' style={{marginTop: "2px"}}> Couleurs : </h4> 
@@ -1583,12 +1602,12 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     </div>
                 </div>
             )}
-        </div>
+        </div> 
+        
+        <div className='stats-conatainer'>
+            <Title title={`Statistiques`} />       
 
-                
-         <TitleArrow title={`Statistiques`} />
-
-        <div className='graphics-container'> 
+            <div className='graphics-container'> 
 
                 <div className='graphic-container' >
                     <h3 className='graphic-title'>Courbe de mana</h3>
@@ -1863,14 +1882,15 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
             </div>
 
+        </div>
                 
-                   <IoIosArrowDropleft className='icon-close-popup' size={'5em'}  onClick={()=>navigate(-1)}/>      
+        <IoIosArrowDropleft className='icon-close-popup' size={'5em'}  onClick={()=>navigate(-1)}/>      
     
     </div>                                      
 
                 {/* Popup de zoom carte mobile */}
                 {displayZoomPopup && cardImage && (
-                                                        <div className='popup-bckg'>                                
+                    <div className='popup-bckg'>                                
                                                                 <img className="card-selected-image-zoom" src={getImageUrl(cardImage)} alt="Card mtg"/>
                                                                 <button className='nav-card-button' onClick={()=>(navigate(`/cardSelected`, { state: { cardID: cardID, ListCard: navigateListID  }}))}>Afficher détails</button>
                                                                 <div className='button-nav-mobile' style={{position : 'fixed', marginTop: '48vh', zIndex: '102', color: 'white'}} >   
@@ -1881,7 +1901,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                 </div>
                                                                
                                                                 <CgCloseO className='icon-close-popup' style={{zIndex: '103'}} color='white' size={'5em'} onClick={()=> closePopup()}/>
-                                                        </div>
+                    </div>
                                 )} 
             
                 
@@ -1937,11 +1957,12 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                         
                         <div className='set-attributs-deck'>
                             <div className='pub-title-container'>
-                                <h1 className='pub-title'>Deck publié</h1>
+                                <h1 className='pub-title'>Deck publié !</h1>
                             </div>
-                            <MdPublishedWithChanges size={'5em'} color=" #5D3B8C" />
-                            <button  type="button" className="valid-form" onClick={() => {setPopupPub(false);}}>
-                                                Ok
+                            <img src={deckPile} className='pub-image' alt="deck_pile" /> 
+                            <h4  className='pub-public'>public</h4>
+                            <button  type="button" className="valid-popup" onClick={() => {setPopupPub(false);}}>
+                                            <h4 className="valid-popup-title" >Fermer</h4> 
                                     </button>
                         </div>
                     </div>

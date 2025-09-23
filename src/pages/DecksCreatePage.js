@@ -651,10 +651,10 @@ const DecksCreatePage = () => {
                                 <strong className="deck-named" style={{padding:'5%'}}> {deck.name} </strong>
 
                                 {!deck.isPublic && (
-                                    <h6 className='deck-public' style={{backgroundColor: 'red'}}>privé</h6>
+                                    <h6 className='deck-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)'}}>privé</h6>
                                 )}
                                 {deck.isPublic && (
-                                    <h6 className='deck-public' style={{backgroundColor: 'green'}}>public</h6>
+                                    <h6 className='deck-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)'}}>public</h6>
                                 )}
 
                                 <div className='cards-page-icon-container'>                           

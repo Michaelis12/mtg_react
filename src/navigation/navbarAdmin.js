@@ -409,9 +409,15 @@ const NavbarAdmin = function () {
                         </div> 
                         )}
                         
-                        <button className="section-navbar-mobile" onClick={()=> {setAdminNotifs(!adminNotifs);}}><strong>Notifications</strong><span className="icon-fleche">{arrowSensNotifs}</span></button>
-                        { adminNotifs && (
-                        <div className="btn-navbar-mobile-hover">
+                        <button className="section-navbar-notif-mobile" onClick={()=> {setAdminNotifs(!adminNotifs);}}>
+                            <strong style={{marginLeft: notifications.length < 1 ? '20%' : '0'}}>Notifications</strong>
+                            {notifications.length > 0 && (
+                            <p className="alert-notif-mobile">{notifications.length}</p>
+                            )}
+                            <span className="icon-fleche">{arrowSensNotifs}</span></button>
+                        
+                        { adminNotifs && ( 
+                        <div className="btn-navbar-mobile-hover" style={{marginTop:'1px'}}>
                             {notifications.length > 0 ? (
                                 notifications.map((notification, index) => (
                                     <div key={index} className="notification-item-mobile">
@@ -445,10 +451,11 @@ const NavbarAdmin = function () {
                                                 {notification.deckName}
                                             </span>
                                         </p>
+                                        <CgCloseO onClick={()=>deleteNotif(notification.id)} size={"2em"}/>
                                     </div>
                                 ))
                             ) : (
-                                <p>Aucune notification</p>
+                                <p className="notification-empty-mobile">Aucune notification</p>
                             )}
                         </div> 
                         )}

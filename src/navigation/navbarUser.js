@@ -66,33 +66,6 @@ const NavbarUser = function () {
         setUserNotifs(false)
     }
 
-    // Ouvre le hover notifications
-    const navNotifs = () => {
-        setUserCards(false)
-        setUserDecks(false)
-        setUserLog(false)
-        setUserNotifs(true)
-    }
-
-    // Récupérer les notifications
-    const displayNotifs = async () => {
-        const response = await getNotifs();
-        setNotifications(response);
-    }
-    useEffect(() => {
-        displayNotifs();
-    }, [alertNotifs]);
-
-    // Supprimer une notif
-    const deleteNotif = async (id) => {
-        try {
-            await axiosInstance.delete(`f_user/deleteUserNotif?notifID=${id}`, {withCredentials: true});
-            setAlertNotifs(!alertNotifs);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     // Naviguer vers un deck
     const navDeck = (id) => {
         navigate(`/deckbuilding`, { state: { deckID: id } })
@@ -165,6 +138,53 @@ const NavbarUser = function () {
                                    }
                               } 
                     navMobileLog() }, [userLog]);
+
+     // Afficher les notifications dans la navbar mobile
+    const [arrowSensNotifs, setArrowSensNotifs] = useState(<SlArrowDown/>)   
+
+
+    useEffect(() => {
+                    const navMobileNotifs = () => {
+                              
+                              if (userNotifs) {
+                                setArrowSensNotifs((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp color="white"/> : <SlArrowDown color="white"/>));
+                                 } 
+                              else {
+                                setArrowSensNotifs((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp color="white"/> : <SlArrowDown color="white"/>));
+                                   }
+                              } 
+                    navMobileNotifs() }, [userNotifs]);
+
+
+    
+    // Ouvre le hover notifications
+    const navNotifs = () => {
+        setUserCards(false)
+        setUserDecks(false)
+        setUserLog(false)
+        setUserNotifs(true)
+    }
+
+    // Récupérer les notifications
+    const displayNotifs = async () => {
+        const response = await getNotifs();
+        setNotifications(response);
+    }
+    useEffect(() => {
+        displayNotifs();
+    }, [alertNotifs]);
+
+    // Supprimer une notif
+    const deleteNotif = async (id) => {
+        try {
+            await axiosInstance.delete(`f_user/deleteUserNotif?notifID=${id}`, {withCredentials: true});
+            setAlertNotifs(!alertNotifs);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+        
+              
 
     return ( 
 
@@ -288,48 +308,54 @@ const NavbarUser = function () {
                         <button className="btn-navbar-mobile" onClick={()=> {deconnexion(); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}>Se déconnecter</button>
                     </div> 
                 )}
-                <button className="section-navbar-mobile" onClick={()=> {setUserNotifs(!userNotifs);}}><strong>Notifications</strong><span className="icon-fleche">{/* Optionnel: icône flèche */}</span></button>
-                { userNotifs && (
-                    <div className="btn-navbar-mobile-hover">
-                        {notifications.length > 0 ? (
-                            notifications.map((notification, index) => (
-                                <div key={index} className="notification-item-mobile">
-                                    <p style={{
-                                        fontFamily: 'Arial', 
-                                        fontWeight: 'normal', 
-                                        fontStyle: 'normal',
-                                        margin: '5px 0'
-                                    }}>
-                                        <span 
-                                            onClick={() => {navUser(notification.issuerID); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}
-                                            style={{
-                                                color: '#007bff',
-                                                textDecoration: 'underline',
-                                                cursor: 'pointer',
-                                                fontWeight: 'bold'
-                                            }}
-                                        >
-                                            {notification.issuerPseudo}
-                                        </span>
-                                        {' a liké votre deck '}
-                                        <span 
-                                            onClick={() => {navDeck(notification.deckID); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}
-                                            style={{
-                                                color: '#007bff',
-                                                textDecoration: 'underline',
-                                                cursor: 'pointer',
-                                                fontWeight: 'bold'
-                                            }}
-                                        >
-                                            {notification.deckName}
-                                        </span>
-                                    </p>
-                                </div>
-                            ))
-                        ) : (
-                            <p>Aucune notification</p>
-                        )}
-                    </div> 
+                <button className="section-navbar-notif-mobile" onClick={()=> {setUserNotifs(!userNotifs);}}>
+                            <strong style={{marginLeft: notifications.length < 1 ? '20%' : '0'}}>Notifications</strong>                            
+                            {notifications.length > 0 && (
+                            <p className="alert-notif-mobile">{notifications.length}</p> 
+                            )}
+                            <span className="icon-fleche">{arrowSensNotifs}</span></button>
+                { userNotifs && ( 
+                                        <div className="btn-navbar-mobile-hover" style={{marginTop:'1px'}}>
+                                            {notifications.length > 0 ? (
+                                                notifications.map((notification, index) => (
+                                                    <div key={index} className="notification-item-mobile">
+                                                        <p style={{
+                                                            fontFamily: 'Arial', 
+                                                            fontWeight: 'normal', 
+                                                            fontStyle: 'normal',
+                                                            margin: '5px 0'
+                                                        }}>
+                                                            <span 
+                                                                onClick={() => {navUser(notification.issuerID); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}
+                                                                style={{
+                                                                    color: '#007bff',
+                                                                    textDecoration: 'underline',
+                                                                    cursor: 'pointer',
+                                                                    fontWeight: 'bold'
+                                                                }}
+                                                            >
+                                                                {notification.issuerPseudo}
+                                                            </span>
+                                                            {' a liké votre deck '}
+                                                            <span 
+                                                                onClick={() => {navDeck(notification.deckID); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}
+                                                                style={{
+                                                                    color: '#007bff',
+                                                                    textDecoration: 'underline',
+                                                                    cursor: 'pointer',
+                                                                    fontWeight: 'bold'
+                                                                }}
+                                                            >
+                                                                {notification.deckName}
+                                                            </span>
+                                                        </p>
+                                                        <CgCloseO onClick={()=>deleteNotif(notification.id)} size={"2em"}/>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <p className="notification-empty-mobile">Aucune notification</p>
+                                            )}
+                                        </div> 
                 )}
             </nav> 
         )}

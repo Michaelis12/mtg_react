@@ -90,8 +90,6 @@ const CardsPage = () => {
                     return;
                 }
 
-                console.log("hello")
-
 
                 // Contient les RequestParams de la requete
                 const params = {

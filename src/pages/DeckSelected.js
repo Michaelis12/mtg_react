@@ -1326,9 +1326,11 @@ const DeckSelected = () => {
                                                 
                           
              {/* Graphiques */}
-             <TitleArrow title={`Statistiques`} />
+
+            <div className='stats-conatainer'>
+                <Title title={`Statistiques`} />
             
-                    <div className='graphics-container'> 
+                <div className='graphics-container'> 
             
                      <div className='graphic-container' >
                                 <h3 className='graphic-title'>Courbe de mana</h3>
@@ -1487,9 +1489,9 @@ const DeckSelected = () => {
             
                 
                             </div>
-                        </div> 
+                </div> 
             
-                        <div className='graphic-container-type'>      
+                <div className='graphic-container-type'>      
                                 <h3 className='graphic-title'>Répartition par type</h3>
                                 <ResponsiveContainer
                                     width="100%"
@@ -1602,6 +1604,8 @@ const DeckSelected = () => {
                                     </div>
             
                 </div>
+
+            </div>
 
              <IoIosArrowDropleft className='icon-close-popup' size={'5em'} style={{marginTop: '5%'}}  onClick={()=>navigate(-1)}/>
         

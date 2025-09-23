@@ -51,6 +51,41 @@
 
 /*Caractéristiques du deck*/
 
+.deck-card-public {
+  color: white;
+  border-radius: 30px;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  padding-left: 2%;
+  padding-right: 2%;
+  text-align: center;
+  font-size: 0.6em;
+}
+
+
+@media (max-width: 700px) {
+    .deck-card-public {
+        font-size: 1.5em;
+        padding: 2%;
+        padding-left: 3%;
+        padding-right: 3%;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+    .deck-card-public {
+        margin-top: 5%;
+        font-size: 1em;
+        padding: 2%;
+        padding-left: 3%;
+        padding-right: 3%;
+        width: 30%;
+    }
+
+}
+
 .deckbuilding-body {
     display: flex;
     flex-direction: column;
@@ -101,12 +136,53 @@
 
 }
 
+@media (max-width: 400px) {
+
+    .pub-title-container {
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+}
+
 .pub-title {
     color: white;
 }
 
-.pub-image {
-    width: 100%;
+
+.pub-public {
+    position: absolute;
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-left: 2%;
+    padding-right: 2%;
+    border-radius: 30px;
+    font-size: 1.8em;
+}
+
+@media (max-width: 1000px) {
+    .pub-image {
+        height: 350px;
+    }
+}
+
+
+@media (max-width: 500px) {
+    .pub-image {
+        height: 250px;
+    }
+
+    .pub-public {
+      font-size: 1.2em;
+      padding: 2%;
+      padding-left: 3%;
+      padding-right: 3%;
+    }
 }
 
 
@@ -114,10 +190,7 @@
         display: none;
     }
 
-    .pub-title-container {
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-}
+
 
 
 
@@ -1155,4 +1228,7 @@
         gap: 0px;
     }
 } 
+
+
+
 

@@ -72,8 +72,8 @@ const AccountPage = () => {
             const [decks, setDecks] = useState([])
             const [detailsDeck, setDetailsDeck] = useState(null)
 
-                const getDecks = async () => {
-                    try {   
+        const getDecks = async () => {
+            try {   
                         
                 const params = {
                     page: 0,
@@ -95,7 +95,7 @@ const AccountPage = () => {
                             deck.deckBuilderName, deck.likeNumber, deck.cards, deck.commander
                 ) )
             
-                        setDecks(listDecks)
+                setDecks(listDecks)
                            
         
                     }   
