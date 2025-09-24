@@ -106,7 +106,7 @@ const SignPage = function () {
 
         try{
         
-            const response = await axiosInstance.post(`/f_all/verificationSign?email=${email}&code=${verificationCode}`, null);
+            const response = await axiosInstance.post(`/f_all/verification?email=${email}&code=${verificationCode}`, null);
 
             setActiveAccount(true)
             setErrorContent(null)
