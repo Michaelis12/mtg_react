@@ -99,14 +99,14 @@ const SignPage = function () {
 
     }
 
-    // Form code de vérification
+    // Form code de vérification pour activer le compte après l'inscription
     const verifyUser = async (e) => {
     e.preventDefault();
     setDisplayLoading(true)
 
         try{
         
-            const response = await axiosInstance.post(`/f_all/verification?email=${email}&code=${verificationCode}`, null);
+            const response = await axiosInstance.post(`/f_all/verificationSign?email=${email}&code=${verificationCode}`, null);
 
             setActiveAccount(true)
             setErrorContent(null)
@@ -122,42 +122,6 @@ const SignPage = function () {
             }   
 
 
-    // Form Connexion CSRF
-    /*
-    const logIn = async (e) => {
-        e.preventDefault();
-    
-            try{  
-                setErrorContent(null)
-                setDisplayLoading(true)
-
-                const user = {
-                    email,
-                    password 
-                }  
-    
-                const request = await axiosInstance.post('/f_all/login', user, { withCredentials: true }); 
-                setJwtToken(request.data.jwt);
-                console.log(request.data.jwt)
-                
-                const csrfRequest = await axiosInstance.get('/f_csrf/csrf', { withCredentials: true  });
-                 setCsrfToken(csrfRequest.data.token);
-                 console.log(csrfRequest.data.token)
-    
-                const authentification = request.data; 
-                
-                const roles = authentification.authorities.map(auth => auth.authority);
-                authLogIn(roles);
-
-                setDisplayLoading(false)
-                navigate('/myspace')
-
-    
-            }catch (error) {
-                setDisplayLoading(false)
-                setErrorContent(error.response.data)
-            }}
-    */
     
     // Form Connexion
     const logIn = async (e) => {
@@ -443,7 +407,7 @@ const SignPage = function () {
                     </div>
 
                     <div className="link-group">
-                        <button className="valid-form" type="submit" disabled={verificationCode === ""} >Valider</button>
+                        <button className="valid-form" type="submit" disabled={verificationCode === ""} ><h4>Valider</h4></button>
                     </div>
                     
                 </form>
@@ -526,7 +490,7 @@ const SignPage = function () {
             </div>
         )}
 
-        {/* Form de renseignement du code du code' */}
+        {/* Form de renseignement du code */}
         {activeAccount && sendCode && !changepassword && (
             <div className="login-container" style={{ backgroundImage: `url(${backgroundForm})`}}>
                 <h1 className="title-log">Mot de passe oublié</h1>
