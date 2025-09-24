@@ -980,7 +980,7 @@ const CardsPage = () => {
 
       // N'affiche pas les terrains de base
       const maskBaseLand = (value) => {
-        if(value > 1 && value < 8) {
+        if(value > 0 && value < 7) {
             return "none";
       }
     }   
