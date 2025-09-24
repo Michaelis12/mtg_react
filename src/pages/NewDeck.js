@@ -348,27 +348,27 @@ const NewDeck = () => {
 
             const cardsId = []; 
 
-            if (colors.includes("BLEU")) {
-              cardsId.push(2);  // Ajout de l'ID 2 pour la couleur BLEU
+            if (colors.includes("BLANC")) {
+              cardsId.push(1);  
             }
 
-            if (colors.includes("BLANC")) {
-              cardsId.push(3);  // Ajout de l'ID 3 pour la couleur BLANC
+            if (colors.includes("BLEU")) {
+              cardsId.push(2);  
             }
 
             if (colors.includes("NOIR")) {
-              cardsId.push(4);  // Ajout de l'ID 4 pour la couleur NOIR
+              cardsId.push(3); 
             }
 
             if (colors.includes("ROUGE")) {
-              cardsId.push(5);  // Ajout de l'ID 5 pour la couleur ROUGE
+              cardsId.push(4);  
             }
 
             if (colors.includes("VERT")) {
-              cardsId.push(6);  // Ajout de l'ID 6 pour la couleur VERT
+              cardsId.push(5);  
             }
 
-              cardsId.push(7);  // Ajout de l'ID 7 pour la couleur INCOLORE
+              cardsId.push(6);  
 
             const response = await axiosInstance.post('/f_user/addDeck', deckRegister, { withCredentials: true}); 
             const responseData = response.data
@@ -943,27 +943,27 @@ const NewDeck = () => {
 
             const cardsId = []; 
 
-            if (colors.includes("BLEU")) {
-              cardsId.push(2);  // Ajout de l'ID 2 pour la couleur BLEU
+            if (colors.includes("BLANC")) {
+              cardsId.push(1);  
             }
 
-            if (colors.includes("BLANC")) {
-              cardsId.push(3);  // Ajout de l'ID 3 pour la couleur BLANC
+            if (colors.includes("BLEU")) {
+              cardsId.push(2);  
             }
 
             if (colors.includes("NOIR")) {
-              cardsId.push(4);  // Ajout de l'ID 4 pour la couleur NOIR
+              cardsId.push(3); 
             }
 
             if (colors.includes("ROUGE")) {
-              cardsId.push(5);  // Ajout de l'ID 5 pour la couleur ROUGE
+              cardsId.push(4);  
             }
 
             if (colors.includes("VERT")) {
-              cardsId.push(6);  // Ajout de l'ID 6 pour la couleur VERT
+              cardsId.push(5);  
             }
 
-              cardsId.push(7);  // Ajout de l'ID 7 pour la couleur INCOLORE
+            cardsId.push(6);
 
 
             const request = await axiosInstance.post(`f_user/addCardsOnDeck?cardId=${cardsId}&deckId=${responseData}`, null, { withCredentials: true });
