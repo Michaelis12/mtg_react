@@ -51,7 +51,7 @@ const NewCard = function () {
         // Affiche une image par défaut ou l'image entré par l'admin
         const displayImage = () => {
             if(image !== "") {
-                return image && image.startsWith('/uploads/') ? `https://localhost:8443${image}` : image;
+                return image && image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${image}` : image;
             }
             else {
                 return defaultImg;
@@ -67,7 +67,7 @@ const NewCard = function () {
                     const formData = new FormData();
                     formData.append('file', file);
                     
-                    const uploadRes = await axiosInstance.post("https://localhost:8443/f_all/uploadImage", formData, {
+                    const uploadRes = await axiosInstance.post("https://mtg-spring.onrender.com/f_all/uploadImage", formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data',
                         },

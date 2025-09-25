@@ -808,7 +808,7 @@ const DecksCreatePage = () => {
                                             accept="image/*" 
                                             onChange={(e) => selectImage(e)}
                                             />
-                                            <img className='deck-selected-img' src={deckImage && deckImage.startsWith('/uploads/') ? `https://localhost:8443${deckImage}` : deckImage} alt="deck-img" />
+                                            <img className='deck-selected-img' src={deckImage && deckImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deckImage}` : deckImage} alt="deck-img" />
                                             
                                             <ButtonValidPopup onClick={()=>editDeck()}/>
                                   </div>

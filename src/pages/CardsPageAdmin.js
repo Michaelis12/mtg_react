@@ -1546,7 +1546,7 @@ const CardsPageAdmin = () => {
                   accept="image/*"
                   onChange={(e) => changeImage(e)}
                 />
-                <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://localhost:8443${cardImage}` : cardImage} alt="deck-img" />
+                <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cardImage}` : cardImage} alt="deck-img" />
               </div>
               <div className='setAttributs-card-checkout'>
               
@@ -1660,7 +1660,7 @@ const CardsPageAdmin = () => {
               accept="image/*"
               onChange={(e) => changeImage(e)}
             />
-            <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://localhost:8443${cardImage}` : cardImage} alt="deck-img" />
+            <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cardImage}` : cardImage} alt="deck-img" />
           </div>
           <div className='setAttributs-card-img-checkout-mobile'>
 
@@ -1778,7 +1778,7 @@ const CardsPageAdmin = () => {
               accept="image/*"
               onChange={(e) => changeImage(e)}
             />
-            <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://localhost:8443${cardImage}` : cardImage} alt="deck-img" />
+            <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cardImage}` : cardImage} alt="deck-img" />
           </div>
           <div className='setAttributs-card-img-checkout-mobile'>
 
