@@ -96,14 +96,15 @@ const AccountPage = () => {
 
 
         // Activer le compte de l'user
-        const activeDeckBuilder = async () => { 
+          const activeDeckBuilder = async () => { 
             try {
                 setDisplayLoading(true)
                
 
                 const request = await axiosInstance.put(`/f_admin/activeUser?userID=${newID}`, null, { withCredentials: true }); 
-                 navigate(-1);
+                
                 setDisplayLoading(false)
+                setDisplayActivePopUp(false)
     
             }   
             catch (error) {
@@ -118,19 +119,20 @@ const AccountPage = () => {
         const desacDeckBuilder = async () => {
             try {
                 setDisplayLoading(true)
-                
+                const body = {
+                    cause: cause                    
+                };
 
                 if (day === "def") {
-                const request = await axiosInstance.put(`/f_admin/desacUser?userID=${newID}`, cause, { withCredentials: true });               
+                const request = await axiosInstance.put(`/f_admin/desacUser?userID=${newID}`, body, { withCredentials: true });               
                  
                 }
                 else {
-                const request = await axiosInstance.put(`/f_admin/desacUserTemporal?userID=${newID}&days=${day}`, cause, { withCredentials: true });
+                const request = await axiosInstance.put(`/f_admin/desacUserTemporal?userID=${newID}&days=${day}`, body, { withCredentials: true });
                 }
                 
-                navigate(-1);
                 setDisplayLoading(false)
-
+                setDisplayDesacPopUp(false)
     
             }   
             catch (error) {
@@ -715,16 +717,16 @@ const AccountPage = () => {
                             <div className='time-ban-container'>
                                 <h4 className="form-label-format"> Pour la durée :</h4>
                                 <div className='checkout-days'>
-                                    <li className='li-day'><input type="checkbox" className='input-day' name={"dayNumber"} value={7} 
+                                    <li className='li-day'><input type="radio" className='input-day' name={"dayNumber"} value={7} 
                                     onChange={(event) => setDay(event.target.value)} 
                                             /><h5 className='text-day'>1 semaine</h5></li>
-                                    <li className='li-day'><input type="checkbox" name={"dayNumber"} className='input-day' value={14} 
+                                    <li className='li-day'><input type="radio" name={"dayNumber"} className='input-day' value={14} 
                                     onChange={(event) => setDay(event.target.value)} 
                                             /><h5 className='text-day'>2 semaines</h5></li>
-                                    <li className='li-day'><input type="checkbox" className='input-day' name={"dayNumber"} value={30} 
+                                    <li className='li-day'><input type="radio" className='input-day' name={"dayNumber"} value={30} 
                                     onChange={(event) => setDay(event.target.value)} 
                                             /><h5 className='text-day'>1 mois</h5></li>
-                                    <li className='li-day'><input type="checkbox" className='input-day' name={"dayNumber"} value={"def"} 
+                                    <li className='li-day'><input type="radio" className='input-day' name={"dayNumber"} value={"def"} 
                                     onChange={(event) => setDay(event.target.value)}
                                             /><h5 className='text-day'>Définitive</h5></li>
                                 </div>
