@@ -46,6 +46,7 @@ const AccountPage = () => {
     const [newID, setNewID] = React.useState("")
     const [day, setDay] = React.useState("")
     const [cause, setCause] = React.useState("")
+    const [signalUpdate, setSignalUpdate] = useState(true)
     const [disableButtons, setDisableButtons] = useState(false)
     const [displayDeletePopUp, setDisplayDeletePopUp] = React.useState(false)
     const [displayActivePopUp, setDisplayActivePopUp] = React.useState(false)
@@ -89,6 +90,9 @@ const AccountPage = () => {
                 if(request.data.roles.includes("ADMIN")) {
                     setDisableButtons(true)
                 }
+                if(!request.data.roles.includes("ADMIN")) {
+                    setDisableButtons(false)
+                }
 
                 setDisplayLoading(false)
 
@@ -101,8 +105,10 @@ const AccountPage = () => {
     
         }
         getDeckBuilder();
-        }, [id, newID]);
+        }, [id, newID, signalUpdate]);
 
+
+        // Activer l'user
         const activeDeckBuilder = async () => { 
             try {
                 setDisplayLoading(true)
@@ -112,8 +118,7 @@ const AccountPage = () => {
                 
                 setDisplayLoading(false)
                 setDisplayActivePopUp(false)
-                window.location.reload();
-    
+                setSignalUpdate(!signalUpdate)
             }   
             catch (error) {
                 setDisplayLoading(false)
@@ -123,7 +128,7 @@ const AccountPage = () => {
     
         }
 
-
+        // Désactiver l'user
         const desacDeckBuilder = async () => {
             try {
                 setDisplayLoading(true)
@@ -141,7 +146,7 @@ const AccountPage = () => {
                 
                 setDisplayLoading(false)
                 setDisplayDesacPopUp(false)
-                window.location.reload();
+                setSignalUpdate(!signalUpdate)
     
             }   
             catch (error) {
@@ -152,6 +157,7 @@ const AccountPage = () => {
     
         }
 
+        // Supprimer l'user
         const deleteDeckBuilder = async () => {
             try {
                 setDisplayLoading(true)
