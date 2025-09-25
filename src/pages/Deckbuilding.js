@@ -1089,17 +1089,16 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         
         // Retire des cartes pour un format =/= commander 
         const unselectCard = (cardToRemove) => {
-            console.log(cardToRemove.id)
-            console.log("cc")
-            setDeckCards(prevCards => {
-                // Convertit les objets Card en ID s’ils ne le sont pas déjà
-                const cardIds = prevCards.map(card => typeof card === 'object' ? card.id : card);
+         setDeckCards(prevCards => {
+            const index = prevCards.findIndex(card => card.id === cardToRemove.id);
 
-                // Supprime l'ID correspondant à la carte à retirer
-                const filtered = cardIds.filter(id => id !== cardToRemove.id);
+            if (index === -1) return prevCards; // aucune carte trouvée → rien à changer
 
-                return filtered;
-                });
+            // copie immuable du tableau
+            const newCards = [...prevCards];
+            newCards.splice(index, 1); // supprime UNE seule occurrence
+            return newCards;
+        });
 
                 if (cardsSelected.filter(id => id === cardToRemove.id).length > 0)
                     setCardsSelected(prevCards => {
@@ -1116,6 +1115,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 
         // Retire tous les exemplaires d'une carte
         const unselectCards = (cardToRemove) => {
+
+                setDeckCards(prevCards =>
+                prevCards.filter(card => card.id !== cardToRemove.id)
+                );
+
                     if(cardsSelected.length === 1) {
                       setDisplayPopup(false)
                     }
@@ -1168,6 +1172,16 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             return `${cardsSelected.length} cartes ajoutées , ${cardsUnselected.length} cartes retirées `
 
         }
+
+
+        const disableButton = (id) => {
+            const deckCardsid = deckCards.map(card => card.id);
+            if(!deckCardsid.includes(id)) {
+                return true
+            }
+        }
+
+        const [displayAddPopUp, setDisplayAddPopUp] = useState(false)
         
         
         
@@ -1388,7 +1402,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 
                 {/* Passer le deck en public */}
                 {!deck.isPublic && ( 
-                    <div className='public-container'>
                             <button className="pub-deck-container" 
                             disabled={disabledPublication()} onClick={()=>publishDeck()}>
                                 <MdSend className='icon-update-user' />
@@ -1398,7 +1411,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 </div>
                             </button> 
                                
-                    </div>                
                 )}
 
                 {/* Passer le deck en privé */}
@@ -1445,6 +1457,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         )} 
 
         {/*Version avec requetage*/}
+        {/*
         <div className='decks-types-map'> 
           
             { deckLands.length > 0 && (
@@ -1452,7 +1465,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     <TitleType title={"Terrains (" + deckLands.length + ")"}/>
                     <div className='deck-text-map'>
                         {deckLandsUnit.map(land => {
-                            const isMobile = window.innerWidth < 500;
                             return (
                                 <div className="land-text-details" id='land-card' key={land.id}>
                                     
@@ -1466,11 +1478,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
 
                                     {detailsCard && detailsCard.id === land.id && (
-                                            <img className="card-img-zoom" style={isMobile ? { maxWidth: '80vw', maxHeight: '40vw' } : {}} src={land.image && land.image.startsWith('/uploads/') ? `https://localhost:8443${land.image}` : land.image} alt="Card-image" />
+                                            <img className="card-img-zoom"  src={land.image && land.image.startsWith('/uploads/') ? `https://localhost:8443${land.image}` : land.image} alt="Card-image" />
                                         )}
                                     <div className='deckbuilding-number-container'>
                                         {land.id < 8 && (
-                                            <div className='deckbuilding-text-number' style={isMobile ? { gap: '4px' } : {}}>
+                                            <div className='deckbuilding-text-number'>
                                                 <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(land.id)} >
                                                 <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
                                                 </button>
@@ -1495,7 +1507,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                             </button>
                                         </div>
                                         )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={isMobile ? '1em' : '3em'} onClick={() => deleteCards(land.id)} />
+                                        <TiDeleteOutline className='delete-card-button' color='red' onClick={() => deleteCards(land.id)} />
                                         
                                     </div>
                                 </div>
@@ -1704,6 +1716,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 </div>
             )}
         </div>
+        /*}
 
         {/*Version sans requetage*/}
         <div className='decks-types-map'> 
@@ -1713,7 +1726,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     <TitleType title={"Terrains (" + deckCards.filter(card => card.type === "TERRAIN").length + ")"}/>
                     <div className='deck-text-map'>
                         {deckLandsUnit.map(land => {
-                            const isMobile = window.innerWidth < 500;
                             return (
                                 <div className="land-text-details" id='land-card' key={land.id}>
                                     
@@ -1727,18 +1739,25 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
 
                                     {detailsCard && detailsCard.id === land.id && (
-                                            <img className="card-img-zoom" style={isMobile ? { maxWidth: '80vw', maxHeight: '40vw' } : {}} src={land.image && land.image.startsWith('/uploads/') ? `https://localhost:8443${land.image}` : land.image} alt="Card-image" />
+                                            <img className="card-img-zoom"  src={land.image && land.image.startsWith('/uploads/') ? `https://localhost:8443${land.image}` : land.image} alt="Card-image" />
                                         )}
                                     <div className='deckbuilding-number-container'>
-                                        {land.id < 8 && (
-                                            <div className='deckbuilding-text-number' style={isMobile ? { gap: '4px' } : {}}>
-                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
+                                        {land.id < 8 && ( 
+                                            <div className='deckbuilding-text-number'>
+                                                { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
+                                                    <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
+                                                )}
+
+                                                { cardsUnselected.filter(cardDeck => cardDeck === land.id).length > 0  && (
+                                                    <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === land.id).length}</p>
+                                                )}
+
+                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)}
+                                                disabled={disableButton(land.id)} >
                                                 <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
                                                 </button>
 
-                                                { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
-                                                    <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
-                                                )}
+                                                
                                                 <input type='number' className='input-card-length' step="1" 
                                                     value={count(land.id) || 0}
                                                     onChange={(e) => setNumberCardOnDeck(land.id, e.target.value)}
@@ -1751,21 +1770,28 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                             </div>
                                         )} 
                                         {format !== "COMMANDER" && land.id > 7 && (
-                                        <div className='deckbuilding-text-number'>                              
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
+                                        <div className='deckbuilding-text-number'> 
+                                        
+                                            { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
+                                                    <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
+                                                )}
+
+                                            { cardsUnselected.filter(cardDeck => cardDeck === land.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === land.id).length}</p>
+                                             )}
+
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)}
+                                            disabled={disableButton(land.id)} >
                                                 <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
                                             </button>
                                             
-                                            { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
-                                                    <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
-                                                )}
                                                                               
                                             <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} disabled={numberLand(land.id) > 3} onClick={() => selectCard(land)} >
                                                 <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                             </button>
                                         </div>
                                         )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={isMobile ? '1em' : '3em'} onClick={() => deleteCards(land.id)} />
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={() => deleteCards(land.id)} />
                                         
                                     </div>
                                 </div>
@@ -1791,19 +1817,25 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     
                                     <div className='deckbuilding-number-container'>
                                         { format !== "COMMANDER" && ( 
-                                        <div className='deckbuilding-text-number'>                              
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(creature.id)} >
+                                        <div className='deckbuilding-text-number'>  
+                                            { cardsSelected.filter(cardDeck => cardDeck === creature.id).length > 0  && (
+                                                    <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === creature.id).length}</p>
+                                                )}
+
+                                            { cardsUnselected.filter(cardDeck => cardDeck === creature.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === creature.id).length}</p>
+                                             )}
+
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(creature.id)} >
                                                                         <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                             </button>
 
-                                            { cardsSelected.filter(cardDeck => cardDeck === creature.id).length > 0  && (
-                                                <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === creature.id).length}</p>
-                                            )}
+                        
                                             
                                             <p className='p-card-length'>{count(creature.id)}</p>                                  
                                             <button className="add-button-deckbuilding" disabled={count(creature.id) > 3}
                                             style={{ margin : '2%', border: 'none' }} 
-                                            onClick={() => addCard(creature.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                            onClick={() => selectCard(creature.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                             </button> 
                                         </div>
                                         )}
@@ -1842,11 +1874,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                         
                                         {/* Modif enchant */}
                                         { cardsSelected.filter(cardDeck => cardDeck === enchant.id).length > 0  && (
-                                                <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === enchant.id).length}</p>
+                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === enchant.id).length}</p>
                                         )}
 
                                         { cardsUnselected.filter(cardDeck => cardDeck === enchant.id).length > 0  && (
-                                                <p className='p-card-add-length' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === enchant.id).length}</p>
+                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === enchant.id).length}</p>
                                         )}
                                         
                                         <p className='p-card-length'>{count(enchant.id)}</p>                                  
@@ -1886,13 +1918,21 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     
                                      <div className='deckbuilding-text-number'>
                                         { format !== "COMMANDER" && (
-                                        <div className='deckbuilding-text-number'>                              
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(spell.id)} >
+                                        <div className='deckbuilding-text-number'>   
+                                        { cardsSelected.filter(cardDeck => cardDeck === spell.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === spell.id).length}</p>
+                                        )}
+
+                                        { cardsUnselected.filter(cardDeck => cardDeck === spell.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === spell.id).length}</p>
+                                        )}
+
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(spell)} >
                                                                     <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                                         
-                                        <p className='p-card-length'>{numberSpell(spell.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={numberSpell(spell.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => addCard(spell.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                        <p className='p-card-length'>{count(spell.id)}</p>                                  
+                                        <button className="add-button-deckbuilding" disabled={count(spell.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(spell)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button> 
                                         </div>
                                         )}
@@ -1924,13 +1964,22 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
                                      <div className='deckbuilding-number-container'>
                                         { format !== "COMMANDER" && (
-                                        <div className='deckbuilding-text-number'>                              
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(artefact.id)} >
+                                        <div className='deckbuilding-text-number'>   
+
+                                        { cardsSelected.filter(cardDeck => cardDeck === artefact.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === artefact.id).length}</p>
+                                        )}
+
+                                        { cardsUnselected.filter(cardDeck => cardDeck === artefact.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === artefact.id).length}</p>
+                                        )}
+
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(artefact.id)} >
                                                                     <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                                         
-                                        <p className='p-card-length'>{numberArtefact(artefact.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={numberArtefact(artefact.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => addCard(artefact.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                        <p className='p-card-length'>{count(artefact.id)}</p>                                  
+                                        <button className="add-button-deckbuilding" disabled={count(artefact.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(artefact.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button> 
                                         </div>
                                         )}
@@ -1965,13 +2014,22 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     </div>
                                     <div className='deckbuilding-number-container'>
                                     { format !== "COMMANDER" && (
-                                    <div className='deckbuilding-text-number'>                              
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(planeswalker.id)} >
+                                    <div className='deckbuilding-text-number'>
+
+                                        { cardsSelected.filter(cardDeck => cardDeck === planeswalker.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === planeswalker.id).length}</p>
+                                        )}
+
+                                        { cardsUnselected.filter(cardDeck => cardDeck === planeswalker.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === planeswalker.id).length}</p>
+                                        )}
+                                                                      
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(planeswalker.id)} >
                                             <AiOutlineMinusCircle size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                             
-                                        <p className='p-card-length'>{numberPlaneswalker(planeswalker.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={numberPlaneswalker(planeswalker.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => addCard(planeswalker.id)} >
+                                        <p className='p-card-length'>{count(planeswalker.id)}</p>                                  
+                                        <button className="add-button-deckbuilding" disabled={count(planeswalker.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(planeswalker.id)} >
                                             <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button> 
                                     </div>
@@ -2276,10 +2334,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
     
         </div>
         
-        {/*Bouton pour valider les changements de carte */}
+        {/*Bouton pour valider les changements de carte */} 
         <ButtonValid style={{position: 'fixed', bottom: '15px', right: '50px'}}
-                        onClick={()=>updateCards()} disabled={cardsSelected.length === 0 && cardsUnselected.length === 0 } 
-                        text={updateCardText()}/>                                      
+                        onClick={()=>setDisplayAddPopUp(true)} disabled={cardsSelected.length === 0 && cardsUnselected.length === 0 } 
+                        text={"Valider"}/>                                      
 
                 {/* Popup de zoom carte mobile */}
                 {displayZoomPopup && cardImage && (
@@ -2343,6 +2401,20 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayZoomPopup(false)}/>
                             </div>
                 )}
+
+                {/* Popup d'ajout de cartes */}
+                { displayAddPopUp && (
+                                   <div className='popup-bckg'>
+                                        <div className='popup-update-user'>
+                                            <div className='header-ban-container'>
+                                                <h2 style={{color: 'white', fontFamily: 'MedievalSharp, cursive'}}>Modifications effectuées</h2>
+                                            </div>
+                                            <h4 className='active-p1' style={{padding:'5%', color: 'black', textAlign: 'center'}} >{updateCardText()}</h4>                               
+                                            <button className='valid-popup' onClick={() => updateCards()}><h4 className='valid-poup-title'>Valider</h4></button>
+                                          </div> 
+                                          <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayAddPopUp(false)}/> 
+                                      </div>
+                                )}
                             
                 {/* Popup publication du deck */}
                 {popupPub && (

@@ -104,6 +104,7 @@
 
 .deckbuilding-pp {
     min-width: 300px ;
+    width: 300px ;
     height: 300px;
     border-radius: 50%; 
     object-fit: cover;
@@ -884,7 +885,7 @@
     color: #2c3e50;
     transition: color 0.3s ease;
     flex: 1;
-    font-size: 1.5em;
+    font-size: 1.3em;
     line-height: 1.1;
     margin: 4px 0;
     text-align: left; /* Garde le texte aligné à gauche */
@@ -1124,6 +1125,14 @@
   gap: 10px;
 } 
 
+@media (max-width: 760px) {
+
+    .update-deck-container, .pub-deck-container, .pv-deck-container {
+        width: 60%;
+    }
+
+}
+
 .public-container {
     display: flex;
     flex-direction: column;
@@ -1233,6 +1242,22 @@
     }
 } 
 
+.p-card-add-length-deckbuilding {
+     position: absolute;
+    color: green;
+    margin-left: -50px;
+    margin-top: 15px;
+    font-size: 1.3em;
+    font-weight: bold;
+    white-space: nowrap;
+    z-index: 10;
+}
 
+@media (max-width: 500px) {
+  .p-card-add-length-deckbuilding {
+    font-size: 0.8em;
+    margin-left: -25px;
+  }
+}
 
 
