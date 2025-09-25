@@ -181,7 +181,16 @@ td {
   color: white;
 }
 
-.update-password-form {
+.update-password-form-desktop {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 50%;
+  padding: 5%;
+  border: 1px solid black;
+}
+
+.update-password-form-mobile {
   display: none;
 }
 
@@ -358,13 +367,17 @@ td {
     display: none;
   }
 
-  .update-password-form {
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  width: 90%;
-  padding: 5%;
-  border: 1px solid black;
+  .update-password-form-desktop {
+    display: none;
+}
+
+  .update-password-form-mobile {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 90%;
+    padding: 5%;
+    border: 1px solid black;
 }
 }
 

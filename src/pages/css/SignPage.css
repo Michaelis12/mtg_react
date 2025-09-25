@@ -61,14 +61,19 @@
     margin-bottom: 5%;
 }
 
-.input-group label {
+.input-group-sign {
+    margin-bottom: 2%;
+}
+
+
+.input-group label, .input-group-sign label {
     padding:  5px;
     display: block;
     color: black;
     font-weight: bold;
 }
 
-.input-group input {
+.input-group input, .input-group-sign input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -223,6 +228,12 @@ button:hover {
     font-size: 1.2em;
 }
 
+.instruction-para-sign {
+    color: gray;
+    font-style: italic;
+    font-size: 1em;
+}
+
 @media (max-width: 1650px) {
 
     .login-container {
@@ -252,7 +263,7 @@ button:hover {
         width: 60%;
     }
 
-    .instruction-para {
+    .instruction-para, .instruction-para-sign {
         font-size: 0.8em;
     }
 
@@ -323,4 +334,14 @@ button:hover {
 
 
     }
+
+
+    /*Page new admin */
+
+    .alert-send-admin-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
 

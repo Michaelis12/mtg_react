@@ -93,12 +93,14 @@ const NewAdmin = function () {
 
     // Form ajout d'admin 
     const addAdmin = async (e) => {
-    //e.preventDefault();
+    e.preventDefault();
        setErrorContent(null) 
        setDisplayLoading(true)
         const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,20}$/;
         if(regex.test(password)) {
                 try{
+
+                     setAlertAdminSend(false)
 
                     const user = {
                     pseudo,
@@ -109,15 +111,22 @@ const NewAdmin = function () {
                     bio 
                     }
 
+
+
                     const response = await axiosInstance.post('/f_admin/addAdmin', user, { withCredentials: true });
+
                     setExistingAccount(true)
                     setAlertAdminSend(true)
                     setErrorContent(null)
+                    setPseudo(false)
+                    setEmail(false)
+                    setPassword(false)
+                    setConfirmPassword(false)
                     setDisplayLoading(false)
 
 
-                }catch (error) {
-                    setErrorContent(error.response.data)
+                }catch (e) {
+                    setErrorContent(e.response.data)
                     setDisplayLoading(false)
 
                 }
@@ -138,36 +147,42 @@ return (
             { displayLoading && (
             <img src={loading} className="loading-img" alt="Image 1" />
             )}
-            
+             
             {/* Form d'ajout de l'admin */}
-                <div className="login-container" style={{marginTop: '2%', marginBottom: '1%', backgroundImage: `url(${backgroundForm})`}}>
+                <div className="login-container" style={{backgroundImage: `url(${backgroundForm})`}}>
                 <h1 className="title-log">Ajouter un nouvel administrateur</h1>
 
                 <div className="alert-send-error-container">
                         <h6 className="alert-send-error-auth">{errorContent}</h6>
                     </div>
+
+                { alertAdminSend && (
+                    <div className="alert-send-admin-container">
+                    <h4 className="alert-send-card" style={{position: 'absolute', color: "green"}}>Administrateur ajouté !</h4>
+                    </div>
+                )}
                 
                 <form className="sign-form" onSubmit={addAdmin} style={{marginTop: '2%'}}> 
-                    <div className="input-group">
+                    <div className="input-group-sign">
                         <label>Pseudo :</label>
                         
                         <input type="pseudo" id="pseudo" name="pseudo" placeholder="ex : MagicPlayer1"
                         onChange={(e) => setPseudo(e.target.value)} style={{borderColor: pseudoStyle()}}/>
-                        <p className="instruction-para">  doit contenir entre 5 et 15 caractères</p>
+                        <p className="instruction-para-sign">  doit contenir entre 5 et 15 caractères</p>
                     </div>
-                    <div className="input-group">
+                    <div className="input-group-sign">
                         <label >E-mail :</label>
                         <input type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)}
                         style={{borderColor: emailStyle()}}  required/>
                     </div>
-                    <div className="input-group">
+                    <div className="input-group-sign">
                         <label>Mot de passe :</label>
                         <input type="password" id="password" onChange={(e) => setPassword(e.target.value)}
                         placeholder="entre 8 et 20 caractères avec au moins une majuscule et un caractère spécial"
                         style={{borderColor: passwordStyle()}} required/>
-                        <p className="instruction-para">  doit contenir entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial  </p>
+                        <p className="instruction-para-sign">  doit contenir entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial  </p>
                     </div>
-                    <div className="input-group">
+                    <div className="input-group-sign" style={{marginBottom: '5%'}}>
                         <label>Confirmation du mot de passe :</label>
                         <input type="password" id="password" onChange={(e) => setConfirmPassword(e.target.value)}
                         style={{borderColor: passwordStyle()}} required/>
@@ -182,11 +197,7 @@ return (
                 
                 </div>
 
-                { alertAdminSend && (
-                    <div className="alert-send-card-container">
-                    <h4 className="alert-send-card">Administrateur ajouté !</h4>
-                    </div>
-                )}
+                
         </div>
         </Section>
 )

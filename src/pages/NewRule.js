@@ -2,9 +2,8 @@ import  "./css/NewRegle.css"
 import Section from '../components/section';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
+import ButtonValidPopup from "../components/buttonValidPopup";
 import backgroundCardsPage from "../assets/background_cardsPage3.jpg"
-import { MdPublishedWithChanges } from "react-icons/md";
 import Title from '../components/title';
 import loading from "../assets/loading.gif"
 import backgroundPopup from "../assets/background_white.png"
@@ -34,12 +33,14 @@ const NewRegle = function () {
     const [alertDataSend, setAlertDataSend] = React.useState(false)
     const [alertDataDontSend, setAlertDataDontSend] = React.useState(false)
     
-    const [popupPub, setPopupPub]= React.useState(false)
-
     // Soumet le form 
     const sendRegle = async () => {
 
             try{
+                setAlertDataDontSend(false)
+                setAlertDataSend(false)
+
+
                 setDisplayLoading(true);
                 const formData = new FormData();
                     formData.append('title', title);
@@ -53,8 +54,9 @@ const NewRegle = function () {
                 const response = await axiosInstance.post('/f_admin/addRegle', data, { withCredentials: true }); 
                 setAlertDataSend(true)
                 setAlertDataDontSend(false)
+                setTitle("")
+                setText("")
                 setDisplayLoading(false);
-                setPopupPub(true)
             }catch (e) { 
                 setAlertDataDontSend(true)
                 setDisplayLoading(false);
@@ -63,11 +65,6 @@ const NewRegle = function () {
 
     }
 
-    const popupConfirm = () => { 
-            window.location.reload();
-        }
-
-    
     
     return (
         <Section>
@@ -84,40 +81,28 @@ const NewRegle = function () {
                        </textarea>
             </div>
                 
-                <div className="input-groupe">
-                    <label>Texte :</label>
-                    <textarea type="text" id="texte" name="texte" className="text-input" rows="15" cols="33" 
+                <div className="input-group-rule">
+                    <label className='rule-line-title' >Texte :</label>
+                    <textarea type="text" id="texte" name="texte" style={{width:'80%'}} rows="15" cols="33" value={text}  
                     onChange={(e) => setText(e.target.value)}required/>
                 </div> 
-            <button className='create-card' disabled={!completeState} onClick={sendRegle}>Publier</button>
-          </div>   
-          { alertDataSend && (
-            <h4 className="alert-send-card">Contenu publié !</h4>
-        )}
-        { alertDataDontSend && (
-        <div className="alert-send-error-container">
-            <h5 className="alert-send-error">Echec de l'envoi</h5>
-            <h6 className="para-send-error">Assurez-vous que tous les champs sont correctement remplis</h6>
-        </div>
-        )}   
+            <div className='valid-button-container' style={{padding: '1%'}}>
+                <ButtonValidPopup disabled={!completeState} onClick={() => sendRegle()} />
+                {/* Alertes */}
+                { alertDataSend &&(
+                    <h4 className="alert-send-rule" style={{color: 'green'}}>Règle publiée !</h4>
+                )}
+                { alertDataDontSend && (
+                    <h5 className="alert-send-rule" style={{color: 'red'}}>Échec de l'envoi</h5>
+                 )}
+            </div>
+
+            </div>     
         </div>
         { displayLoading && (
                 <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
             )}
-        {popupPub && (
-                                <div className='popup-bckg'>
-                                    
-                                    <div className='set-attributs-deck'>
-                                        <div className='pub-title-container'>
-                                            <h1 className='pub-title'>Carte Publiée</h1>
-                                        </div>
-                                        <MdPublishedWithChanges size={'5em'} color=" #5D3B8C" />
-                                        <button  type="button" className="valid-form" onClick={() => popupConfirm()}>
-                                                            Ok
-                                                </button>
-                                    </div>
-                                </div>
-                            )}
+
         </Section>
     )
 } 

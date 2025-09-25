@@ -315,7 +315,18 @@ const NewCard = function () {
             const response = await axiosInstance.post('/f_admin/addCard', card, { withCredentials: true });
             setAlertCardSend(true)
             setDisplayLoading(false);
-            window.location.reload();
+            //window.location.reload();
+            setName("")
+            setText("")
+            setImage("")
+            setManaCost("")
+            setValue("")
+            setFormats([])
+            setColors([])
+            setType("")
+            setLegendary("")
+            setRarity("")
+            setEdition("")
             
         }catch (e) {
             setDisplayLoading(false);
@@ -324,9 +335,6 @@ const NewCard = function () {
 
         
     }
-    const popupConfirm = () => { 
-            window.location.reload();
-        }
     
     return ( 
     <Section>
@@ -788,15 +796,15 @@ const NewCard = function () {
                     </div>
 
                      <div className='valid-button-container' style={{padding: '5%'}}>
-                    <ButtonValidPopup disabled={!completeState} onClick={() => addCard()} />
-                    {/* Alertes */}
-                    { alertCardSend &&(
-                        <h4 className="alert-send-card" style={{color: 'green'}}>Carte publiée !</h4>
-                    )}
-                    { alertCardDontSend && (
-                        <h5 className="alert-send-card" style={{color: 'red'}}>Échec de l'envoi</h5>
-                    )}
-                </div>
+                        <ButtonValidPopup disabled={!completeState} onClick={() => addCard()} />
+                        {/* Alertes */}
+                        { alertCardSend &&(
+                            <h4 className="alert-send-card" style={{color: 'green'}}>Carte publiée !</h4>
+                        )}
+                        { alertCardDontSend && (
+                            <h5 className="alert-send-card" style={{color: 'red'}}>Échec de l'envoi</h5>
+                        )}
+                    </div>
                 
                 </div>
                 
@@ -810,22 +818,6 @@ const NewCard = function () {
         
         
     </div>
-    
-     {/* Popup publication */}
-    {popupPub && (
-                        <div className='popup-bckg'>
-                            
-                            <div className='set-attributs-deck'>
-                                <div className='pub-title-container'>
-                                    <h1 className='pub-title'>Carte Publiée</h1>
-                                </div>
-                                <MdPublishedWithChanges size={'5em'} color=" #5D3B8C" />
-                                <button  type="button" className="valid-form" onClick={() => popupConfirm()}>
-                                                    Ok
-                                        </button>
-                            </div>
-                        </div>
-                    )}
 
     </Section> 
     )

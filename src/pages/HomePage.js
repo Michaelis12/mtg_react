@@ -239,7 +239,7 @@ const navNewDeck = () => {
                     <h2 className="top-card-likeNumber" >{card.likeNumber} 
                       <FaHeart color="red" style={{position:'relative'}}/></h2>
                       {detailsCard && detailsCard.id === card.id && (
-                                          <img className="card-img-zoom" src={getImageUrl(card.image)} alt="Card-image"/>
+                                          <img className="top-card-img-zoom" src={getImageUrl(card.image)} alt="Card-image"/>
                                           )} 
               </div>
                 )
@@ -257,7 +257,7 @@ const navNewDeck = () => {
             borderRadius: '10px',
             boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
           }}> 
-        {decks.map(deck => (
+        {decks.map(deck => ( 
           <div className="top-deck-details" key={deck.id}>
 
                 <img className="deck-img" onClick={() => chooseDeck(deck.id)} src={getImageUrl(deck.image)}
@@ -268,6 +268,10 @@ const navNewDeck = () => {
                       <button className="top3-decks-button"><h4 className="top-decks-deckBuilderName" 
                       onClick={() => chooseUser(deck.id)}> de {deck.deckBuilderName}</h4></button>
                 </div> 
+                <div className="top3-decks-attributs-mobile">
+                <strong className="decks-name"> {deck.name} </strong>
+                <button className="deck-db-button" onClick={() => chooseUser(deck.id)}><strong className="deck-db"> de {deck.deckBuilderName}</strong></button>
+                </div>
                 <br/>
                 <h2 className="top-deck-likeNumber">{deck.likeNumber} <FaHeart color="red" style={{position:'relative'}}/></h2>
 
@@ -303,44 +307,6 @@ const navNewDeck = () => {
           </div>
             )
         )}
-        {decks.map(deck => ( 
-                                        <div className="deck-details"  key={deck.id}>
-                                            <img className="deck-pp" src={getImageUrl(deck.image)} alt="Deck avatar" onClick={() => chooseDeck(deck.id)}
-                                            onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } onMouseOut={() => hoveredDeck()} />
-                                            <strong className="decks-name"> {deck.name} </strong>
-                                          <button className="deck-db-button" onClick={() => chooseUser(deck.id)}><strong className="deck-db"> de {deck.deckBuilderName}</strong></button>
-        
-                                            <h2 className="top-deck-likeNumber">{deck.likeNumber} <FaHeart color="red" style={{position:'relative'}}/></h2>
-        
-                                            {detailsDeck && detailsDeck.id === deck.id && (
-                                            <div className="hover-deck-card">
-                                                  <div className="img-container">
-                                                      <img className="hover-deck-card-img" src={getImageUrl(deck.image)} alt="Deck mtg"/>
-                                                  </div>
-                                                          <div className="deck-hover-body" >
-                                                            <div className='name-line'>
-                                                              <h1 className="hover-deck-name"> {deck.name}</h1>
-                                                            </div>
-                                                            <div className='color-line'>                        
-                                                                <h2 className='color'> Couleurs : </h2> 
-                                                                {deck.colors && deck.colors.length > 0 && Array.isArray(colors) && (
-                                                                    <div className='mapping-color'>
-                                                                      {deck.colors.map((color)  => (
-                                                                    <img src={getColorPics(color)} className="color-img-select" style={{display:(displayColor(color))}} alt={color}/>                                
-                                                                ))}
-                                                                    </div>
-                                                                )} 
-                                                            </div>
-                                                            <div className='format-line'>              
-                                                                <h2 className='format'> Format : </h2> 
-                                                                <h2 className='card-format' style={{ backgroundColor: 'green' }}>{deck.format}</h2>
-                                                            </div>
-                                                            
-                                                        </div>                                                
-                                                      </div>
-                                            )}
-                                        </div>                         
-        ))}
         </div>
       </div>
 

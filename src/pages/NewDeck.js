@@ -877,10 +877,10 @@ const NewDeck = () => {
     // Modifie l'icone de la carte quand elle est sélectionnée 
     const changeIcon = (id) => {
                 if(cedhSelected.id !== id) {
-                                return <CgAdd size={'2.5em'} color={'black'} className="icon-add-card"/>
+                                return <CgAdd size={'2.5em'} color={'black'} />
                                 }
                                 else {
-                                    return <CgCloseO size={'2.5em'} color={'red'} className="icon-add-card"/>
+                                    return <CgCloseO size={'2.5em'} color={'red'} />
                                 } 
     } 
     
@@ -1262,7 +1262,7 @@ const NewDeck = () => {
                           onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                           />
                                             
-                          <AddButton style={{ backgroundColor: 'white', paddingTop : '2%' }} onClick={()=> selectCedh(card)}
+                          <AddButton style={{ backgroundColor: 'white', width:'40px', height: '40px' }} onClick={()=> selectCedh(card)}
                           icon={changeIcon(card.id)}/>
 
                           <p className='card-page-likenumber' style={{position:'relative', marginTop: '10px'}}>{card.likeNumber} <FaHeart 

@@ -46,11 +46,19 @@
 }
 
 
+
 .delete-icon {
     position: relative;
     margin-top: -15px;
     font-size: 2.5em;
 }
+
+.desac-icon {
+    position: relative;
+    margin-top: -15px;
+    font-size: 2em;
+}
+
 
 .avert-header {
     width: 100%;
@@ -93,6 +101,10 @@
   .popup-delete {
     width: 80%;
   }
+
+  .popup-delete-title {
+    font-size: 1.4em;
+}
 }
 
 
@@ -113,6 +125,10 @@
 
 .delete-icon { 
     font-size: 1.5em;
+}
+
+.desac-icon { 
+    font-size: 1.2em;
 }
 
 .header-popup-delete { 

@@ -8,6 +8,7 @@ import { LuRefreshCw } from "react-icons/lu";
 import { IoSettingsOutline } from "react-icons/io5";
 import Section from '../components/section';
 import PopupDelete from "../components/popupDelete";
+import ButtonValidPopup from "../components/buttonValidPopup";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { CgCloseO  } from "react-icons/cg";
 import { ImCross } from "react-icons/im";
@@ -25,6 +26,7 @@ const SettingPage = function () {
   const [displayResetPassword, setDisplayResetPassword] = React.useState(false)
   const [displayLoading, setDisplayLoading] = useState(false);
   const [userDecks, setUserDecks] = useState([])
+  const { authLogOut } = useContext(AuthContext);
   
 
   const navigate = useNavigate();
@@ -34,6 +36,7 @@ const SettingPage = function () {
   const [newPassword, setNewPassword] = useState("")
   const [confirmNewPassword, setConfirmNewPassword] = useState("")
   const [errorContent, setErrorContent] = React.useState(null);
+  const [succesContent, setSuccesContent] = React.useState(null);
   
 
     // Récupère les données de l'user
@@ -188,9 +191,10 @@ const SettingPage = function () {
                     const request = await axiosInstance.put(`/f_user/updatePassword`, requestBody,
                     { withCredentials: true }
                     );
-    
-                    
+                    setSuccesContent("Mot de passe mis à jour");
                     setDisplayLoading(false);
+                    setDisplayResetPassword(false);
+                    setSuccesContent(null);
                 }   
                 catch (error) {
                     setDisplayLoading(false);
@@ -215,6 +219,7 @@ const SettingPage = function () {
         try {
             setDisplayLoading(true);
             const request = await axiosInstance.put(`/f_user/desacAccount`, null, { withCredentials: true });
+            authLogOut()
             navigate('/')
             setDisplayLoading(false);
             
@@ -232,7 +237,7 @@ const SettingPage = function () {
         try {
             setDisplayLoading(true);
             const request = await axiosInstance.delete(`/f_user/deleteAccount`, { withCredentials: true });
-            localStorage.removeItem("authToken");
+            authLogOut()
             navigate('/')
             setDisplayLoading(false);
 
@@ -332,94 +337,79 @@ const SettingPage = function () {
 
                 <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>navigate(-1)}/>
 
-
+            {/*Popup modification de password*/}
             {displayResetPassword && ( 
                 <div className="popup-bckg">
-
-                        <div className="display-login-container">
-                            <div className="login-container" style={{ backgroundImage: `url(${backgroundWhite})`}}>
+                             
+                            <div className="login-container" style={{ backgroundImage: `url(${backgroundWhite})`, marginTop: '0%'}}>
                                 <h2 className="title-log">Modifier le mot de passe</h2>
                                 <div className="alert-send-error-container">
                                         <h6 className="alert-send-error-auth">{errorContent}</h6>
                                 </div>
+                                <div className="alert-send-error-container">
+                                        <h6 className="alert-send-error-auth" style={{color: 'green'}}>{succesContent}</h6>
+                                </div>
                                 <form className="login-form" onSubmit={updatePassword} style={{width : `100%`}}> 
 
                                 <div className="input-group">
-                                    <label>Mot de passe actuel :</label>
-                                    <input type="password" id="password" onChange={(e) => setPassword(e.target.value)} placeholder="XXXXXXXX"
-                                    style={{borderColor: passwordStyle()}} required/>
+                                    <label className="sign-label">Mot de passe actuel :</label>
+                                    <input type="password" id="password" onChange={(e) => setPassword(e.target.value)} 
+                                     className="sign-input" style={{borderColor: passwordStyle()}} required/>
                                 </div>
                                     
                                 <div className="input-group">
-                                    <label>Nouveau Mot de passe :</label>
+                                    <label className="sign-label">Nouveau Mot de passe :</label>
                                     <input type="password" id="newPassword" onChange={(e) => setNewPassword(e.target.value)} placeholder="ex : M@agicPlayer12"
-                                    style={{borderColor: passwordStyle()}} required/>
+                                     className="sign-input" style={{borderColor: passwordStyle()}} required/>
                                     <p className="instruction-para">  doit contenir entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial  </p>
                                 </div>
                                 
                                 
-                                <div className="input-group">
-                                    <label>Confirmation du nouveau mot de passe :</label>
+                                <div className="input-group">      
+                                    <label className="sign-label">Confirmation du nouveau mot de passe :</label>
                                     <input type="password" id="confirmPassword" onChange={(e) => setConfirmNewPassword(e.target.value)}
-                                    style={{borderColor: passwordStyle()}} required/>
+                                     className="sign-input" style={{borderColor: passwordStyle()}} required/>
                                 </div> 
                                 <div className="link-group">
-                                        <button className="valid-form" disabled={password === "" || newPassword === "" || confirmNewPassword ===""} type="submit" >Valider</button>
+                                        <button className="valid-popup" disabled={password === "" || newPassword === "" || confirmNewPassword ===""} type="submit" ><h4 className="valid-popup-title" >Valider</h4></button>
                                     </div>
                                 </form>                             
                             </div>
-                        </div>
+                            
 
-                            <form className="update-password-form" onSubmit={updatePassword} style={{ backgroundImage: `url(${backgroundWhite})`, width: '100%'}}> 
-
-                                <div className="input-group">
-                                    <label>Mot de passe actuel :</label>
-                                    <input type="password" id="password" onChange={(e) => setPassword(e.target.value)} placeholder="XXXXXXXX"
-                                    style={{borderColor: passwordStyle()}} required/>
-                                </div>
-                                    
-                                <div className="input-group">
-                                    <label>Nouveau Mot de passe :</label>
-                                    <input type="password" id="newPassword" onChange={(e) => setNewPassword(e.target.value)} placeholder="ex : M@agicPlayer12"
-                                    style={{borderColor: passwordStyle()}} required/>
-                                    <p className="instruction-para">  doit contenir entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial  </p>
-                                </div>
-                                
-                                
-                                <div className="input-group">
-                                    <label>Confirmation du nouveau mot de passe :</label>
-                                    <input type="password" id="confirmPassword" onChange={(e) => setConfirmNewPassword(e.target.value)}
-                                    style={{borderColor: passwordStyle()}} required/>
-                                </div> 
-                                <div className="link-group">
-                                        <button className="valid-form" disabled={password === "" || newPassword === "" || confirmNewPassword ===""} type="submit" >Valider</button>
-                                    </div>
-                                </form>    
-                        <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>{setDisplayResetPassword(false); setErrorContent(null);}}/>
+                             
+                        
+                        <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>{setDisplayResetPassword(false); setErrorContent(null); 
+                            setPassword("");  setNewPassword(""); setConfirmNewPassword("")}}/>
                 </div>
             )}
 
-            {
-             displayDesacPopUp && ( 
-        
-            <PopupDelete 
-                title={"Désactiver le compte ?"} 
-                text={"Une fois désactivé votre compte, comme vos decks ne seront plus visibles par les autres utilisateurs"}
-                onClick={() => desacAccount()}
-                back={() => setDisplayDesacPopUp(false)}
-            />
-            )
-            } 
+            {displayDesacPopUp && ( 
 
-            {
-             displayDeletePopUp && ( 
+            <div className='popup-bckg'> 
+                <div className='popup-delete' style={{ backgroundImage: `url(${backgroundWhite})`}}>
+                    <div className='header-popup-delete' style={{gap: "10px"}}>
+                                        <ImCross  className="desac-icon" />
+                                        <h1 className="popup-delete-title">Désactiver le compte ?</h1>
+                    </div>
+                    <div className="avert-header">
+                                        <h4 className="avert-p2">Une fois désactivé votre compte, comme vos decks ne seront plus visibles par les autres utilisateurs</h4> 
+                                        <h4 className="avert-p2"> Êtes-vous sûr(e) de vouloir continuer ?</h4>
+                    </div>                                     
+                    <ButtonValidPopup onClick={() => desacAccount()}/>
+                </div> 
+            <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={() => setDisplayDesacPopUp(false)}/> 
+        </div> 
+            )} 
+
+            {displayDeletePopUp && ( 
         
-            <PopupDelete 
-                title={"Supprimer le compte ?"} 
-                text={"Une fois désactivé votre compte, comme vos decks seront perdu à jamais"}
-                onClick={() => deleteAccount()}
-                back={() => setDisplayDeletePopUp(false)}
-            />
+                <PopupDelete 
+                    title={"Supprimer le compte ?"} 
+                    text={"Une fois désactivé votre compte, comme vos decks seront perdu à jamais"}
+                    onClick={() => deleteAccount()}
+                    back={() => setDisplayDeletePopUp(false)}
+                />
             )
             } 
    

@@ -302,12 +302,50 @@
     cursor: pointer; 
 }
 
+.top-card-img-zoom {  
+    position: absolute;
+    display: fixed; 
+    pointer-events: none; 
+    width: 350px;
+    margin-top: -25%;
+    min-height: 300px;
+    z-index: 100;
+    border-radius: 10px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    transform: scale(0.95);
+    animation: zoomFadeIn 0.4s ease-out forwards;
+
+}
+
+
+@media (max-width: 1200px) {
+    .top3_cards-img {
+        max-width: 250px; 
+    }
+
+    .top-card-img-zoom {  
+        width: 290px;
+    }
+ 
+}
+
 @media (max-width: 768px) {
     .top3_cards-img {
         max-width: 180px; 
     }
- 
+
+    .top-card-img-zoom {  
+        width: 220px;
+    }
 }
+
+@media (max-width: 500px) {
+    .top-card-img-zoom {
+       display: none;
+    }
+}
+
+
 
 .deck-img { 
     width: 300px;   /* Définit la taille de l'image (ajustez selon vos besoins) */
@@ -319,7 +357,7 @@
     position: relative;
     background-color: white;
 }
-
+ 
 .top3-decks-attributs {  
     background-color: white;
     color: black;
@@ -370,12 +408,11 @@
     
 }
 
+
+
 @media (max-width: 768px) {
 
-    .top3-decks-attributs { 
-        width: 100%;
-        border: 2px solid black;
-    }
+
 
     .top3-card-details, .top3-deck-details {
         padding: 5px;
@@ -408,9 +445,25 @@
 
 /* Top Decks*/
 
+.top3-decks-attributs-mobile { 
+        display: none;
+}
+
 @media (max-width: 768px) {
     .top3-decks-name {
         font-size: 1em;
+    }
+
+    .top3-decks-attributs { 
+        display: none;
+    }
+
+    .top3-decks-attributs-mobile { 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 90%;
     }
 }
 
@@ -562,6 +615,10 @@
         font-size: 1.8em;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
+
+    .hover-top3-deck-card{
+        display: none;
+    }
 }
 
 /* Media query pour les écrans de 480px et moins (mobiles très petits) */
@@ -575,8 +632,8 @@
     }
 
     .deck-img {
-      height: 180px;
-      width: 180px;
+      height: 150px;
+      width: 150px;
       border: 2px solid black;
     }
 

@@ -11,7 +11,7 @@ const PopupDelete = function (props) {
              <div className='popup-delete' style={{ backgroundImage: `url(${backgroundWhite})`}}>
                                     <div className='header-popup-delete'>
                                         <RiDeleteBin6Line  className="delete-icon" />
-                                        <h1>{props.title}</h1>
+                                        <h1 className="popup-delete-title">{props.title}</h1>
                                     </div>
                                     <div className="avert-header">
                                         <h4 className="avert-p2">{props.text}</h4> 

@@ -1301,7 +1301,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
                 {/* Passer le deck en privé */}
                 {deck.isPublic && (
-                    <button className='update-deck-container' onClick={()=>privateDeck()}>
+                    <button className='pv-deck-container' onClick={()=>privateDeck()}>
                         <RiGitRepositoryPrivateLine  className='icon-update-user' />
                         <h5 className='update-user-p'>Passer en privé</h5>
                     </button>                   
@@ -1373,7 +1373,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(land.id)} >
                                                 <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
                                                 </button>
-                                                <textarea className='input-card-length' step="1" min="0"
+                                                <input type='number' className='input-card-length' step="1" 
                                                     value={numberLand(land.id) || 0}
                                                     onChange={(e) => setNumberCardOnDeck(land.id, e.target.value)}
                                                 />
@@ -1961,7 +1961,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             </div>
                             <img src={deckPile} className='pub-image' alt="deck_pile" /> 
                             <h4  className='pub-public'>public</h4>
-                            <button  type="button" className="valid-popup" onClick={() => {setPopupPub(false);}}>
+                            <button  type="button" className="valid-popup" onClick={() => {setPopupPub(false); window.location.reload();}}>
                                             <h4 className="valid-popup-title" >Fermer</h4> 
                                     </button>
                         </div>

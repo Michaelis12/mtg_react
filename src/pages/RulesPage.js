@@ -12,7 +12,7 @@ import backgroundCardsPage from "../assets/background_cardsPage.jpg"
 import backgroundRule from "../assets/background_white.png"
 import loading from "../assets/loading.gif" 
 
-const ArticlesPage = function () {
+const RulesPage = function () { 
 
   const [rules, setRules] = React.useState([])
   const [ruleToDelete, setRuleToDelete] = useState(null);
@@ -93,4 +93,4 @@ const ArticlesPage = function () {
   )
 }
 
-export default ArticlesPage
+export default RulesPage

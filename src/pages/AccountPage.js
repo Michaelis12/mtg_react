@@ -848,10 +848,12 @@ const AccountPage = () => {
                                 </div>
                                 
                             </div>
-                            
-                            <button className='next-page-button' style={{marginBottom: '3%'}} 
-                                onClick={()=>navigate('/decksCreate')}>Afficher plus en détails</button>
+                            { decks.length > 0 && (
+                                <button className='next-page-button' style={{marginBottom: '3%'}} 
+                                    onClick={()=>navigate('/decksCreate')}>Afficher en détails</button>
+                            )}
                             </div>
+                            
                             }
 
                         {/*Mapping des cartes likées*/}
@@ -887,7 +889,7 @@ const AccountPage = () => {
                                         </div>
                                     ))}
                                 </div>
-                                <button className='next-page-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/cardsLiked')}>Afficher plus en détails</button>
+                                <button className='next-page-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/cardsLiked')}>Afficher en détails</button>
                                 </div>
                         }
                         {arrowUp2 === true && cardsLiked.length < 1 && (
@@ -960,7 +962,7 @@ const AccountPage = () => {
                                                     </div>
                                             ))}
                                         </div>
-                                        <button className='next-page-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/decksLiked')}>Afficher plus en détails</button>
+                                        <button className='next-page-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/decksLiked')}>Afficher en détails</button>
                                     </div>
                                     }
                                     {arrowUp3 === true && decksLiked.length < 1 && (

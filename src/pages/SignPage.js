@@ -334,7 +334,7 @@ const SignPage = function () {
      
  
     
-    return (
+    return ( 
     <Section> 
         <div className="sign-container">
         <img src={BackgroundMTG} className="background-sign" alt="Image 1" />
@@ -458,7 +458,7 @@ const SignPage = function () {
             <div className="login-container" style={{ backgroundImage: `url(${backgroundForm})`}}>
                 <h1 className="title-log">Mot de passe oublié</h1>
                 
-                <h5 className="p-tutorial"><strong>Entrez l'adresse mail associée à votre compte</strong></h5>
+                <h4 className="p-tutorial"><strong>Entrez l'adresse mail associée à votre compte</strong></h4>
 
                 <div className="alert-send-error-container">
                         <h6 className="alert-send-error-auth">{errorContent}</h6>
@@ -469,8 +469,8 @@ const SignPage = function () {
             
                            
                     <div className="input-group">
-                        <label >Adresse email :</label>
-                        <input type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)}
+                        <label className="sign-label" >Adresse email :</label>
+                        <input className="sign-input" type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)}
                         style={{borderColor: logStyle()}} required/>
                     </div>
                     
@@ -495,7 +495,7 @@ const SignPage = function () {
             <div className="login-container" style={{ backgroundImage: `url(${backgroundForm})`}}>
                 <h1 className="title-log">Mot de passe oublié</h1>
 
-                <h5 className="p-tutorial"><strong>Entrez le code d'activation reçu par mail</strong></h5>
+                <h4 className="p-tutorial"><strong>Entrez le code d'activation reçu par mail</strong></h4>
                 <div className="alert-send-error-container">
                         <h6 className="alert-send-error-auth">{errorContent}</h6>
                 </div>
@@ -504,9 +504,9 @@ const SignPage = function () {
                 <form className="login-form" onSubmit={navChangePassword} style={{width : `100%`}}> 
                     
                     <div className="input-group">
-                        <label >Code :</label>
-                        <input type="text" id="text" name="text" onChange={(e) => setVerificationCode(e.target.value)} placeholder="XXXXXXX"
-                        style={{borderColor: logStyle()}} required/>
+                        <label className="sign-label" >Code :</label>
+                        <input  type="text" id="text" name="text" onChange={(e) => setVerificationCode(e.target.value)} placeholder="XXXXXXX"
+                          className="sign-input" style={{borderColor: logStyle()}} required/>
                     </div>
 
                     <div className="link-group">
@@ -534,24 +534,24 @@ const SignPage = function () {
         {activeAccount && changepassword && (
             <div className="login-container" style={{ backgroundImage: `url(${backgroundForm})`}}>
                 <h1 className="title-log">Mot de passe oublié</h1>
-                <h5 className="p-tutorial"><strong>Choisissez votre nouveau mot de passe</strong></h5>
+                <h4 className="p-tutorial"><strong>Choisissez votre nouveau mot de passe</strong></h4>
                 <div className="alert-send-error-container">
                         <h6 className="alert-send-error-auth">{errorContent}</h6>
                 </div>
                 <form className="login-form" onSubmit={resetPassword} style={{width : `100%`}}> 
                     
                     <div className="input-group">
-                    <label>Nouveau Mot de passe :</label>
+                    <label className="sign-label" >Nouveau Mot de passe :</label>
                     <input type="password" id="password" onChange={(e) => setNewPassword(e.target.value)} placeholder="ex : M@agicPlayer12"
-                    style={{borderColor: passwordStyle()}} required/>
+                    style={{borderColor: passwordStyle()}}  className="sign-input" required/>
                     <p className="instruction-para">  doit contenir entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial  </p>
                 </div>
                 
                 
                 <div className="input-group">
-                    <label>Confirmation du nouveau mot de passe :</label>
+                    <label className="sign-label" >Confirmation du nouveau mot de passe :</label>
                     <input type="password" id="password" onChange={(e) => setConfirmNewPassword(e.target.value)}
-                    style={{borderColor: passwordStyle()}} required/>
+                      className="sign-input" style={{borderColor: passwordStyle()}} required/>
                 </div> 
                 <div className="link-group">
                         <button className="valid-form" type="submit" ><h4>Valider</h4></button>

@@ -15,7 +15,8 @@
   }
 
 .regle {
-    max-width: 800px;
+    width: 800px;
+    min-width: 300px;
     border: 2px solid black;
     background-color: #ccc;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
@@ -23,6 +24,24 @@
     max-height: 600px;
     overflow: hidden; 
   } 
+
+@media (max-width: 1600px) {
+  .regle {
+    width: 80%;
+  }
+}
+
+@media (max-width: 600px) {
+  .regle {
+    width: 90%;
+  }
+}
+
+@media (max-width: 400px) {
+  .regle {
+    width: 100%;
+  }
+}
 
   .regle:hover {
      transform: translateY(-3px);
@@ -109,6 +128,10 @@
 
   .regle {
     max-width: 400px;
+  }
+
+  .regles-container {
+    gap: 50px;
   }
 
   .update-element-popup {
