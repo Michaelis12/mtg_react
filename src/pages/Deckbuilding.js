@@ -121,10 +121,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         const [newName, setNewName] = React.useState("")
         const [newImage, setNewImage] = React.useState("")
         
-        // Ouvrir le form d'edit
-        const startEdit = () => {
-            setUpdateDeck(true)
-        }
 
 
         const [isImageUpdate, setIsImageUpdate] = React.useState(false) 
@@ -313,8 +309,38 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             const cardWithID = deckPlaneswalkers.filter(card => card.id === id);
             const number = cardWithID.length;
                 return number;
+        }; 
+
+        /*
+        // Sélectionne des cartes un format =/= commander
+        const selectCard = (newCard) => {
+                  setCardsSelected(prevCards => [...prevCards, newCard])
         };
-             
+        
+        // Retire des cartes pour un format =/= commander 
+        const unselectCard = (cardToRemove) => {
+                    setCardsSelected(prevCards => {
+                      const index = prevCards.findIndex(card => card.id === cardToRemove.id);
+                      if (index === -1) return prevCards; // Rien à retirer
+                      const newCards = [...prevCards];
+                      newCards.splice(index, 1);
+                      return newCards;
+                    });
+        };
+                
+        // Retire tous les exemplaires d'une carte
+        const unselectCards = (cardToRemove) => {
+                    if(cardsSelected.length === 1) {
+                       setCardImage(defaultImg)
+                      setDisplayPopup(false)
+                    }
+                    
+                    setCardsSelected(prevCards => 
+                      prevCards.filter(card => card.id !== cardToRemove.id)
+                    );
+                    
+        };
+         */    
 
         const [arrowSens, setArrowSens] = useState(<SlArrowDown/>)
         const [arrowUp, setArrowUp] = useState(false)
@@ -704,7 +730,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             try { 
                 setDisplayLoading(true);
                 const response = await axiosInstance.put(`/f_user/deckPublic?deckID=${id}`, null, { withCredentials: true });
-                //navigate('/myspace')
                 setDisplayLoading(false);
                 setPopupPub(true)
                  }   

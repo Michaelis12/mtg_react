@@ -67,7 +67,6 @@ const CardsDeckPage = () => {
      const callColors = useRef(false)
      const recupStorageColors = (response) => {
         try {
-            console.log(callColors)
 
              if (callColors.current) return;
 

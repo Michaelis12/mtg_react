@@ -46,6 +46,7 @@ const AccountPage = () => {
     const [newID, setNewID] = React.useState("")
     const [day, setDay] = React.useState("")
     const [cause, setCause] = React.useState("")
+    const [disableButtons, setDisableButtons] = useState(false)
     const [displayDeletePopUp, setDisplayDeletePopUp] = React.useState(false)
     const [displayActivePopUp, setDisplayActivePopUp] = React.useState(false)
     const [displayDesacPopUp, setDisplayDesacPopUp] = React.useState(false)
@@ -76,11 +77,19 @@ const AccountPage = () => {
                     setNewID(id)
                 }
 
-                const request = await axiosInstance.get(`/f_all/getUserID?userID=${newID}`);
+
+                const request = await axiosInstance.get(`/f_admin/getUserID?userID=${newID}`);
 
                 const response = request.data
+
+                console.log(request.data)
     
                 setDeckBuilder(response)
+
+                if(request.data.roles.includes("ADMIN")) {
+                    setDisableButtons(true)
+                }
+
                 setDisplayLoading(false)
 
             }   
@@ -103,6 +112,7 @@ const AccountPage = () => {
                 
                 setDisplayLoading(false)
                 setDisplayActivePopUp(false)
+                window.location.reload();
     
             }   
             catch (error) {
@@ -131,6 +141,7 @@ const AccountPage = () => {
                 
                 setDisplayLoading(false)
                 setDisplayDesacPopUp(false)
+                window.location.reload();
     
             }   
             catch (error) {
@@ -189,9 +200,7 @@ const AccountPage = () => {
                             deck.colors, deck.manaCost, deck.value, deck.isPublic, deck.deckBuilder,
                             deck.deckBuilderName, deck.likeNumber, deck.cards, deck.commander
                 ) )
-                        
-                 console.log(response)     
-            
+                                    
                 setDecks(listDecks)
                 setPage(1) 
                 setHasMore(!response.data.isLast)
@@ -540,22 +549,25 @@ const AccountPage = () => {
                                         </div>
                                     </div>
                         
-                        </div>
+                        </div> 
 
                         <div className='admin-users-button'>
-                                    { deckBuilder.activity !== "INACTIVE" && (
-                                    <button className='update-user-container' onClick={() => setDisplayDesacPopUp(true)}>
+                                    { deckBuilder.activity !== "INACTIVE" && deckBuilder.activity !== "BANNED" && (
+                                    <button className='update-user-container' onClick={() => setDisplayDesacPopUp(true)}
+                                    disabled={disableButtons} >
                                             <ImCross className='icon-update-user' />
                                             <h5 className='update-user-p'>Desactiver le compte</h5>
                                     </button> 
                                     )}
-                                    { deckBuilder.activity === "INACTIVE" && (
-                                    <button className='update-user-container' onClick={() => setDisplayActivePopUp(true)}>
+                                    { deckBuilder.activity === "INACTIVE" || deckBuilder.activity === "BANNED" && (
+                                    <button className='update-user-container' onClick={() => setDisplayActivePopUp(true)}
+                                     >
                                             <VscDebugStart className='icon-update-user' />
                                             <h5 className='update-user-p'>Activer le compte</h5>
                                     </button> 
                                     )}
-                                    <button className='delete-user-container' onClick={() => setDisplayDeletePopUp(true)}>
+                                    <button className='delete-user-container' onClick={() => setDisplayDeletePopUp(true)}
+                                      disabled={disableButtons} >
                                             <RiDeleteBin6Line className='icon-update-user' />
                                             <h5 className='update-user-p'>Supprimer le compte</h5>
                                     </button> 
@@ -689,15 +701,15 @@ const AccountPage = () => {
                     onClick={()=>deleteDeckBuilder()} 
                     back={()=>setDisplayDeletePopUp(false)}/>
                 )}
-
+                
                 { displayActivePopUp && (
                    <div className='popup-bckg'>
                         <div className='popup-update-user'>
                             <div className='header-ban-container'>
                                 <h2 style={{color: 'white', fontFamily: 'MedievalSharp, cursive'}}>Réactiver le compte {deckBuilder.pseudo}</h2>
                             </div>
-                            <h3 className='active-pop-up-text'>Le compte {deckBuilder.pseudo} sera à nouveau actif</h3>                               
-                            <button className='valid-ban-user' onClick={() => activeDeckBuilder()}><h3>Valider</h3></button>
+                            <h4 className='active-p1' style={{padding:'5%', color: 'black', textAlign: 'center'}} >Le compte {deckBuilder.pseudo} sera à nouveau actif</h4>                               
+                            <button className='valid-popup' onClick={() => activeDeckBuilder()}><h4 className='valid-poup-title'>Valider</h4></button>
                           </div> 
                           <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayActivePopUp(false)}/> 
                       </div>
