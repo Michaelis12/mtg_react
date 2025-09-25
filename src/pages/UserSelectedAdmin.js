@@ -82,8 +82,6 @@ const AccountPage = () => {
                 const request = await axiosInstance.get(`/f_admin/getUserID?userID=${newID}`);
 
                 const response = request.data
-
-                console.log(request.data)
     
                 setDeckBuilder(response)
 
