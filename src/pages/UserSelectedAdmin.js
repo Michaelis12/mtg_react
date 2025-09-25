@@ -76,7 +76,7 @@ const AccountPage = () => {
                     setNewID(id)
                 }
 
-                const request = await axiosInstance.get(`/f_all/getUserID?userID=${newID}`);
+                const request = await axiosInstance.get(`/f_admin/getUserID?userID=${newID}`);
 
                 const response = request.data
     
@@ -94,6 +94,8 @@ const AccountPage = () => {
         getDeckBuilder();
         }, [id, newID]);
 
+
+        // Activer le compte de l'user
         const activeDeckBuilder = async () => { 
             try {
                 setDisplayLoading(true)
@@ -112,22 +114,18 @@ const AccountPage = () => {
     
         }
 
-
+        // Désactiver le compte de l'user
         const desacDeckBuilder = async () => {
             try {
                 setDisplayLoading(true)
-                const params = {
-                    userID: newID,
-                    days: day,
-                    cause: cause                    
-                };
+                
 
                 if (day === "def") {
                 const request = await axiosInstance.put(`/f_admin/desacUser?userID=${newID}`, cause, { withCredentials: true });               
                  
                 }
                 else {
-                const request = await axiosInstance.put(`/f_admin/desacUserTemporal?userID=${newID}&days=${day}&cause=${cause}`, null, { withCredentials: true });
+                const request = await axiosInstance.put(`/f_admin/desacUserTemporal?userID=${newID}&days=${day}`, cause, { withCredentials: true });
                 }
                 
                 navigate(-1);
@@ -143,6 +141,7 @@ const AccountPage = () => {
     
         }
 
+        // Supprimer le compte de l'user
         const deleteDeckBuilder = async () => {
             try {
                 setDisplayLoading(true)
@@ -542,22 +541,24 @@ const AccountPage = () => {
                                         </div>
                                     </div>
                         
-                        </div>
+                        </div> 
 
                         <div className='admin-users-button'>
-                                    { deckBuilder.activity !== "INACTIVE" && (
+                                { deckBuilder.activity !== "INACTIVE" && (
                                     <button className='update-user-container' onClick={() => setDisplayDesacPopUp(true)}>
                                             <ImCross className='icon-update-user' />
                                             <h5 className='update-user-p'>Desactiver le compte</h5>
                                     </button> 
                                     )}
-                                    { deckBuilder.activity === "INACTIVE" && (
-                                    <button className='update-user-container' onClick={() => setDisplayActivePopUp(true)}>
+                                { deckBuilder.activity === "INACTIVE" && (
+                                    <button className='update-user-container' onClick={() => setDisplayActivePopUp(true)}
+                                     disabled={deckBuilder.roles.includes("ADMIN")}>
                                             <VscDebugStart className='icon-update-user' />
                                             <h5 className='update-user-p'>Activer le compte</h5>
                                     </button> 
                                     )}
-                                    <button className='delete-user-container' onClick={() => setDisplayDeletePopUp(true)}>
+                                    <button className='delete-user-container' onClick={() => setDisplayDeletePopUp(true)}
+                                    disabled={deckBuilder.roles.includes("ADMIN")} >
                                             <RiDeleteBin6Line className='icon-update-user' />
                                             <h5 className='update-user-p'>Supprimer le compte</h5>
                                     </button> 

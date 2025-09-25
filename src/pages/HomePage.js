@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from 'react';
 import {useNavigate} from 'react-router-dom';
 import { AuthContext } from "../context/authContext"
 import axiosInstance from "../api/axiosInstance";
-import BanniereMTG from "../assets/banniere.jpg"
+import BanniereMTG from "../assets/banniere.jpeg"
 import LogoMTG from "../assets/LogoMTG.png"
 import BackgroundTopCards from "../assets/mtg_wallpaper.jpg"
 import { FaHeart  } from 'react-icons/fa';

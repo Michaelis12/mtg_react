@@ -494,6 +494,24 @@
   gap: 10px;
 } 
 
+.update-user-container:disabled {
+    opacity: 0.5;
+}
+
+.delete-user-container:disabled {
+    opacity: 0.5;
+}
+
+.update-user-container:hover:disabled {
+    background-color: white;
+    pointer-events: none;  
+}
+
+.delete-user-container:hover:disabled {
+    background-color: white;
+    pointer-events: none;  
+}
+
 .delete-user-container:hover {
   background-color: red;
 }
@@ -569,6 +587,8 @@
     opacity: 1;
     padding-bottom: 2%;
 }
+
+
 
 
 @media (max-width: 1650px) {
