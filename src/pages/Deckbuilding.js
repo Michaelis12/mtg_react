@@ -16,7 +16,6 @@ import black from "../assets/black-mtg.png"
 import incolore from "../assets/incolore-mtg.png"
 import loading from "../assets/loading.gif"
 import { TiDeleteOutline } from "react-icons/ti";
-import { MdPublishedWithChanges } from "react-icons/md";
 import { SlArrowDown, SlArrowUp } from "react-icons/sl"; 
 import { SlRefresh } from "react-icons/sl";
 import { CgAdd, CgCloseO   } from "react-icons/cg";
@@ -32,6 +31,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import Section from '../components/section';
 import IconButtonHover from '../components/buttonIconHover';
 import ButtonValidPopup from "../components/buttonValidPopup";
+import ButtonValid from '../components/buttonValid';
 import PopupDelete from '../components/popupDelete';
 import Title from '../components/title';
 import TitleType from '../components/titleType';
@@ -311,36 +311,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 return number;
         }; 
 
-        /*
-        // Sélectionne des cartes un format =/= commander
-        const selectCard = (newCard) => {
-                  setCardsSelected(prevCards => [...prevCards, newCard])
-        };
-        
-        // Retire des cartes pour un format =/= commander 
-        const unselectCard = (cardToRemove) => {
-                    setCardsSelected(prevCards => {
-                      const index = prevCards.findIndex(card => card.id === cardToRemove.id);
-                      if (index === -1) return prevCards; // Rien à retirer
-                      const newCards = [...prevCards];
-                      newCards.splice(index, 1);
-                      return newCards;
-                    });
-        };
-                
-        // Retire tous les exemplaires d'une carte
-        const unselectCards = (cardToRemove) => {
-                    if(cardsSelected.length === 1) {
-                       setCardImage(defaultImg)
-                      setDisplayPopup(false)
-                    }
-                    
-                    setCardsSelected(prevCards => 
-                      prevCards.filter(card => card.id !== cardToRemove.id)
-                    );
-                    
-        };
-         */    
 
         const [arrowSens, setArrowSens] = useState(<SlArrowDown/>)
         const [arrowUp, setArrowUp] = useState(false)
@@ -1091,6 +1061,113 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 'NOIR': black,
                 'INCOLORE': incolore
         };
+
+
+        const [cardsSelected, setCardsSelected] = useState([])
+        const [cardsUnselected, setCardsUnselected] = useState([])
+
+
+        // Sélectionne des cartes un format =/= commander
+        const selectCard = (newCard) => {
+            console.log(newCard.id)
+
+            setDeckCards(prevCards => [...prevCards, newCard])
+
+            if (cardsUnselected.filter(id => id === newCard.id).length > 0) {
+                setCardsUnselected(prevCards => {
+                      const index = prevCards.findIndex(card => card === newCard.id);
+                      const newCards = [...prevCards];
+                      newCards.splice(index, 1);
+                      return newCards;
+                    });
+            }
+            else {
+              setCardsSelected(prevCards => [...prevCards, newCard.id])
+            }
+
+        };
+        
+        // Retire des cartes pour un format =/= commander 
+        const unselectCard = (cardToRemove) => {
+            console.log(cardToRemove.id)
+            console.log("cc")
+            setDeckCards(prevCards => {
+                // Convertit les objets Card en ID s’ils ne le sont pas déjà
+                const cardIds = prevCards.map(card => typeof card === 'object' ? card.id : card);
+
+                // Supprime l'ID correspondant à la carte à retirer
+                const filtered = cardIds.filter(id => id !== cardToRemove.id);
+
+                return filtered;
+                });
+
+                if (cardsSelected.filter(id => id === cardToRemove.id).length > 0)
+                    setCardsSelected(prevCards => {
+                      const index = prevCards.findIndex(card => card === cardToRemove.id);
+                      const newCards = [...prevCards];
+                      newCards.splice(index, 1);
+                      return newCards;
+                    });
+                else {
+                     setCardsUnselected(prevCards => [...prevCards, cardToRemove.id])
+                }
+                
+        };
+                
+        // Retire tous les exemplaires d'une carte
+        const unselectCards = (cardToRemove) => {
+                    if(cardsSelected.length === 1) {
+                      setDisplayPopup(false)
+                    }
+                    
+                    setCardsSelected(prevCards => 
+                      prevCards.filter(card => card.id !== cardToRemove.id)
+                    );
+                    
+        };  
+
+        // Donne le nombre d'exemplaire d'une carte
+        const count = (cardID) => {
+            const deckCardsid = deckCards.map(card => card.id);
+            return deckCardsid.filter(id => id === cardID).length 
+        }
+
+        // Modifier le nombre des cartes
+        const updateCards = async (value) => {
+            try { 
+                setDisplayLoading(true)
+
+                if(cardsSelected.length > 0) {
+                const request1 = await axiosInstance.post(`f_user/addCardsOnDeck?cardId=${cardsSelected}&deckId=${id}`, null, { withCredentials: true });
+                }
+                if (cardsUnselected.length > 0) {
+                const request2 = await axiosInstance.delete(`/f_user/deleteCardsOnDeck?cardId=${value}&deckId=${id}`, { withCredentials: true });
+                }
+
+                setDeckSignal(!deckSignal)
+                
+                 }   
+            catch (error) {
+                console.log(error);
+            }
+            finally {
+              setDisplayLoading(false)
+            }
+        }
+
+        const updateCardText = () => {
+
+
+            if (cardsSelected.length < 1) {
+                return `${cardsUnselected.length} cartes retirées ` 
+            }
+            if (cardsUnselected.length < 1) {
+                return `+ ${cardsSelected.length} cartes ajoutées` 
+            }
+
+            return `${cardsSelected.length} cartes ajoutées , ${cardsUnselected.length} cartes retirées `
+
+        }
         
         
         
@@ -1343,7 +1420,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 <Title title={`Cartes du deck (${deckCards.length})`}/>
             )}
                         
-
+        {/*Mapping des cartes*/}
         <div className='map-deck-cards'> 
         
 
@@ -1367,10 +1444,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         </div>
         )} 
 
-
+        {/*Version avec requetage*/}
         <div className='decks-types-map'> 
-
-             
+          
             { deckLands.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
                     <TitleType title={"Terrains (" + deckLands.length + ")"}/>
@@ -1627,8 +1703,295 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     </div>
                 </div>
             )}
+        </div>
+
+        {/*Version sans requetage*/}
+        <div className='decks-types-map'> 
+          
+            { deckLands.length > 0 && (
+                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
+                    <TitleType title={"Terrains (" + deckCards.filter(card => card.type === "TERRAIN").length + ")"}/>
+                    <div className='deck-text-map'>
+                        {deckLandsUnit.map(land => {
+                            const isMobile = window.innerWidth < 500;
+                            return (
+                                <div className="land-text-details" id='land-card' key={land.id}>
+                                    
+                                    <div className='card-link-desktop'>
+                                        <h5 className='land-text-name' onMouseEnter={() => hoveredCard(land.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseLand(land.id)}>{land.name}</h5>
+                                    </div>
+
+                                    <div className='card-link-mobile'>
+                                        <h5 className='land-text-name'  onClick={()=> openZoomPopup(land)} >{land.name}</h5>
+                                    </div>
+
+
+                                    {detailsCard && detailsCard.id === land.id && (
+                                            <img className="card-img-zoom" style={isMobile ? { maxWidth: '80vw', maxHeight: '40vw' } : {}} src={land.image && land.image.startsWith('/uploads/') ? `https://localhost:8443${land.image}` : land.image} alt="Card-image" />
+                                        )}
+                                    <div className='deckbuilding-number-container'>
+                                        {land.id < 8 && (
+                                            <div className='deckbuilding-text-number' style={isMobile ? { gap: '4px' } : {}}>
+                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
+                                                <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
+                                                </button>
+
+                                                { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
+                                                    <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
+                                                )}
+                                                <input type='number' className='input-card-length' step="1" 
+                                                    value={count(land.id) || 0}
+                                                    onChange={(e) => setNumberCardOnDeck(land.id, e.target.value)}
+                                                />
+
+
+                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(land)} >
+                                                <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                                </button>
+                                            </div>
+                                        )} 
+                                        {format !== "COMMANDER" && land.id > 7 && (
+                                        <div className='deckbuilding-text-number'>                              
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
+                                                <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
+                                            </button>
+                                            
+                                            { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
+                                                    <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
+                                                )}
+                                                                              
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} disabled={numberLand(land.id) > 3} onClick={() => selectCard(land)} >
+                                                <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                            </button>
+                                        </div>
+                                        )}
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={isMobile ? '1em' : '3em'} onClick={() => deleteCards(land.id)} />
+                                        
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
+            { deckCreatures.length > 0 && (    
+                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
+                    <TitleType title={"Créatures (" + deckCards.filter(card => card.type === "CREATURE").length + + ")"}/>
+                    <div className='deck-text-map'>
+                            {deckCreaturesUnit.map(creature => ( 
+                                <div className="land-text-details" id='land-card'  key={creature.id}>
+                                    
+                                    <div className='card-link-desktop'>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(creature.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseCreature(creature.id)}>{creature.name}</h5>
+                                        </div>
+                                        <div className='card-link-mobile'>
+                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(creature)} >{creature.name}</h5>
+                                        </div>
+                                    
+                                    <div className='deckbuilding-number-container'>
+                                        { format !== "COMMANDER" && ( 
+                                        <div className='deckbuilding-text-number'>                              
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(creature.id)} >
+                                                                        <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
+                                            </button>
+
+                                            { cardsSelected.filter(cardDeck => cardDeck === creature.id).length > 0  && (
+                                                <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === creature.id).length}</p>
+                                            )}
+                                            
+                                            <p className='p-card-length'>{count(creature.id)}</p>                                  
+                                            <button className="add-button-deckbuilding" disabled={count(creature.id) > 3}
+                                            style={{ margin : '2%', border: 'none' }} 
+                                            onClick={() => addCard(creature.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                            </button> 
+                                        </div>
+                                        )}
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(creature.id)}/>
+                                </div>  
+                                    {detailsCard && detailsCard.id === creature.id && (
+                                    <img className="card-img-zoom" src={creature.image && creature.image.startsWith('/uploads/') ? `https://localhost:8443${creature.image}` : creature.image} alt="Card-image"/>
+                                    )} 
+                                </div>
+                        
+                            ))}
+                    </div>
+                </div>
+            )}
+
+            { deckEnchants.length > 0 && (
+                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
+                    <TitleType title={"Enchantements (" + deckCards.filter(card => card.type === "ENCHANTEMENT").length + ")"}/>
+                    <div className='deck-text-map'>
+                            {deckEnchantsUnit.map(enchant => ( 
+                                <div className="land-text-details" id='land-card'  key={enchant.id}>
+                                    
+                                    <div className='card-link-desktop'>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(enchant.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseEnchant(enchant.id)}>{enchant.name}</h5>
+                                        </div>
+                                    <div className='card-link-mobile'>
+                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(enchant)} >{enchant.name}</h5>
+                                    </div>
+
+                                    <div className='deckbuilding-number-container'>
+                                        { format !== "COMMANDER" && ( 
+                                        <div className='deckbuilding-text-number'>                              
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(enchant)} >
+                                                                    <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
+                                        </button>
+                                        
+                                        {/* Modif enchant */}
+                                        { cardsSelected.filter(cardDeck => cardDeck === enchant.id).length > 0  && (
+                                                <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === enchant.id).length}</p>
+                                        )}
+
+                                        { cardsUnselected.filter(cardDeck => cardDeck === enchant.id).length > 0  && (
+                                                <p className='p-card-add-length' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === enchant.id).length}</p>
+                                        )}
+                                        
+                                        <p className='p-card-length'>{count(enchant.id)}</p>                                  
+                                        <button className="add-button-deckbuilding" disabled={count(enchant.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(enchant)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                        </button> 
+                                        </div>
+                                        )}
+
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(enchant.id)}/>
+                                    </div>
+                                    {detailsCard && detailsCard.id === enchant.id && (
+                                    <img className="card-img-zoom" src={enchant.image && enchant.image.startsWith('/uploads/') ? `https://localhost:8443${enchant.image}` : enchant.image} alt="Card-image"/>
+                                    )} 
+                                </div>
+                        
+                            ))}
+                    </div>
+                </div>
+            )}
+                
+            { deckSpells.length > 0 && (
+                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
+                    <TitleType title={"Sorts (" + deckCards.filter(card =>
+                            card.type === "EPHEMERE" || card.type === "RITUEL" || card.type === "BATAILLE"
+                            ).length
+                            + ")"}/>
+                    <div className='deck-text-map'>
+                            {deckSpellsUnit.map(spell => ( 
+                                <div className="land-text-details" id='land-card'  key={spell.id}>
+                                    
+                                    <div className='card-link-desktop'>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(spell.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseSpell(spell.id)}>{spell.name}</h5>
+                                        </div>
+                                        <div className='card-link-mobile'>
+                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(spell)} >{spell.name}</h5>
+                                        </div>
+                                    
+                                     <div className='deckbuilding-text-number'>
+                                        { format !== "COMMANDER" && (
+                                        <div className='deckbuilding-text-number'>                              
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(spell.id)} >
+                                                                    <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
+                                        </button>
+                                        
+                                        <p className='p-card-length'>{numberSpell(spell.id)}</p>                                  
+                                        <button className="add-button-deckbuilding" disabled={numberSpell(spell.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => addCard(spell.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                        </button> 
+                                        </div>
+                                        )}
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(spell.id)}/>
+                                    </div>
+                                    {detailsCard && detailsCard.id === spell.id && (
+                                    <img className="card-img-zoom" src={spell.image && spell.image.startsWith('/uploads/') ? `https://localhost:8443${spell.image}` : spell.image} alt="Card-image"/>
+                                    )} 
+                                </div>
+                        
+                            ))}
+                    </div>
+                </div>
+            )}
+
+            { deckArtefacts.length > 0 && (
+                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>    
+                    <TitleType title={"Artefacts (" + deckCards.filter(card => card.type === "ARTEFACT").length + ")"}/>
+                    <div className='deck-text-map'>
+                            {deckArtefactsUnit.map(artefact => ( 
+                                <div className="land-text-details" id='land-card'  key={artefact.id}>
+
+                                        <div className='card-link-desktop'>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(artefact.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseArtefact(artefact.id)}>{artefact.name}</h5>
+                                        </div>
+                                       <div className='card-link-mobile'>
+                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(artefact)} >{artefact.name}</h5>
+                                       </div>
+
+                                     <div className='deckbuilding-number-container'>
+                                        { format !== "COMMANDER" && (
+                                        <div className='deckbuilding-text-number'>                              
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(artefact.id)} >
+                                                                    <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
+                                        </button>
+                                        
+                                        <p className='p-card-length'>{numberArtefact(artefact.id)}</p>                                  
+                                        <button className="add-button-deckbuilding" disabled={numberArtefact(artefact.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => addCard(artefact.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                        </button> 
+                                        </div>
+                                        )}
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(artefact.id)}/>
+                                    </div>
+                                    {detailsCard && detailsCard.id === artefact.id && (
+                                    <img className="card-img-zoom" src={artefact.image && artefact.image.startsWith('/uploads/') ? `https://localhost:8443${artefact.image}` : artefact.image} alt="Card-image"/>
+                                    )} 
+                                </div>
+                        
+                            ))}
+                    </div>
+                </div>
+            )}
+            
+            { deckPlaneswalkers.length > 0 && (
+                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
+                    <TitleType title={"Planeswalkers (" + deckCards.filter(card => card.type === "PLANESWALKER").length + ")"}/>
+                    <div className='deck-text-map'>
+                            {deckPlaneswalkersUnit.map(planeswalker => ( 
+                                <div className="land-text-details" id='land-card' key={planeswalker.id}>
+                                    <div className='card-link-desktop'>
+                                        <h5 className='land-text-name' 
+                                        onMouseEnter={() => hoveredCard(planeswalker.id)} 
+                                        onMouseOut={() => hoveredCard()} 
+                                        onClick={() => choosePlaneswalker(planeswalker.id)}>
+                                        {planeswalker.name}
+                                        </h5>
+                                    </div>
+                                    <div className='card-link-mobile'>
+                                        <h5 className='land-text-name' onClick={()=> openZoomPopup(planeswalker)} >{planeswalker.name}</h5>
+                                    </div>
+                                    <div className='deckbuilding-number-container'>
+                                    { format !== "COMMANDER" && (
+                                    <div className='deckbuilding-text-number'>                              
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(planeswalker.id)} >
+                                            <AiOutlineMinusCircle size={'2em'} color={'black'} className="icon-add-card"/>
+                                        </button>
+                            
+                                        <p className='p-card-length'>{numberPlaneswalker(planeswalker.id)}</p>                                  
+                                        <button className="add-button-deckbuilding" disabled={numberPlaneswalker(planeswalker.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => addCard(planeswalker.id)} >
+                                            <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                        </button> 
+                                    </div>
+                                    )}
+                                    <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={() => deleteCards(planeswalker.id)}/>
+                                    </div>
+                                    {detailsCard && detailsCard.id === planeswalker.id && (
+                                        <img className="card-img-zoom" 
+                                            src={planeswalker.image && planeswalker.image.startsWith('/uploads/') ? `https://localhost:8443${planeswalker.image}` : planeswalker.image} 
+                                            alt="Card-image"/>
+                                    )} 
+                                </div>
+                            ))} 
+
+                    </div>
+                </div>
+            )}
         </div> 
         
+        {/*Graphiques*/}
         <div className='stats-conatainer'>
             <Title title={`Statistiques`} />       
 
@@ -1911,7 +2274,12 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 
         <IoIosArrowDropleft className='icon-close-popup' size={'5em'}  onClick={()=>navigate(-1)}/>      
     
-    </div>                                      
+        </div>
+        
+        {/*Bouton pour valider les changements de carte */}
+        <ButtonValid style={{position: 'fixed', bottom: '15px', right: '50px'}}
+                        onClick={()=>updateCards()} disabled={cardsSelected.length === 0 && cardsUnselected.length === 0 } 
+                        text={updateCardText()}/>                                      
 
                 {/* Popup de zoom carte mobile */}
                 {displayZoomPopup && cardImage && (
