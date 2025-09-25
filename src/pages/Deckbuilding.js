@@ -1069,7 +1069,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
         // Sélectionne des cartes un format =/= commander
         const selectCard = (newCard) => {
-            console.log(newCard.id)
 
             setDeckCards(prevCards => [...prevCards, newCard])
 
@@ -1136,8 +1135,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             return deckCardsid.filter(id => id === cardID).length 
         }
 
-        // Modifier le nombre des cartes
-        const updateCards = async (value) => {
+        const [displayAddPopUp, setDisplayAddPopUp] = useState(false)
+
+        // Enregistrer les modifications
+        const updateCards = async () => {
             try { 
                 setDisplayLoading(true)
 
@@ -1145,10 +1146,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 const request1 = await axiosInstance.post(`f_user/addCardsOnDeck?cardId=${cardsSelected}&deckId=${id}`, null, { withCredentials: true });
                 }
                 if (cardsUnselected.length > 0) {
-                const request2 = await axiosInstance.delete(`/f_user/deleteCardsOnDeck?cardId=${value}&deckId=${id}`, { withCredentials: true });
+                const request2 = await axiosInstance.delete(`/f_user/deleteCardsListOnDeck?cardId=${cardsUnselected}&deckId=${id}`, { withCredentials: true });
                 }
 
-                setDeckSignal(!deckSignal)
+                window.location.reload();
                 
                  }   
             catch (error) {
@@ -1181,7 +1182,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             }
         }
 
-        const [displayAddPopUp, setDisplayAddPopUp] = useState(false)
         
         
         
