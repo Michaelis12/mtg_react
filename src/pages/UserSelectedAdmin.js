@@ -35,7 +35,7 @@ import { getAvatarUrl, getDeckImageUrl } from '../utils/imageUtils';
 
  
 
-const AccountPage = () => {
+const UserSelectedAdmin = () => {
     const location = useLocation()
     const navigate = useNavigate()
     const id = location.state?.userID
@@ -760,4 +760,4 @@ const AccountPage = () => {
 
     }
 
-    export default AccountPage;
+    export default UserSelectedAdmin;

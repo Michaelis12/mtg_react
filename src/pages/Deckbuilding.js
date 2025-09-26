@@ -16,7 +16,7 @@ import black from "../assets/black-mtg.png"
 import incolore from "../assets/incolore-mtg.png"
 import loading from "../assets/loading.gif"
 import { TiDeleteOutline } from "react-icons/ti";
-import { MdPublishedWithChanges } from "react-icons/md";
+import { RiResetLeftFill } from "react-icons/ri";
 import { SlArrowDown, SlArrowUp } from "react-icons/sl"; 
 import { SlRefresh } from "react-icons/sl";
 import { CgAdd, CgCloseO   } from "react-icons/cg";
@@ -32,6 +32,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import Section from '../components/section';
 import IconButtonHover from '../components/buttonIconHover';
 import ButtonValidPopup from "../components/buttonValidPopup";
+import ButtonValid from '../components/buttonValid';
 import PopupDelete from '../components/popupDelete';
 import Title from '../components/title';
 import TitleType from '../components/titleType';
@@ -50,6 +51,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
        const [deck, setDeck] = React.useState([])
        const [updateDeck, setUpdateDeck] = React.useState(false)
        const [deckCards, setDeckCards] = React.useState([])
+       const [deckCardsGraphic, setDeckCardsGraphic] = React.useState([])
        const [colors, setColors] = React.useState([])
        const [format, setFormat]= React.useState([])
 
@@ -121,10 +123,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         const [newName, setNewName] = React.useState("")
         const [newImage, setNewImage] = React.useState("")
         
-        // Ouvrir le form d'edit
-        const startEdit = () => {
-            setUpdateDeck(true)
-        }
 
 
         const [isImageUpdate, setIsImageUpdate] = React.useState(false) 
@@ -226,6 +224,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                         card.colors, card.type, card.rarity, card.edition, card.decks
                 ) ) 
                 setDeckCards(listCards)
+                setDeckCardsGraphic(listCards)
                 setDisplayLoading(false);
 
                 }   
@@ -313,8 +312,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             const cardWithID = deckPlaneswalkers.filter(card => card.id === id);
             const number = cardWithID.length;
                 return number;
-        };
-             
+        }; 
+
 
         const [arrowSens, setArrowSens] = useState(<SlArrowDown/>)
         const [arrowUp, setArrowUp] = useState(false)
@@ -704,7 +703,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             try { 
                 setDisplayLoading(true);
                 const response = await axiosInstance.put(`/f_user/deckPublic?deckID=${id}`, null, { withCredentials: true });
-                //navigate('/myspace')
                 setDisplayLoading(false);
                 setPopupPub(true)
                  }   
@@ -993,7 +991,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         
         // Graphique de répartition des cartes par types
         const getCardsByType = () => {
-            const typeCount = deckCards.reduce((acc, card) => {
+            const typeCount = deckCardsGraphic.reduce((acc, card) => {
             if (card.type) {
                 acc[card.type] = acc[card.type] ? acc[card.type] + 1 : 1;
             }
@@ -1011,7 +1009,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
         // Graphique de répartition des cartes par cout en mana
         const getCardsByManaCost = () => {
-            const manacostCount = deckCards.reduce((acc, card) => {
+            const manacostCount = deckCardsGraphic.reduce((acc, card) => {
             if (card.manaCost) {
                 acc[card.manaCost] = acc[card.manaCost] ? acc[card.manaCost] + 1 : 1;
             }
@@ -1030,7 +1028,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         // Graphique de répartition des cartes par couleurs
         // Préparer les données pour la répartition des couleurs
         const getCardsByColor = () => {
-            const colorCount = deckCards.reduce((acc, card) => {
+            const colorCount = deckCardsGraphic.reduce((acc, card) => {
             card.colors.forEach(color => {
                 acc[color] = acc[color] ? acc[color] + 1 : 1;
             });
@@ -1066,6 +1064,148 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 'NOIR': black,
                 'INCOLORE': incolore
         };
+
+
+        const [cardsSelected, setCardsSelected] = useState([])
+        const [cardsUnselected, setCardsUnselected] = useState([])
+
+
+        // Sélectionne des cartes un format =/= commander
+        const selectCard = (newCard) => {
+            setDeckCards(prevCards => [...prevCards, newCard])
+
+            if (cardsUnselected.filter(id => id === newCard.id).length > 0) {
+                setCardsUnselected(prevCards => {
+                      const index = prevCards.findIndex(card => card === newCard.id);
+                      const newCards = [...prevCards];
+                      newCards.splice(index, 1);
+                      return newCards;
+                    });
+            }
+            else {
+              setCardsSelected(prevCards => [...prevCards, newCard.id])
+            }
+
+
+        };
+        
+        // Retire des cartes pour un format =/= commander 
+        const unselectCard = (cardToRemove) => {
+         setDeckCards(prevCards => {
+            const index = prevCards.findIndex(card => card.id === cardToRemove.id);
+
+            if (index === -1) return prevCards; // aucune carte trouvée → rien à changer
+
+            // copie immuable du tableau
+            const newCards = [...prevCards];
+            newCards.splice(index, 1); // supprime UNE seule occurrence
+            return newCards;
+        });
+
+                if (cardsSelected.filter(id => id === cardToRemove.id).length > 0)
+                    setCardsSelected(prevCards => {
+                      const index = prevCards.findIndex(card => card === cardToRemove.id);
+                      const newCards = [...prevCards];
+                      newCards.splice(index, 1);
+                      return newCards;
+                    });
+                else {
+                     setCardsUnselected(prevCards => [...prevCards, cardToRemove.id])
+                }
+
+                
+        };
+                
+        // Retire tous les exemplaires d'une carte
+        const unselectCards = (cardToRemove) => {
+
+            setDeckCards((prevCards) => {
+                // Sépare les cartes à garder et celles à retirer
+                const remainingCards = prevCards.filter(card => card.id !== cardToRemove.id);
+                const removedCards = prevCards.filter(card => card.id === cardToRemove.id);
+
+
+                // Met à jour cardsUnselected en évitant les doublons
+                setCardsUnselected((prevUnselected) => {
+                    // On filtre les ids déjà présents
+                    const newIds = removedCards
+                        .map(card => card.id)
+                        .filter(id => !prevUnselected.includes(id));
+
+                    return [...prevUnselected, ...newIds];
+                });
+
+                return remainingCards;
+            });
+
+        };
+
+
+
+
+
+        // Donne le nombre d'exemplaire d'une carte
+        const count = (cardID) => {
+            const deckCardsid = deckCards.map(card => card.id);
+            return deckCardsid.filter(id => id === cardID).length 
+        }
+
+        const [displayAddPopUp, setDisplayAddPopUp] = useState(false)
+
+        // Enregistrer les modifications
+        const updateCards = async () => {
+            try { 
+                setDisplayLoading(true)
+
+                 console.log(cardsUnselected)
+
+                if(cardsSelected.length > 0) {
+                const request1 = await axiosInstance.post(`f_user/addCardsOnDeck?cardId=${cardsSelected}&deckId=${id}`, null, { withCredentials: true });
+                }
+                if (cardsUnselected.length > 0) {
+                const request2 = await axiosInstance.delete(`/f_user/deleteCardsListOnDeck?cardId=${cardsUnselected}&deckId=${id}`, { withCredentials: true });
+                }
+
+                window.location.reload();
+                
+                 }   
+            catch (error) {
+                console.log(error);
+            }
+            finally {
+              setDisplayLoading(false)
+            }
+        }
+
+        // Annuler les modifications
+        const resetCards = () => {
+            setCardsSelected([])
+            setCardsUnselected([])
+            setDeckSignal(!deckSignal)
+        }
+
+        const updateCardText = () => {
+
+
+            if (cardsSelected.length < 1) {
+                return `${cardsUnselected.length} cartes retirées ` 
+            }
+            if (cardsUnselected.length < 1) {
+                return `+ ${cardsSelected.length} cartes ajoutées` 
+            }
+
+            return `${cardsSelected.length} cartes ajoutées , ${cardsUnselected.length} cartes retirées `
+
+        }
+
+
+        const maskCard = (id) => {
+            const deckCardsid = deckCards.map(card => card.id);
+            if(!deckCardsid.includes(id)) {
+                return 'none'
+            }
+        }
+
         
         
         
@@ -1097,7 +1237,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                   
                                                           <div className="deck-content">
                                                                <img className="deckbuilding-pp" style={{marginTop: '-5%'}}
-                                                               src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck mtg"/>
+                                                               src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck mtg"/> 
                                 
                                                               <div className="deck-selected-attributs" >
                                 
@@ -1286,7 +1426,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 
                 {/* Passer le deck en public */}
                 {!deck.isPublic && ( 
-                    <div className='public-container'>
                             <button className="pub-deck-container" 
                             disabled={disabledPublication()} onClick={()=>publishDeck()}>
                                 <MdSend className='icon-update-user' />
@@ -1296,7 +1435,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 </div>
                             </button> 
                                
-                    </div>                
                 )}
 
                 {/* Passer le deck en privé */}
@@ -1318,7 +1456,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 <Title title={`Cartes du deck (${deckCards.length})`}/>
             )}
                         
-
+        {/*Mapping des cartes*/}
         <div className='map-deck-cards'> 
         
 
@@ -1343,17 +1481,16 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         )} 
 
 
+        {/*Version sans requetage*/}
         <div className='decks-types-map'> 
-
-             
+          
             { deckLands.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Terrains (" + deckLands.length + ")"}/>
+                    <TitleType title={"Terrains ("+ deckCards.filter(card => card.type === "TERRAIN").length + ")"}/>
                     <div className='deck-text-map'>
                         {deckLandsUnit.map(land => {
-                            const isMobile = window.innerWidth < 500;
                             return (
-                                <div className="land-text-details" id='land-card' key={land.id}>
+                                <div className="land-text-details" id='land-card'  style={{display: maskCard(land.id)}} key={land.id}>
                                     
                                     <div className='card-link-desktop'>
                                         <h5 className='land-text-name' onMouseEnter={() => hoveredCard(land.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseLand(land.id)}>{land.name}</h5>
@@ -1365,36 +1502,51 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
 
                                     {detailsCard && detailsCard.id === land.id && (
-                                            <img className="card-img-zoom" style={isMobile ? { maxWidth: '80vw', maxHeight: '40vw' } : {}} src={land.image && land.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${land.image}` : land.image} alt="Card-image" />
+                                            <img className="card-img-zoom"  src={land.image && land.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${land.image}` : land.image} alt="Card-image" />
                                         )}
                                     <div className='deckbuilding-number-container'>
-                                        {land.id < 8 && (
-                                            <div className='deckbuilding-text-number' style={isMobile ? { gap: '4px' } : {}}>
-                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(land.id)} >
+                                        {land.id < 7 && (
+                                            <div className='deckbuilding-text-number'>
+
+                                                { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
+                                                    <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
+                                                )}
+
+                                                { cardsUnselected.filter(cardDeck => cardDeck === land.id).length > 0  && (
+                                                    <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === land.id).length}</p>
+                                                )}
+
+                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
                                                 <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
                                                 </button>
-                                                <input type='number' className='input-card-length' step="1" 
-                                                    value={numberLand(land.id) || 0}
-                                                    onChange={(e) => setNumberCardOnDeck(land.id, e.target.value)}
-                                                />
-                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => addCard(land.id)} >
+                                                <p className='p-card-length'>{count(land.id)}</p>
+                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(land)} >
                                                 <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                                 </button>
                                             </div>
                                         )} 
-                                        {format !== "COMMANDER" && land.id > 7 && (
+                                        {format !== "COMMANDER" && land.id > 6 && (
                                         <div className='deckbuilding-text-number'>                              
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(land.id)} >
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
                                                 <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
                                             </button>
                                             
-                                            <p className='p-card-length'>{numberLand(land.id)}</p>                                  
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} disabled={numberLand(land.id) > 3} onClick={() => addCard(land.id)} >
+                                            <p className='p-card-length'>{count(land.id)}</p>
+
+                                            { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
+                                                    <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
+                                                )}
+
+                                                { cardsUnselected.filter(cardDeck => cardDeck === land.id).length > 0  && (
+                                                    <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === land.id).length}</p>
+                                                )}
+
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} disabled={count(land.id) > 3} onClick={() => selectCard(land)} >
                                                 <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                             </button>
                                         </div>
                                         )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={isMobile ? '1em' : '3em'} onClick={() => deleteCards(land.id)} />
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={() => unselectCards(land)} />
                                         
                                     </div>
                                 </div>
@@ -1406,10 +1558,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
             { deckCreatures.length > 0 && (    
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Créatures (" + deckCreatures.length + ")"}/>
+                    <TitleType title={"Créatures (" + deckCards.filter(card => card.type === "CREATURE").length + ")"}/>
                     <div className='deck-text-map'>
                             {deckCreaturesUnit.map(creature => ( 
-                                <div className="land-text-details" id='land-card'  key={creature.id}>
+                                <div className="land-text-details" id='land-card' style={{display: maskCard(creature.id)}} key={creature.id}>
                                     
                                     <div className='card-link-desktop'>
                                             <h5 className='land-text-name' onMouseEnter={() => hoveredCard(creature.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseCreature(creature.id)}>{creature.name}</h5>
@@ -1420,19 +1572,29 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     
                                     <div className='deckbuilding-number-container'>
                                         { format !== "COMMANDER" && ( 
-                                        <div className='deckbuilding-text-number'>                              
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(creature.id)} >
+                                        <div className='deckbuilding-text-number'>  
+                                            { cardsSelected.filter(cardDeck => cardDeck === creature.id).length > 0  && (
+                                                    <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === creature.id).length}</p>
+                                                )}
+
+                                            { cardsUnselected.filter(cardDeck => cardDeck === creature.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === creature.id).length}</p>
+                                             )}
+
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(creature)} >
                                                                         <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                             </button>
+
+                        
                                             
-                                            <p className='p-card-length'>{numberCreature(creature.id)}</p>                                  
-                                            <button className="add-button-deckbuilding" disabled={numberCreature(creature.id) > 3}
+                                            <p className='p-card-length'>{count(creature.id)}</p>                                  
+                                            <button className="add-button-deckbuilding" disabled={count(creature.id) > 3}
                                             style={{ margin : '2%', border: 'none' }} 
-                                            onClick={() => addCard(creature.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                            onClick={() => selectCard(creature)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                             </button> 
                                         </div>
                                         )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(creature.id)}/>
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(creature)}/>
                                 </div>  
                                     {detailsCard && detailsCard.id === creature.id && (
                                     <img className="card-img-zoom" src={creature.image && creature.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${creature.image}` : creature.image} alt="Card-image"/>
@@ -1446,10 +1608,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
             { deckEnchants.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Enchantements (" + deckEnchants.length + ")"}/>
+                    <TitleType title={"Enchantements (" + deckCards.filter(card => card.type === "ENCHANTEMENT").length + ")"}/>
                     <div className='deck-text-map'>
                             {deckEnchantsUnit.map(enchant => ( 
-                                <div className="land-text-details" id='land-card'  key={enchant.id}>
+                                <div className="land-text-details" id='land-card' style={{display: maskCard(enchant.id)}} key={enchant.id}>
                                     
                                     <div className='card-link-desktop'>
                                             <h5 className='land-text-name' onMouseEnter={() => hoveredCard(enchant.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseEnchant(enchant.id)}>{enchant.name}</h5>
@@ -1461,17 +1623,25 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     <div className='deckbuilding-number-container'>
                                         { format !== "COMMANDER" && ( 
                                         <div className='deckbuilding-text-number'>                              
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(enchant.id)} >
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(enchant)} >
                                                                     <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                                         
-                                        <p className='p-card-length'>{numberEnchant(enchant.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={numberEnchant(enchant.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => addCard(enchant.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                        { cardsSelected.filter(cardDeck => cardDeck === enchant.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === enchant.id).length}</p>
+                                        )}
+
+                                        { cardsUnselected.filter(cardDeck => cardDeck === enchant.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === enchant.id).length}</p>
+                                        )}
+                                        
+                                        <p className='p-card-length'>{count(enchant.id)}</p>                                  
+                                        <button className="add-button-deckbuilding" disabled={count(enchant.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(enchant)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button> 
                                         </div>
                                         )}
 
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(enchant.id)}/>
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(enchant)}/>
                                     </div>
                                     {detailsCard && detailsCard.id === enchant.id && (
                                     <img className="card-img-zoom" src={enchant.image && enchant.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${enchant.image}` : enchant.image} alt="Card-image"/>
@@ -1485,10 +1655,13 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 
             { deckSpells.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Sorts (" + deckSpells.length + ")"}/>
+                    <TitleType title={"Sorts (" + deckCards.filter(card =>
+                            card.type === "EPHEMERE" || card.type === "RITUEL" || card.type === "BATAILLE"
+                            ).length
+                            + ")"}/>
                     <div className='deck-text-map'>
                             {deckSpellsUnit.map(spell => ( 
-                                <div className="land-text-details" id='land-card'  key={spell.id}>
+                                <div className="land-text-details" id='land-card' style={{display: maskCard(spell.id)}}  key={spell.id}>
                                     
                                     <div className='card-link-desktop'>
                                             <h5 className='land-text-name' onMouseEnter={() => hoveredCard(spell.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseSpell(spell.id)}>{spell.name}</h5>
@@ -1499,17 +1672,25 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     
                                      <div className='deckbuilding-text-number'>
                                         { format !== "COMMANDER" && (
-                                        <div className='deckbuilding-text-number'>                              
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(spell.id)} >
+                                        <div className='deckbuilding-text-number'>   
+                                        { cardsSelected.filter(cardDeck => cardDeck === spell.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === spell.id).length}</p>
+                                        )}
+
+                                        { cardsUnselected.filter(cardDeck => cardDeck === spell.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === spell.id).length}</p>
+                                        )}
+
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(spell)} >
                                                                     <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                                         
-                                        <p className='p-card-length'>{numberSpell(spell.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={numberSpell(spell.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => addCard(spell.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                        <p className='p-card-length'>{count(spell.id)}</p>                                  
+                                        <button className="add-button-deckbuilding" disabled={count(spell.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(spell)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button> 
                                         </div>
                                         )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(spell.id)}/>
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(spell)}/>
                                     </div>
                                     {detailsCard && detailsCard.id === spell.id && (
                                     <img className="card-img-zoom" src={spell.image && spell.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${spell.image}` : spell.image} alt="Card-image"/>
@@ -1523,10 +1704,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
             { deckArtefacts.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>    
-                    <TitleType title={"Artefacts (" + deckArtefacts.length + ")"}/>
+                    <TitleType title={"Artefacts (" + deckCards.filter(card => card.type === "ARTEFACT").length + ")"}/>
                     <div className='deck-text-map'>
                             {deckArtefactsUnit.map(artefact => ( 
-                                <div className="land-text-details" id='land-card'  key={artefact.id}>
+                                <div className="land-text-details" id='land-card' style={{display: maskCard(artefact.id)}}  key={artefact.id}>
 
                                         <div className='card-link-desktop'>
                                             <h5 className='land-text-name' onMouseEnter={() => hoveredCard(artefact.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseArtefact(artefact.id)}>{artefact.name}</h5>
@@ -1537,17 +1718,26 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
                                      <div className='deckbuilding-number-container'>
                                         { format !== "COMMANDER" && (
-                                        <div className='deckbuilding-text-number'>                              
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(artefact.id)} >
+                                        <div className='deckbuilding-text-number'>   
+
+                                        { cardsSelected.filter(cardDeck => cardDeck === artefact.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === artefact.id).length}</p>
+                                        )}
+
+                                        { cardsUnselected.filter(cardDeck => cardDeck === artefact.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === artefact.id).length}</p>
+                                        )}
+
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(artefact)} >
                                                                     <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                                         
-                                        <p className='p-card-length'>{numberArtefact(artefact.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={numberArtefact(artefact.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => addCard(artefact.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                        <p className='p-card-length'>{count(artefact.id)}</p>                                  
+                                        <button className="add-button-deckbuilding" disabled={count(artefact.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(artefact)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button> 
                                         </div>
                                         )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(artefact.id)}/>
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(artefact)}/>
                                     </div>
                                     {detailsCard && detailsCard.id === artefact.id && (
                                     <img className="card-img-zoom" src={artefact.image && artefact.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${artefact.image}` : artefact.image} alt="Card-image"/>
@@ -1561,10 +1751,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             
             { deckPlaneswalkers.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Planeswalkers (" + deckPlaneswalkers.length + ")"}/>
+                    <TitleType title={"Planeswalkers (" + deckCards.filter(card => card.type === "PLANESWALKER").length + ")"}/>
                     <div className='deck-text-map'>
                             {deckPlaneswalkersUnit.map(planeswalker => ( 
-                                <div className="land-text-details" id='land-card' key={planeswalker.id}>
+                                <div className="land-text-details" id='land-card' key={planeswalker.id}
+                                style={{display: maskCard(planeswalker.id)}}>
                                     <div className='card-link-desktop'>
                                         <h5 className='land-text-name' 
                                         onMouseEnter={() => hoveredCard(planeswalker.id)} 
@@ -1578,18 +1769,27 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     </div>
                                     <div className='deckbuilding-number-container'>
                                     { format !== "COMMANDER" && (
-                                    <div className='deckbuilding-text-number'>                              
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => deleteCard(planeswalker.id)} >
+                                    <div className='deckbuilding-text-number'>
+
+                                        { cardsSelected.filter(cardDeck => cardDeck === planeswalker.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === planeswalker.id).length}</p>
+                                        )}
+
+                                        { cardsUnselected.filter(cardDeck => cardDeck === planeswalker.id).length > 0  && (
+                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === planeswalker.id).length}</p>
+                                        )}
+                                                                      
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(planeswalker)} >
                                             <AiOutlineMinusCircle size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                             
-                                        <p className='p-card-length'>{numberPlaneswalker(planeswalker.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={numberPlaneswalker(planeswalker.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => addCard(planeswalker.id)} >
+                                        <p className='p-card-length'>{count(planeswalker.id)}</p>                                  
+                                        <button className="add-button-deckbuilding" disabled={count(planeswalker.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(planeswalker)} >
                                             <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button> 
                                     </div>
                                     )}
-                                    <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={() => deleteCards(planeswalker.id)}/>
+                                    <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={() => unselectCards(planeswalker)}/>
                                     </div>
                                     {detailsCard && detailsCard.id === planeswalker.id && (
                                         <img className="card-img-zoom" 
@@ -1604,73 +1804,218 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             )}
         </div> 
         
-        <div className='stats-conatainer'>
-            <Title title={`Statistiques`} />       
+        {/*Graphiques*/}
+        <div className='stats-conatainer' >
+                <Title title={`Statistiques`} />       
 
-            <div className='graphics-container'> 
+                <div className='graphics-container'> 
 
-                <div className='graphic-container' >
-                    <h3 className='graphic-title'>Courbe de mana</h3>
-                    <ResponsiveContainer
+                    <div className='graphic-container' >
+                        <h3 className='graphic-title'>Courbe de mana</h3>
+                        <ResponsiveContainer
+                                width="100%"
+                                height={window.innerWidth < 768 ? 300 : 400}
+                                className="responsive-container"
+                                style={{
+                                    backgroundImage: `url(${backgroundPopup})`,
+                                    backgroundPosition: 'top',
+                                }}
+                                >
+                                <BarChart
+                                    data={manaCostData}
+                                    margin={{ top: 20, right: 20, left: window.innerWidth < 768 ? 10 : 20, bottom: 30 }}
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    
+                                    {/* L'axe X doit afficher le nom du coût de mana (par exemple '1', '3', '5') */}
+                                    <XAxis
+                                    dataKey="name"  // Affiche la propriété "name" dans les données
+                                    label={{
+                                        value: 'Coût en mana',
+                                        position: 'insideBottom',
+                                        offset: -5,
+                                        style: { fontWeight: 'bold', fontStyle: 'italic', color: 'grey' }
+                                    }}
+                                    style={{ paddingBottom: '5%' }}
+                                    />
+                                    
+                                    <YAxis />
+                                    
+                                    <Bar dataKey="value" fill="#8884d8">
+                                    {/* Ajout de l'affichage des labels personnalisés sur chaque barre */}
+                                    <LabelList
+                                        content={({ x, y, width, height, value, index }) => {
+                                        const { name } = manaCostData[index];
+                                        const isMobile = window.innerWidth < 768;
+                                        const boxWidth = isMobile ? 40 : 140;
+                                        const boxHeight = isMobile ? 25 : 50;
+                                        const chartHeight = isMobile ? 300 : 400;
+                                        const paddingFromBottom = 10;
+
+                                        const centerX = x + width / 2;
+                                        let centerY = y + height / 2;
+
+                                        const bottomEdge = centerY + boxHeight / 2;
+                                        if (bottomEdge > chartHeight - paddingFromBottom) {
+                                            centerY = chartHeight - paddingFromBottom - boxHeight / 2;
+                                        }
+
+                                        return (
+                                            <g>
+                                            <foreignObject
+                                                x={centerX - boxWidth / 2}
+                                                y={centerY - boxHeight / 2}
+                                                width={boxWidth}
+                                                height={boxHeight}
+                                            >
+                                                <div
+                                                xmlns="http://www.w3.org/1999/xhtml"
+                                                style={{
+                                                    backgroundColor: 'white',
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '6px',
+                                                    padding: isMobile ? '2px' : '6px',
+                                                    textAlign: 'center',
+                                                    fontSize: isMobile ? '12px' : '14px',
+                                                    fontWeight: 'bold',
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    boxSizing: 'border-box',
+                                                }}
+                                                >
+                                                <p style={{ margin: 0 }}>{isMobile ? value : `${value} cartes`}</p>
+                                                </div>
+                                            </foreignObject>
+                                            </g>
+                                        );
+                                        }}
+                                    />
+                                    </Bar>
+                                </BarChart>
+                        </ResponsiveContainer>
+                </div>                                      
+
+
+                    <div className='graphic-container'>
+                        <h3 className='graphic-title'>Répartition par couleur</h3>
+                        <ResponsiveContainer
+                        className='responsive-container'
+                        width="100%"
+                        height={400}
+                        style={{
+                            backgroundImage: `url(${backgroundPopup})`,
+                            backgroundPosition: 'top'
+                        }}
+                    >
+                        <PieChart>
+                            <Pie
+                                data={colorData}
+                                dataKey="value"
+                                nameKey="name"
+                                outerRadius="90%"
+                                fill="#8884d8"
+                                labelLine={false}
+                                label={({ cx, cy, midAngle, innerRadius, outerRadius, index }) => {
+                                    const RADIAN = Math.PI / 180;
+                                    // On augmente le radius pour éloigner les objets
+                                    const radius = innerRadius + (outerRadius - innerRadius) / 2 + 30; // On ajoute 30px pour éloigner les objets
+                                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                                    const entry = colorData[index];
+
+                                    return (
+                                        <g transform={`translate(${x},${y})`}>
+                                            <foreignObject x={-30} y={-35} width={80} height={70}>
+                                                <div
+                                                    xmlns="http://www.w3.org/1999/xhtml"
+                                                    style={{
+                                                        backgroundColor: 'white',
+                                                        border: '1px solid #ccc',
+                                                        padding: '10px',
+                                                        borderRadius: '8px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        fontSize: '14px',
+                                                        fontWeight: 'bold',
+                                                        boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+                                                    }}
+                                                >
+                                                    <img
+                                                        src={LEGEND_IMAGES[entry.name]}
+                                                        alt={entry.name}
+                                                        style={{ width: '30px', height: '30px', marginRight: 8 }}
+                                                    />
+                                                    <span>{entry.value}</span>
+                                                </div>
+                                            </foreignObject>
+                                        </g>
+                                    );
+                                }}
+                            >
+                                {colorData.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLOR_MAP[entry.name] || '#CCCCCC'} />
+                                ))}
+                            </Pie>
+                        </PieChart>
+                    </ResponsiveContainer>
+
+
+        
+                    </div>
+                </div> 
+
+                <div className='graphic-container-type'>      
+                        <h3 className='graphic-title'>Répartition par type</h3>
+                        <ResponsiveContainer
                             width="100%"
                             height={window.innerWidth < 768 ? 300 : 400}
                             className="responsive-container"
                             style={{
                                 backgroundImage: `url(${backgroundPopup})`,
-                                backgroundPosition: 'top',
+                                backgroundPosition: 'top'
                             }}
                             >
-                            <BarChart
-                                data={manaCostData}
-                                margin={{ top: 20, right: 20, left: window.innerWidth < 768 ? 10 : 20, bottom: 30 }}
-                            >
+                            <BarChart data={typeData} margin={{ top: 20, right: 20, left: window.innerWidth < 768 ? 10 : 20, bottom: 20 }}>
                                 <CartesianGrid strokeDasharray="3 3" />
-                                
-                                {/* L'axe X doit afficher le nom du coût de mana (par exemple '1', '3', '5') */}
-                                <XAxis
-                                dataKey="name"  // Affiche la propriété "name" dans les données
-                                label={{
-                                    value: 'Coût en mana',
-                                    position: 'insideBottom',
-                                    offset: -5,
-                                    style: { fontWeight: 'bold', fontStyle: 'italic', color: 'grey' }
-                                }}
-                                style={{ paddingBottom: '5%' }}
-                                />
-                                
                                 <YAxis />
-                                
+                                <XAxis hide={true} />
+                                {/* SUPPRIMER le Tooltip */}
+                                {/* <Tooltip content={<CustomTooltipType />} /> */}
                                 <Bar dataKey="value" fill="#8884d8">
-                                {/* Ajout de l'affichage des labels personnalisés sur chaque barre */}
-                                <LabelList
+                                    <LabelList
                                     content={({ x, y, width, height, value, index }) => {
-                                    const { name } = manaCostData[index];
-                                    const isMobile = window.innerWidth < 768;
-                                    const boxWidth = isMobile ? 40 : 140;
-                                    const boxHeight = isMobile ? 25 : 50;
-                                    const chartHeight = isMobile ? 300 : 400;
-                                    const paddingFromBottom = 10;
+                                        const { name } = typeData[index];
+                                        const isMobile = window.innerWidth < 768;
+                                        const boxWidth = isMobile ? 40 : 140;
+                                        const boxHeight = isMobile ? 25 : 70;
+                                        const chartHeight = isMobile ? 300 : 400;
+                                        const paddingFromBottom = 10;
 
-                                    const centerX = x + width / 2;
-                                    let centerY = y + height / 2;
+                                        const centerX = x + width / 2;
+                                        let centerY = y + height / 2;
 
-                                    const bottomEdge = centerY + boxHeight / 2;
-                                    if (bottomEdge > chartHeight - paddingFromBottom) {
+                                        const bottomEdge = centerY + boxHeight / 2;
+                                        if (bottomEdge > chartHeight - paddingFromBottom) {
                                         centerY = chartHeight - paddingFromBottom - boxHeight / 2;
-                                    }
+                                        }
 
-                                    return (
+                                        return (
                                         <g>
-                                        <foreignObject
+                                            <foreignObject
                                             x={centerX - boxWidth / 2}
                                             y={centerY - boxHeight / 2}
                                             width={boxWidth}
                                             height={boxHeight}
-                                        >
+                                            >
                                             <div
-                                            xmlns="http://www.w3.org/1999/xhtml"
-                                            style={{
-                                                backgroundColor: 'white',
+                                                xmlns="http://www.w3.org/1999/xhtml"
+                                                style={{
+                                                backgroundColor: isMobile ? TYPE_COLORS[index % TYPE_COLORS.length] : 'white',
                                                 border: '1px solid #ccc',
                                                 borderRadius: '6px',
                                                 padding: isMobile ? '2px' : '6px',
@@ -1684,209 +2029,73 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
                                                 boxSizing: 'border-box',
-                                            }}
-                                            >
-                                            <p style={{ margin: 0 }}>{isMobile ? value : `${value} cartes`}</p>
-                                            </div>
-                                        </foreignObject>
-                                        </g>
-                                    );
-                                    }}
-                                />
-                                </Bar>
-                            </BarChart>
-                    </ResponsiveContainer>
-            </div>                                      
-
-
-                <div className='graphic-container'>
-                    <h3 className='graphic-title'>Répartition par couleur</h3>
-                    <ResponsiveContainer
-                    className='responsive-container'
-                    width="100%"
-                    height={400}
-                    style={{
-                        backgroundImage: `url(${backgroundPopup})`,
-                        backgroundPosition: 'top'
-                    }}
-                >
-                    <PieChart>
-                        <Pie
-                            data={colorData}
-                            dataKey="value"
-                            nameKey="name"
-                            outerRadius="90%"
-                            fill="#8884d8"
-                            labelLine={false}
-                            label={({ cx, cy, midAngle, innerRadius, outerRadius, index }) => {
-                                const RADIAN = Math.PI / 180;
-                                // On augmente le radius pour éloigner les objets
-                                const radius = innerRadius + (outerRadius - innerRadius) / 2 + 30; // On ajoute 30px pour éloigner les objets
-                                const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                                const y = cy + radius * Math.sin(-midAngle * RADIAN);
-                                const entry = colorData[index];
-
-                                return (
-                                    <g transform={`translate(${x},${y})`}>
-                                        <foreignObject x={-30} y={-35} width={80} height={70}>
-                                            <div
-                                                xmlns="http://www.w3.org/1999/xhtml"
-                                                style={{
-                                                    backgroundColor: 'white',
-                                                    border: '1px solid #ccc',
-                                                    padding: '10px',
-                                                    borderRadius: '8px',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    fontSize: '14px',
-                                                    fontWeight: 'bold',
-                                                    boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+                                                color: isMobile ? 'white' : 'black'
                                                 }}
                                             >
-                                                <img
-                                                    src={LEGEND_IMAGES[entry.name]}
-                                                    alt={entry.name}
-                                                    style={{ width: '30px', height: '30px', marginRight: 8 }}
-                                                />
-                                                <span>{entry.value}</span>
+                                                {isMobile ? (
+                                                    <p style={{ margin: 0 }}>{value}</p>
+                                                ) : (
+                                                    <>
+                                                        <p
+                                                        style={{
+                                                            margin: 0,
+                                                            color: 'white',
+                                                            backgroundColor: '#5D3B8C',
+                                                            width: '100%',
+                                                            padding: '6px 0',
+                                                            fontSize: '14px',
+                                                        }}
+                                                        >
+                                                        {name}
+                                                        </p>
+                                                        <p style={{ margin: '6px 0 0 0', fontSize: '14px' }}>x {value}</p>
+                                                    </>
+                                                )}
                                             </div>
-                                        </foreignObject>
-                                    </g>
-                                );
-                            }}
-                        >
-                            {colorData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLOR_MAP[entry.name] || '#CCCCCC'} />
-                            ))}
-                        </Pie>
-                    </PieChart>
-                </ResponsiveContainer>
+                                            </foreignObject>
+                                        </g>
+                                        );
+                                    }}
+                                    />
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
 
+                        {/* Légendes externes pour mobile */}
+                            <div className='legend-graphic-types'>
+                                {typeData.map((type, index) => (
+                                    <div key={type.name} style={{ 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        gap: '5px',
+                                        fontSize: '10px'
+                                    }}>
+                                        <div style={{
+                                            width: '12px',
+                                            height: '12px',
+                                            backgroundColor: TYPE_COLORS[index % TYPE_COLORS.length],
+                                            borderRadius: '2px'
+                                        }}></div>
+                                        <span>{type.name}</span>
+                                    </div>
+                                ))}
+                            </div>
 
-    
                 </div>
-            </div> 
-
-            <div className='graphic-container-type'>      
-                    <h3 className='graphic-title'>Répartition par type</h3>
-                    <ResponsiveContainer
-                        width="100%"
-                        height={window.innerWidth < 768 ? 300 : 400}
-                        className="responsive-container"
-                        style={{
-                            backgroundImage: `url(${backgroundPopup})`,
-                            backgroundPosition: 'top'
-                        }}
-                        >
-                        <BarChart data={typeData} margin={{ top: 20, right: 20, left: window.innerWidth < 768 ? 10 : 20, bottom: 20 }}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <YAxis />
-                            <XAxis hide={true} />
-                            {/* SUPPRIMER le Tooltip */}
-                            {/* <Tooltip content={<CustomTooltipType />} /> */}
-                            <Bar dataKey="value" fill="#8884d8">
-                                <LabelList
-                                content={({ x, y, width, height, value, index }) => {
-                                    const { name } = typeData[index];
-                                    const isMobile = window.innerWidth < 768;
-                                    const boxWidth = isMobile ? 40 : 140;
-                                    const boxHeight = isMobile ? 25 : 70;
-                                    const chartHeight = isMobile ? 300 : 400;
-                                    const paddingFromBottom = 10;
-
-                                    const centerX = x + width / 2;
-                                    let centerY = y + height / 2;
-
-                                    const bottomEdge = centerY + boxHeight / 2;
-                                    if (bottomEdge > chartHeight - paddingFromBottom) {
-                                    centerY = chartHeight - paddingFromBottom - boxHeight / 2;
-                                    }
-
-                                    return (
-                                    <g>
-                                        <foreignObject
-                                        x={centerX - boxWidth / 2}
-                                        y={centerY - boxHeight / 2}
-                                        width={boxWidth}
-                                        height={boxHeight}
-                                        >
-                                        <div
-                                            xmlns="http://www.w3.org/1999/xhtml"
-                                            style={{
-                                            backgroundColor: isMobile ? TYPE_COLORS[index % TYPE_COLORS.length] : 'white',
-                                            border: '1px solid #ccc',
-                                            borderRadius: '6px',
-                                            padding: isMobile ? '2px' : '6px',
-                                            textAlign: 'center',
-                                            fontSize: isMobile ? '12px' : '14px',
-                                            fontWeight: 'bold',
-                                            width: '100%',
-                                            height: '100%',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            boxSizing: 'border-box',
-                                            color: isMobile ? 'white' : 'black'
-                                            }}
-                                        >
-                                            {isMobile ? (
-                                                <p style={{ margin: 0 }}>{value}</p>
-                                            ) : (
-                                                <>
-                                                    <p
-                                                    style={{
-                                                        margin: 0,
-                                                        color: 'white',
-                                                        backgroundColor: '#5D3B8C',
-                                                        width: '100%',
-                                                        padding: '6px 0',
-                                                        fontSize: '14px',
-                                                    }}
-                                                    >
-                                                    {name}
-                                                    </p>
-                                                    <p style={{ margin: '6px 0 0 0', fontSize: '14px' }}>x {value}</p>
-                                                </>
-                                            )}
-                                        </div>
-                                        </foreignObject>
-                                    </g>
-                                    );
-                                }}
-                                />
-                            </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
-
-                    {/* Légendes externes pour mobile */}
-                        <div className='legend-graphic-types'>
-                            {typeData.map((type, index) => (
-                                <div key={type.name} style={{ 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    gap: '5px',
-                                    fontSize: '10px'
-                                }}>
-                                    <div style={{
-                                        width: '12px',
-                                        height: '12px',
-                                        backgroundColor: TYPE_COLORS[index % TYPE_COLORS.length],
-                                        borderRadius: '2px'
-                                    }}></div>
-                                    <span>{type.name}</span>
-                                </div>
-                            ))}
-                        </div>
-
-            </div>
 
         </div>
-                
         <IoIosArrowDropleft className='icon-close-popup' size={'5em'}  onClick={()=>navigate(-1)}/>      
     
-    </div>                                      
+        </div>
+        
+        {/*Bouton pour annuler les changements de carte */} 
+        <button className="button-reset-cards" style={{position: 'fixed', bottom: '100px', right: '70px'}} onClick={()=>resetCards()} disabled={cardsSelected.length === 0 && cardsUnselected.length === 0 }>
+            <RiResetLeftFill className="button-reset-cards-icon" size={'4em'} color="red"/></button>
+
+        {/*Bouton pour valider les changements de carte */} 
+        <ButtonValid style={{position: 'fixed', bottom: '15px', right: '50px'}}
+                        onClick={()=>setDisplayAddPopUp(true)} disabled={cardsSelected.length === 0 && cardsUnselected.length === 0 } 
+                        text={"Valider"}/>                                      
 
                 {/* Popup de zoom carte mobile */}
                 {displayZoomPopup && cardImage && (
@@ -1950,6 +2159,20 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayZoomPopup(false)}/>
                             </div>
                 )}
+
+                {/* Popup d'ajout de cartes */}
+                { displayAddPopUp && (
+                                   <div className='popup-bckg'>
+                                        <div className='popup-update-user'>
+                                            <div className='header-ban-container'>
+                                                <h2 style={{color: 'white', fontFamily: 'MedievalSharp, cursive'}}>Modifications effectuées</h2>
+                                            </div>
+                                            <h4 className='active-p1' style={{padding:'5%', color: 'black', textAlign: 'center'}} >{updateCardText()}</h4>                               
+                                            <button className='valid-popup' onClick={() => updateCards()}><h4 className='valid-poup-title'>Enregistrer</h4></button>
+                                          </div> 
+                                          <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayAddPopUp(false)}/> 
+                                      </div>
+                                )}
                             
                 {/* Popup publication du deck */}
                 {popupPub && (

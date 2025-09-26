@@ -28,8 +28,10 @@
 }
 
 .button-valid, .button-valid-mobile {
-  z-index: 1000;
+  z-index: 101;
 }
+
+
 
 @media (max-width: 1600px) {
     .button-valid-container {
