@@ -3,7 +3,11 @@
     border: 2px solid black; 
     margin-left: 12.5%;
     margin-bottom: 5%;
-    background-color: #d3d3d3;
+     background: linear-gradient(
+        135deg, 
+        #f9f9f9,  /* presque blanc */
+        #e6e6e6   /* gris clair */
+    );
 
 }
 

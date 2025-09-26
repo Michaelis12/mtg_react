@@ -3,7 +3,6 @@ import React from 'react';
 import Section from '../components/section';
 import Title from '../components/title'
 import backgroundCardsPage from "../assets/background_cardsPage.jpg"
-import backgroundWhite from "../assets/background_white.png"
 
 const Mentions = function () {
 
@@ -13,7 +12,7 @@ const Mentions = function () {
       
       <Title title={"Mentions légales"} style={{marginTop:"3%", marginBottom:"2%"}}/>
 
-      <div className="regle-selected-container" style={{ backgroundImage: `url(${backgroundWhite})` }}>
+      <div className="regle-selected-container">
         <h5 className="regle-selected-content">
            <h5 className="regle-selected-content">
           <strong>Éditeur du site</strong><br/><br/>
