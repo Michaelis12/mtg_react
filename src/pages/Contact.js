@@ -13,7 +13,7 @@ const Contact = function () {
       
       <Title title={"Contact"} style={{marginTop:"3%", marginBottom:"2%"}}/>
 
-      <div className="regle-selected-container" style={{ backgroundImage: `url(${backgroundWhite})` }}>
+      <div className="regle-selected-container">
         <h5 className="regle-selected-content">
           <strong>Nous contacter</strong><br/><br/>
           

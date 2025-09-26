@@ -127,8 +127,7 @@ const ReglesPage = function () {
         icon={<MdOutlinePlayArrow className='icon-nav' />} />
       </div>
 
-      <div className="regle-selected-container" style={{backgroundImage:`url(${backgroundRule})`,
-                                                    backgroundPosition: "center"}}>
+      <div className="regle-selected-container">
         <h5 className="regle-selected-content" >{rule.text}</h5>
       </div> 
     </Section> 

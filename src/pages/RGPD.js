@@ -13,7 +13,7 @@ const RGPD = function () {
       
       <Title title={"Politique de confidentialité (RGPD)"} style={{marginTop:"3%", marginBottom:"2%"}}/>
 
-      <div className="regle-selected-container" style={{ backgroundImage: `url(${backgroundWhite})` }}>
+      <div className="regle-selected-container" >
         <h5 className="regle-selected-content">
           <strong>1. Collecte des données personnelles</strong><br/><br/>
           

@@ -440,7 +440,7 @@
     justify-content: center; /* Centre les cartes sur l'écran */
     flex-wrap: wrap; /* Permet aux cartes de se réorganiser si nécessaire */
     gap: 20px; /* Espacement entre les cartes */
-    margin-bottom: 10%;
+    margin-bottom: 0%;
 }
 
 /* Top Decks*/

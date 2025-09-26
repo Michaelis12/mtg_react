@@ -13,7 +13,7 @@ const Mentions = function () {
       
       <Title title={"Mentions légales"} style={{marginTop:"3%", marginBottom:"2%"}}/>
 
-      <div className="regle-selected-container" style={{ backgroundImage: `url(${backgroundWhite})` }}>
+      <div className="regle-selected-container">
         <h5 className="regle-selected-content">
            <h5 className="regle-selected-content">
           <strong>Éditeur du site</strong><br/><br/>
