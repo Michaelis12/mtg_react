@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; 
 import { useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CgAdd } from "react-icons/cg";
@@ -67,7 +67,6 @@ const CardsDeckPage = () => {
      const callColors = useRef(false)
      const recupStorageColors = (response) => {
         try {
-            console.log(callColors)
 
              if (callColors.current) return;
 
@@ -1016,7 +1015,7 @@ const CardsDeckPage = () => {
 
       // N'affiche pas les terrains de base
       const maskBaseLand = (value) => {
-        if(value > 0 && value < 7) {
+        if(value > 25 ) {
             return "none";
       }
     }
@@ -1051,7 +1050,6 @@ const CardsDeckPage = () => {
         // Ajoute les cartes sélectionnées par l'user dans le deck
         const addCards = async () => { 
             try { 
-              setDisplayLoading(true)
                 const cardIds = cardsSelected.map(card => card.id).join(',');
 
                 const response = await axiosInstance.post(`f_user/addCardsOnDeck?cardId=${cardIds}&deckId=${id}`, null, { withCredentials: true });
@@ -1336,14 +1334,15 @@ const CardsDeckPage = () => {
                       </div>
                       )}
 
-                      { deck.format !== "COMMANDER" && (                 
+                      { deck.format !== "COMMANDER" && (   
+                                      
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         style={{opacity: desacCardsDeck(card.id)}} />
 
                         
-
+                        {/*La présence de cartes dans le deck*/}
                        <div className="deck-presence-container">
                          <p className="p-cards-deck-length">présence dans le deck : {deckCards.filter(cardDeck => cardDeck === card.id).length}</p>
                          {cardsSelected.filter(cardDeck => cardDeck === card).length > 0 && (
@@ -1352,7 +1351,7 @@ const CardsDeckPage = () => {
 
                         
                        </div>
-
+                        {/*Le bouton + si la carte n'est pas encore dans le deck*/}
                        { !deckCards.includes(card.id) && !cardsSelected.includes(card) && (
                         <AddButton onClick={() => selectCard(card)} style={{ backgroundColor: 'white', margin : '2%', marginBottom: '7%', border: 'none' }}
                               icon={<CgAdd size={'2.5em'} color={'black'} />} />
