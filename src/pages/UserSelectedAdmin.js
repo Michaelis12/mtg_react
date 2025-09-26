@@ -82,7 +82,6 @@ const AccountPage = () => {
 
                 const response = request.data
 
-                console.log(request.data)
     
                 setDeckBuilder(response)
 

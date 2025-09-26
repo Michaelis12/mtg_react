@@ -1114,20 +1114,30 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 
         // Retire tous les exemplaires d'une carte
         const unselectCards = (cardToRemove) => {
+            setDeckCards((prevCards) => {
+                // Sépare les cartes à garder et celles à retirer
+                const remainingCards = prevCards.filter(card => card.id !== cardToRemove.id);
+                const removedCards = prevCards.filter(card => card.id === cardToRemove.id);
 
-                setDeckCards(prevCards =>
-                prevCards.filter(card => card.id !== cardToRemove.id)
-                );
+                console.log(removedCards.map(card => card.id));
 
-                    if(cardsSelected.length === 1) {
-                      setDisplayPopup(false)
-                    }
-                    
-                    setCardsSelected(prevCards => 
-                      prevCards.filter(card => card.id !== cardToRemove.id)
-                    );
-                    
-        };  
+                // Met à jour cardsUnselected en évitant les doublons
+                setCardsUnselected((prevUnselected) => {
+                    // On filtre les ids déjà présents
+                    const newIds = removedCards
+                        .map(card => card.id)
+                        .filter(id => !prevUnselected.includes(id));
+
+                    return [...prevUnselected, ...newIds];
+                });
+
+                return remainingCards;
+            });
+        };
+
+
+
+
 
         // Donne le nombre d'exemplaire d'une carte
         const count = (cardID) => {
@@ -1142,6 +1152,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             try { 
                 setDisplayLoading(true)
 
+                 console.log(cardsUnselected)
+
                 if(cardsSelected.length > 0) {
                 const request1 = await axiosInstance.post(`f_user/addCardsOnDeck?cardId=${cardsSelected}&deckId=${id}`, null, { withCredentials: true });
                 }
@@ -1149,7 +1161,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 const request2 = await axiosInstance.delete(`/f_user/deleteCardsListOnDeck?cardId=${cardsUnselected}&deckId=${id}`, { withCredentials: true });
                 }
 
-                window.location.reload();
+                //window.location.reload();
                 
                  }   
             catch (error) {
@@ -1175,10 +1187,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         }
 
 
-        const disableButton = (id) => {
+        const maskCard = (id) => {
             const deckCardsid = deckCards.map(card => card.id);
             if(!deckCardsid.includes(id)) {
-                return true
+                return 'none'
             }
         }
 
@@ -1723,7 +1735,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
           
             { deckLands.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Terrains (" + deckCards.filter(card => card.type === "TERRAIN").length + ")"}/>
+                    <TitleType title={"Terrains (" + deckLands.length + ")"}/>
                     <div className='deck-text-map'>
                         {deckLandsUnit.map(land => {
                             return (
@@ -1742,8 +1754,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                             <img className="card-img-zoom"  src={land.image && land.image.startsWith('/uploads/') ? `https://localhost:8443${land.image}` : land.image} alt="Card-image" />
                                         )}
                                     <div className='deckbuilding-number-container'>
-                                        {land.id < 8 && ( 
+                                        {land.id < 7 && (
                                             <div className='deckbuilding-text-number'>
+
                                                 { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
                                                     <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
                                                 )}
@@ -1752,46 +1765,37 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                     <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === land.id).length}</p>
                                                 )}
 
-                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)}
-                                                disabled={disableButton(land.id)} >
+                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
                                                 <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
                                                 </button>
-
-                                                
-                                                <input type='number' className='input-card-length' step="1" 
-                                                    value={count(land.id) || 0}
-                                                    onChange={(e) => setNumberCardOnDeck(land.id, e.target.value)}
-                                                />
-
-
+                                                <p className='p-card-length'>{count(land.id)}</p>
                                                 <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(land)} >
                                                 <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                                 </button>
                                             </div>
                                         )} 
-                                        {format !== "COMMANDER" && land.id > 7 && (
-                                        <div className='deckbuilding-text-number'> 
-                                        
+                                        {format !== "COMMANDER" && land.id > 6 && (
+                                        <div className='deckbuilding-text-number'>                              
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
+                                                <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
+                                            </button>
+                                            
+                                            <p className='p-card-length'>{count(land.id)}</p>
+
                                             { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
                                                     <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
                                                 )}
 
-                                            { cardsUnselected.filter(cardDeck => cardDeck === land.id).length > 0  && (
-                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === land.id).length}</p>
-                                             )}
+                                                { cardsUnselected.filter(cardDeck => cardDeck === land.id).length > 0  && (
+                                                    <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === land.id).length}</p>
+                                                )}
 
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)}
-                                            disabled={disableButton(land.id)} >
-                                                <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
-                                            </button>
-                                            
-                                                                              
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} disabled={numberLand(land.id) > 3} onClick={() => selectCard(land)} >
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} disabled={count(land.id) > 3} onClick={() => selectCard(land)} >
                                                 <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                             </button>
                                         </div>
                                         )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={() => deleteCards(land.id)} />
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={() => unselectCards(land.id)} />
                                         
                                     </div>
                                 </div>
@@ -1800,13 +1804,12 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     </div>
                 </div>
             )}
-
             { deckCreatures.length > 0 && (    
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Créatures (" + deckCards.filter(card => card.type === "CREATURE").length + + ")"}/>
+                    <TitleType title={"Créatures (" + deckCards.filter(card => card.type === "CREATURE").length + ")"}/>
                     <div className='deck-text-map'>
                             {deckCreaturesUnit.map(creature => ( 
-                                <div className="land-text-details" id='land-card'  key={creature.id}>
+                                <div className="land-text-details" id='land-card' style={{display: maskCard(creature.id)}} key={creature.id}>
                                     
                                     <div className='card-link-desktop'>
                                             <h5 className='land-text-name' onMouseEnter={() => hoveredCard(creature.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseCreature(creature.id)}>{creature.name}</h5>
@@ -1826,7 +1829,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === creature.id).length}</p>
                                              )}
 
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(creature.id)} >
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(creature)} >
                                                                         <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                             </button>
 
@@ -1835,11 +1838,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                             <p className='p-card-length'>{count(creature.id)}</p>                                  
                                             <button className="add-button-deckbuilding" disabled={count(creature.id) > 3}
                                             style={{ margin : '2%', border: 'none' }} 
-                                            onClick={() => selectCard(creature.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                            onClick={() => selectCard(creature)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                             </button> 
                                         </div>
                                         )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(creature.id)}/>
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(creature.id)}/>
                                 </div>  
                                     {detailsCard && detailsCard.id === creature.id && (
                                     <img className="card-img-zoom" src={creature.image && creature.image.startsWith('/uploads/') ? `https://localhost:8443${creature.image}` : creature.image} alt="Card-image"/>
@@ -1856,7 +1859,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     <TitleType title={"Enchantements (" + deckCards.filter(card => card.type === "ENCHANTEMENT").length + ")"}/>
                     <div className='deck-text-map'>
                             {deckEnchantsUnit.map(enchant => ( 
-                                <div className="land-text-details" id='land-card'  key={enchant.id}>
+                                <div className="land-text-details" id='land-card' style={{display: maskCard(enchant.id)}} key={enchant.id}>
                                     
                                     <div className='card-link-desktop'>
                                             <h5 className='land-text-name' onMouseEnter={() => hoveredCard(enchant.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseEnchant(enchant.id)}>{enchant.name}</h5>
@@ -1872,7 +1875,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                     <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                                         
-                                        {/* Modif enchant */}
                                         { cardsSelected.filter(cardDeck => cardDeck === enchant.id).length > 0  && (
                                                 <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === enchant.id).length}</p>
                                         )}
@@ -1887,7 +1889,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                         </div>
                                         )}
 
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(enchant.id)}/>
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(enchant.id)}/>
                                     </div>
                                     {detailsCard && detailsCard.id === enchant.id && (
                                     <img className="card-img-zoom" src={enchant.image && enchant.image.startsWith('/uploads/') ? `https://localhost:8443${enchant.image}` : enchant.image} alt="Card-image"/>
@@ -1907,7 +1909,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             + ")"}/>
                     <div className='deck-text-map'>
                             {deckSpellsUnit.map(spell => ( 
-                                <div className="land-text-details" id='land-card'  key={spell.id}>
+                                <div className="land-text-details" id='land-card' style={{display: maskCard(spell.id)}}  key={spell.id}>
                                     
                                     <div className='card-link-desktop'>
                                             <h5 className='land-text-name' onMouseEnter={() => hoveredCard(spell.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseSpell(spell.id)}>{spell.name}</h5>
@@ -1936,7 +1938,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                         </button> 
                                         </div>
                                         )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(spell.id)}/>
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(spell.id)}/>
                                     </div>
                                     {detailsCard && detailsCard.id === spell.id && (
                                     <img className="card-img-zoom" src={spell.image && spell.image.startsWith('/uploads/') ? `https://localhost:8443${spell.image}` : spell.image} alt="Card-image"/>
@@ -1953,7 +1955,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     <TitleType title={"Artefacts (" + deckCards.filter(card => card.type === "ARTEFACT").length + ")"}/>
                     <div className='deck-text-map'>
                             {deckArtefactsUnit.map(artefact => ( 
-                                <div className="land-text-details" id='land-card'  key={artefact.id}>
+                                <div className="land-text-details" id='land-card' style={{display: maskCard(artefact.id)}}  key={artefact.id}>
 
                                         <div className='card-link-desktop'>
                                             <h5 className='land-text-name' onMouseEnter={() => hoveredCard(artefact.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseArtefact(artefact.id)}>{artefact.name}</h5>
@@ -1974,16 +1976,16 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === artefact.id).length}</p>
                                         )}
 
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(artefact.id)} >
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(artefact)} >
                                                                     <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                                         
                                         <p className='p-card-length'>{count(artefact.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={count(artefact.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(artefact.id)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                        <button className="add-button-deckbuilding" disabled={count(artefact.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(artefact)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button> 
                                         </div>
                                         )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>deleteCards(artefact.id)}/>
+                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(artefact.id)}/>
                                     </div>
                                     {detailsCard && detailsCard.id === artefact.id && (
                                     <img className="card-img-zoom" src={artefact.image && artefact.image.startsWith('/uploads/') ? `https://localhost:8443${artefact.image}` : artefact.image} alt="Card-image"/>
@@ -2000,7 +2002,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     <TitleType title={"Planeswalkers (" + deckCards.filter(card => card.type === "PLANESWALKER").length + ")"}/>
                     <div className='deck-text-map'>
                             {deckPlaneswalkersUnit.map(planeswalker => ( 
-                                <div className="land-text-details" id='land-card' key={planeswalker.id}>
+                                <div className="land-text-details" id='land-card' key={planeswalker.id}
+                                style={{display: maskCard(planeswalker.id)}}>
                                     <div className='card-link-desktop'>
                                         <h5 className='land-text-name' 
                                         onMouseEnter={() => hoveredCard(planeswalker.id)} 
@@ -2024,17 +2027,17 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === planeswalker.id).length}</p>
                                         )}
                                                                       
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(planeswalker.id)} >
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(planeswalker)} >
                                             <AiOutlineMinusCircle size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                             
                                         <p className='p-card-length'>{count(planeswalker.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={count(planeswalker.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(planeswalker.id)} >
+                                        <button className="add-button-deckbuilding" disabled={count(planeswalker.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(planeswalker)} >
                                             <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button> 
                                     </div>
                                     )}
-                                    <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={() => deleteCards(planeswalker.id)}/>
+                                    <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={() => unselectCards(planeswalker)}/>
                                     </div>
                                     {detailsCard && detailsCard.id === planeswalker.id && (
                                         <img className="card-img-zoom" 
@@ -2050,7 +2053,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         </div> 
         
         {/*Graphiques*/}
-        <div className='stats-conatainer'>
+        <div className='stats-conatainer' style={{display: 'none'}}>
             <Title title={`Statistiques`} />       
 
             <div className='graphics-container'> 
@@ -2334,10 +2337,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
     
         </div>
         
+        
         {/*Bouton pour valider les changements de carte */} 
         <ButtonValid style={{position: 'fixed', bottom: '15px', right: '50px'}}
                         onClick={()=>setDisplayAddPopUp(true)} disabled={cardsSelected.length === 0 && cardsUnselected.length === 0 } 
-                        text={"Valider"}/>                                      
+                        text={"Enregistrer les modifications"}/>                                      
 
                 {/* Popup de zoom carte mobile */}
                 {displayZoomPopup && cardImage && (
