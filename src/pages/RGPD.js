@@ -1,5 +1,4 @@
 import "./css/RuleSelected.css"
-import React from 'react';
 import Section from '../components/section';
 import Title from '../components/title'
 import backgroundCardsPage from "../assets/background_cardsPage.jpg"
