@@ -1260,4 +1260,39 @@
   }
 }
 
+.button-reset-cards {
+        background-color: white; 
+        border: 3px solid black;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+        height: 90px;
+        width: 90px;
+        border-radius: 50%;
+        position: fixed;
+        top: 75vh;
+        margin-right: 7vh;
+        z-index: 101;
+    }
+
+
+@media (max-width: 1600px) {
+    .button-reset-cards {
+        top: 85vh;
+         margin-right: 12vh;
+    }
+}
+
+
+
+.button-reset-cards:hover {
+     transform: translateY(-3px);
+    filter: brightness(1.1);
+    box-shadow: 0 8px 25px rgba(93, 59, 140, 0.4);
+}
+
+.button-reset-cards:disabled {
+    display: none;
+  }
+
 
