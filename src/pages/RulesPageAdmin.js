@@ -142,12 +142,13 @@ const RulesPage = function () {
                  onChange={(e) => setText(e.target.value)} >
                       {rule.text}
                  </textarea>
-
-                 <button  type="button" className="valid-form"
-                            disabled={title === "" && text === ""}
-                            onClick={() => updateRule(rule.id)}><h4>
-                                Valider
-              </h4></button>
+                    <div className='valid-button-container' style={{padding: '1%'}}>
+                     <button  type="button" className="valid-form"
+                                disabled={title === "" && text === ""}
+                                onClick={() => updateRule(rule.id)}><h4>
+                                    Valider
+                      </h4></button>
+                      </div>
               </div>
               <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>setRuleToUpdate(null)}/> 
              </div>
