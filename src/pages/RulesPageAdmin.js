@@ -141,7 +141,7 @@ const RulesPage = function () {
                  <textarea className="input-text-rule-mobile" id="deck-name" name="deck-name" rows="25"
                  onChange={(e) => setText(e.target.value)} >
                       {rule.text}
-                 </textarea>
+                 </textarea> 
 
                  <button  type="button" className="valid-form"
                             disabled={title === "" && text === ""}

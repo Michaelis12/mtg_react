@@ -89,8 +89,7 @@ const SignPage = function () {
                     setDisplayLoading(false)
 
                 } 
-            }
-        
+            }       
         else {
             setErrorContent("Le mot de passe ne respecte pas les instructions")
             setDisplayLoading(false)

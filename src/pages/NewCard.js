@@ -298,6 +298,8 @@ const NewCard = function () {
             setAlertCardSend(false)
             setAlertCardDontSend(false)
             setDisplayLoading(true);
+
+
             const card = {
                 name,
                 text, 
@@ -313,6 +315,8 @@ const NewCard = function () {
             }
 
             const response = await axiosInstance.post('/f_admin/addCard', card, { withCredentials: true });
+
+            
             setAlertCardSend(true)
             setDisplayLoading(false);
             //window.location.reload();
