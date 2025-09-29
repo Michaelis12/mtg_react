@@ -935,7 +935,7 @@ const NewDeck = () => {
               image: imagePath,
               format,
               colors,
-              cedhID
+              cedhID : Number(cedhID) // Conversion du string en number
             }
 
             const response = await axiosInstance.post('/f_user/addCedh', deckRegister, { withCredentials: true}); 
@@ -1591,7 +1591,7 @@ const NewDeck = () => {
                                   
                           </div>  
                         <div className='valid-form-container'>      
-                          <button className='valid-popup' onClick={() => createDeck()}><h4 className='valid-popup-title'>Créer le deck</h4></button> 
+                          <button className='valid-popup' onClick={() => createCedh()}><h4 className='valid-popup-title'>Créer le deck</h4></button> 
                         </div>    
                 </div> 
               </div>
@@ -1636,7 +1636,7 @@ const NewDeck = () => {
                                   <ButtonModif onClick={() => returnFormat()} />
                       </div>
                                                                                                       
-                      <button style={{marginBottom: '5%', marginTop: '5%', paddingLeft: '2%', paddingRight: '2%'}} className="valid-form" onClick={() => createDeck()} ><h4>Créer le deck</h4></button>                                          
+                      <button style={{marginBottom: '5%', marginTop: '5%', paddingLeft: '2%', paddingRight: '2%'}} className="valid-form" onClick={() => createCedh()} ><h4>Créer le deck</h4></button>                                          
                     </div> 
                 </div>  
 
