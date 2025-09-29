@@ -249,9 +249,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     
                     if( deck.format === "COMMANDER") {
 
-                        setDisplayLoading(true);
-                        console.log("cedh")
-                            
+                        setDisplayLoading(true);                            
 
                         const params = {
                                 deckID : id,

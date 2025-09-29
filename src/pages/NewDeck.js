@@ -861,7 +861,7 @@ const NewDeck = () => {
               
     const [cedhSelected, setCedhSelected] = React.useState([])
     const [cedh, setCedh] = React.useState([])
-    const [cedhID, setCedhID] = React.useState("")
+    const [cedhID, setCedhID] = React.useState(0)
     const [detailsCedh, setDetailsCedh] = React.useState(false)
       
     // Sélectionne des cartes
@@ -905,9 +905,11 @@ const NewDeck = () => {
       };
 
      // Créé le cedh
+     
       const createCedh = async () => {
         try {
             setDisplayLoading(true);
+
             
             let imagePath = "";
             
@@ -975,7 +977,7 @@ const NewDeck = () => {
             console.log(e)
         }     
     }
-
+    
     useEffect(() => {
     const recupStorage = () => {
         try {
@@ -1591,7 +1593,7 @@ const NewDeck = () => {
                                   
                           </div>  
                         <div className='valid-form-container'>      
-                          <button className='valid-popup' onClick={() => createDeck()}><h4 className='valid-popup-title'>Créer le deck</h4></button> 
+                          <button className='valid-popup' onClick={() => createCedh()}><h4 className='valid-popup-title'>Créer le deck</h4></button> 
                         </div>    
                 </div> 
               </div>
@@ -1636,7 +1638,7 @@ const NewDeck = () => {
                                   <ButtonModif onClick={() => returnFormat()} />
                       </div>
                                                                                                       
-                      <button style={{marginBottom: '5%', marginTop: '5%', paddingLeft: '2%', paddingRight: '2%'}} className="valid-form" onClick={() => createDeck()} ><h4>Créer le deck</h4></button>                                          
+                      <button style={{marginBottom: '5%', marginTop: '5%', paddingLeft: '2%', paddingRight: '2%'}} className="valid-form" onClick={() => createCedh()} ><h4>Créer le deck</h4></button>                                          
                     </div> 
                 </div>  
 
