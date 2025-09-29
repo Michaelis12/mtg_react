@@ -163,19 +163,19 @@ return (
                     <div className="input-group-sign">
                         <label >E-mail :</label>
                         <input type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)}
-                        style={{borderColor: emailStyle()}}  required/>
+                        style={{borderColor: emailStyle()}} value={email} required/>
                     </div>
                     <div className="input-group-sign">
                         <label>Mot de passe :</label>
                         <input type="password" id="password" onChange={(e) => setPassword(e.target.value)}
                         placeholder="entre 8 et 20 caractères avec au moins une majuscule et un caractère spécial"
-                        style={{borderColor: passwordStyle()}} required/>
+                        style={{borderColor: passwordStyle()}} value={password} required/>
                         <p className="instruction-para-sign">  doit contenir entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial  </p>
                     </div>
                     <div className="input-group-sign" style={{marginBottom: '5%'}}>
                         <label>Confirmation du mot de passe :</label>
                         <input type="password" id="password" onChange={(e) => setConfirmPassword(e.target.value)}
-                        style={{borderColor: passwordStyle()}} required/>
+                        style={{borderColor: passwordStyle()}} value={confirmPassword} required/>
                     </div> 
                     <div className="link-group">
                         <button className="valid-form" type="submit" disabled={!completeState}
