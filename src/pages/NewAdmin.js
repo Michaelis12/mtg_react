@@ -106,7 +106,6 @@ const NewAdmin = function () {
 
                     const response = await axiosInstance.post('/f_admin/addAdmin', user, { withCredentials: true });
 
-                    setExistingAccount(true)
                     setAlertAdminSend(true)
                     setErrorContent(null)
                     setPseudo("")
