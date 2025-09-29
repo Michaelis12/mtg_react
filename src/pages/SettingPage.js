@@ -198,7 +198,7 @@ const SettingPage = function () {
                 }   
                 catch (error) {
                     setDisplayLoading(false);
-                    setErrorContent(error.response.data)
+                    setErrorContent("Mot de passe incorrect")
                     console.log(error);
                 }
             }

@@ -156,7 +156,7 @@ return (
                     <div className="input-group-sign">
                         <label>Pseudo :</label>
                         
-                        <input type="pseudo" id="pseudo" name="pseudo" placeholder="ex : MagicPlayer1"
+                        <input type="pseudo" id="pseudo" name="pseudo" placeholder="ex : MagicPlayer1" value={pseudo}
                         onChange={(e) => setPseudo(e.target.value)} style={{borderColor: pseudoStyle()}}/>
                         <p className="instruction-para-sign">  doit contenir entre 5 et 15 caractères</p>
                     </div>
