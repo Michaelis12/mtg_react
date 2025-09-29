@@ -17,18 +17,9 @@ const NewAdmin = function () {
     const [pseudo, setPseudo] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [newPassword, setNewPassword] = React.useState("");
     const [confirmPassword, setConfirmPassword] = React.useState("");
-    const [confirmNewPassword, setConfirmNewPassword] = React.useState("");
-    const [verificationCode, setVerificationCode] = React.useState("");
     const [avatar, setAvatar] = React.useState(defaultImg);
     const [bio, setBio] = React.useState("Apprenti Deckbuilder");
-    const navigate = useNavigate();
-    const [existingAccount, setExistingAccount] = React.useState(true);
-    const [activeAccount, setActiveAccount] = React.useState(true);
-    const [forgotPassword, setForgotPassword] = React.useState(false);
-    const [sendCode, setSendCode] = React.useState(false);
-    const [changepassword, setChangePassword] = React.useState(false);
     const [completeState, setCompleteState] = React.useState(false);
     const [errorContent, setErrorContent] = React.useState(null);
     const [borderPseudoColor, setBorderPseudoColor] = React.useState(null);
@@ -118,10 +109,10 @@ const NewAdmin = function () {
                     setExistingAccount(true)
                     setAlertAdminSend(true)
                     setErrorContent(null)
-                    setPseudo(false)
-                    setEmail(false)
-                    setPassword(false)
-                    setConfirmPassword(false)
+                    setPseudo("")
+                    setEmail("")
+                    setPassword("")
+                    setConfirmPassword("")
                     setDisplayLoading(false)
 
 
