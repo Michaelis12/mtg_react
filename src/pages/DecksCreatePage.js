@@ -62,6 +62,14 @@ const DecksCreatePage = () => {
         const [hasMore, setHasMore] = useState(true);
 
 
+        // Afficher les popup d'edit du deck 
+        const [popupUpdate, setPopupUpdate] = useState(false);
+        const [popupDelete, setPopupDelete] = useState(null);
+        const [deckID, setDeckID] = useState("");
+        const [deckName, setDeckName] = useState("");
+        const [deckImage, setDeckImage] = useState("");
+
+
         useEffect(() => {
         const getDeckBuilder = async () => {
             try {
@@ -477,15 +485,6 @@ const DecksCreatePage = () => {
             setFilterFormats(formats)
           }
 
-        // Afficher les popup d'edit du deck 
-
-        const [popupUpdate, setPopupUpdate] = useState(false);
-        const [popupDelete, setPopupDelete] = useState(null);
-        const [deckID, setDeckID] = useState("");
-        const [deckName, setDeckName] = useState("");
-        const [deckImage, setDeckImage] = useState("");
-
-
 
           // Ouvrir l'edit 
           const openEdit = (id, name, image) => {
@@ -497,8 +496,8 @@ const DecksCreatePage = () => {
 
           const [isImageUpdate, setIsImageUpdate] = React.useState(false) 
           
-                  // Entrer une nouvelle image
-                  const selectImage = async (event) => {
+          // Entrer une nouvelle image
+          const selectImage = async (event) => {
                       const file = event.target.files[0];
                       
                       if (file) {
@@ -521,7 +520,7 @@ const DecksCreatePage = () => {
                           }
                       }
                       setIsImageUpdate(true)
-                  }
+          }
           
           
           // Annuler l'édit 
