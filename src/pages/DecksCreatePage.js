@@ -62,6 +62,14 @@ const DecksCreatePage = () => {
         const [hasMore, setHasMore] = useState(true);
 
 
+        // Afficher les popup d'edit du deck 
+        const [popupUpdate, setPopupUpdate] = useState(false);
+        const [popupDelete, setPopupDelete] = useState(null);
+        const [deckID, setDeckID] = useState("");
+        const [deckName, setDeckName] = useState("");
+        const [deckImage, setDeckImage] = useState("");
+
+
         useEffect(() => {
         const getDeckBuilder = async () => {
             try {
@@ -140,7 +148,7 @@ const DecksCreatePage = () => {
     
         }
         getDecks();
-        }, [ filterName, inputValueMin, inputValueMax, inputManaCostMin, inputManaCostMax,
+        }, [popupDelete, popupUpdate, filterName, inputValueMin, inputValueMax, inputManaCostMin, inputManaCostMax,
             filterColors, filterFormats]);
 
 
@@ -308,7 +316,7 @@ const DecksCreatePage = () => {
 
         const callColors = useRef(false);
                 
-                      // Récupère les rarities dans le storage si l'user vient de cardSelected
+        // Récupère les rarities dans le storage si l'user vient de cardSelected
         const recupStorageColor = (response) => {
                       try {
                 
@@ -476,16 +484,6 @@ const DecksCreatePage = () => {
           const removeFormats = () => {
             setFilterFormats(formats)
           }
-
-        // Afficher les popup d'edit du deck 
-
-        const [popupUpdate, setPopupUpdate] = useState(false);
-        const [popupDelete, setPopupDelete] = useState(null);
-        const [deckID, setDeckID] = useState("");
-        const [deckName, setDeckName] = useState("");
-        const [deckImage, setDeckImage] = useState("");
-
-
 
           // Ouvrir l'edit 
           const openEdit = (id, name, image) => {

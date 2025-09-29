@@ -10,6 +10,7 @@ import { CgCloseO  } from "react-icons/cg";
 import backgroundCardsPage from "../assets/background_cardsPage.jpg"
 import backgroundPopup from "../assets/background_white.png"
 import backgroundWhite from "../assets/background_white.png";
+import loading from "../assets/loading.gif"
 import Section from '../components/sectionMap';
 import Title from '../components/title';
 import OpenButton from '../components/openButton';
@@ -1131,6 +1132,10 @@ const CardsDeckPage = () => {
 
         return (  
             <Section className="section"> 
+            { displayLoading && (
+                <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
+            )}
+
             <img src={backgroundCardsPage} className="background-image" alt="background" />
             
             <OpenButtonLarge  text="Afficher les filtres" icon={arrowFiltersSens} onClick={OpenFilters}/>
