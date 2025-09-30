@@ -1601,8 +1601,6 @@ const CardsDeckPage = () => {
                               <h3>Cartes sélectionnées ({cardsSelected.length})</h3>
                             </div>
                             <div className='cards-selected-container-mobile'>
-                              
-
                               <div className='button-nav-mobile'>   
                                 <IconButtonHover onClick={() => prevCard()} disabled={cardNumber === 0}
                                 icon={<MdOutlinePlayArrow className='icon-nav' style={{ transform: 'scaleX(-1)' }} />} />
