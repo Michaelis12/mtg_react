@@ -1002,7 +1002,8 @@ const CardsDeckPage = () => {
         // Retire tous les exemplaires d'une carte
         const unselectCards = (cardToRemove) => {
             if(cardsSelected.length === 1) {
-               setCardImage(defaultImg)
+              console.log("test")
+              setCardImage(defaultImg)
               setDisplayPopup(false)
             }
             

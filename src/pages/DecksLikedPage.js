@@ -875,7 +875,7 @@ const DecksLikedPage = () => {
                                                       <h1 className="hover-deck-name"> {deck.name}</h1>
                                                     </div>
                                                     <div className='color-line'>                        
-                                                        <h2 className='color'> Couleurs : </h2> 
+                                                        <h4 className='color'> Couleurs : </h4> 
                                                         {deck.colors && deck.colors.length > 0 && Array.isArray(colors) && (
                                                             <div className='mapping-color'>
                                                               {deck.colors.map((color)  => (
@@ -885,8 +885,8 @@ const DecksLikedPage = () => {
                                                         )} 
                                                     </div>
                                                     <div className='format-line'>              
-                                                        <h2 className='format'> Format : </h2> 
-                                                        <h2 className='card-format' style={{ position: 'relative', marginTop: '5px' }}>{deck.format}</h2>
+                                                        <h4 className='format'> Format : </h4> 
+                                                        <h4 className='card-format' style={{ position: 'relative', marginTop: '5px' }}>{deck.format}</h4>
                                                     </div>
                                                     
                                                 </div>                                                

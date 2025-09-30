@@ -748,7 +748,7 @@ const DecksCreatePage = () => {
                                                       <h1 className="hover-deck-name"> {deck.name}</h1>
                                                     </div>
                                                     <div className='color-line'>                        
-                                                        <h2 className='color'> Couleurs : </h2> 
+                                                        <h4 className='color'> Couleurs : </h4> 
                                                         {deck.colors && deck.colors.length > 0 && (
                                                             <div className='mapping-color'>
                                                               {deck.colors.map((color, index)  => (
@@ -760,8 +760,8 @@ const DecksCreatePage = () => {
                                                         )} 
                                                     </div>
                                                     <div className='format-line'>               
-                                                        <h2 className='format'> Format : </h2> 
-                                                        <h2 className='card-format' style={{ backgroundColor: 'green' }}>{deck.format}</h2>
+                                                        <h4 className='format'> Format : </h4> 
+                                                        <h4 className='card-format' style={{ backgroundColor: 'green' }}>{deck.format}</h4>
                                                     </div>
                                                     
                                                  </div>                                                
