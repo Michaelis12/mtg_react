@@ -134,7 +134,7 @@
     min-height: 40vh;
     padding-top: 50px;
     
-} 
+}  
 
 .attributs-map-container {
   display: flex;
@@ -142,6 +142,8 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
 
 }
 
@@ -163,7 +165,7 @@
 
 
 
-.deck-created-section, .deck-liked-section, .card-liked-section, .p-blank-section {
+.deck-created-section, .deck-liked-section, .card-liked-section {
   display: flex;  
   flex-wrap: wrap;
   gap: 0 50px;
@@ -172,6 +174,20 @@
   height: auto; 
   margin-bottom: 1%; 
 } 
+
+
+.p-blank-section {
+  display: flex;  
+  flex-wrap: wrap;
+  gap: 0 50px;
+  justify-content: center;
+  width: 100%;                         
+  height: auto; 
+  margin-bottom: 1%; 
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+} 
+
 
 
 
