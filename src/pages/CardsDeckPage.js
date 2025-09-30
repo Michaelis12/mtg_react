@@ -1051,6 +1051,7 @@ const CardsDeckPage = () => {
         // Ajoute les cartes sélectionnées par l'user dans le deck
         const addCards = async () => { 
             try { 
+                setDisplayLoading(true);
                 const cardIds = cardsSelected.map(card => card.id).join(',');
 
                 const response = await axiosInstance.post(`f_user/addCardsOnDeck?cardId=${cardIds}&deckId=${id}`, null, { withCredentials: true });
@@ -1060,6 +1061,9 @@ const CardsDeckPage = () => {
                  }   
             catch (error) {
                 console.log(error); 
+            }
+            finally {
+              setDisplayLoading(false);
             }
         }
         
