@@ -51,6 +51,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
        const [deck, setDeck] = React.useState([])
        const [updateDeck, setUpdateDeck] = React.useState(false)
        const [deckCards, setDeckCards] = React.useState([])
+       const [deckCardsLength, setDeckCardsLength] = React.useState([])
        const [deckCardsGraphic, setDeckCardsGraphic] = React.useState([])
        const [colors, setColors] = React.useState([])
        const [format, setFormat]= React.useState([])
@@ -224,6 +225,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                         card.colors, card.type, card.rarity, card.edition, card.decks
                 ) ) 
                 setDeckCards(listCards)
+                setDeckCardsLength(listCards.length)
                 setDeckCardsGraphic(listCards)
                 setDisplayLoading(false);
 
@@ -689,10 +691,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         // Desactiver le bouton de publication si le nb de cartes suffisant n'est pas encore atteint
         const disabledPublication = () => {
             if(deck.format === "COMMANDER") {
-                return deckCards.length !== 99 
+                return deckCardsLength !== 99 
             }
             else {
-                return deckCards.length < 40
+                return deckCardsLength < 40
             } 
         }
 
