@@ -1002,7 +1002,6 @@ const CardsDeckPage = () => {
         // Retire tous les exemplaires d'une carte
         const unselectCards = (cardToRemove) => {
             if(cardsSelected.length === 1) {
-              console.log("test")
               setCardImage(defaultImg)
               setDisplayPopup(false)
             }
@@ -1017,7 +1016,7 @@ const CardsDeckPage = () => {
 
       // N'affiche pas les terrains de base
       const maskBaseLand = (value) => {
-        if(value > 70 ) {
+        if(value < 7 ) {
             return "none";
       }
     }
