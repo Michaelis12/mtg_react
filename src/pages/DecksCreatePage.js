@@ -45,6 +45,7 @@ const DecksCreatePage = () => {
     const [colors, setColors] = React.useState([])
     const [formats, setFormats] = React.useState([])
     const [displayLoading, setDisplayLoading] = useState(false);
+    const [deckSignal, setDeckSignal] = useState(false)
     
 
     // Filtre recherche
@@ -148,7 +149,7 @@ const DecksCreatePage = () => {
     
         }
         getDecks();
-        }, [ filterName, inputValueMin, inputValueMax, inputManaCostMin, inputManaCostMax,
+        }, [ deckSignal, filterName, inputValueMin, inputValueMax, inputManaCostMin, inputManaCostMax,
             filterColors, filterFormats]);
 
 
@@ -533,8 +534,7 @@ const DecksCreatePage = () => {
                       }
           }
 
-        
-        
+
           // Valider l'edit 
           const editDeck = async () => {
                     try {
@@ -552,6 +552,7 @@ const DecksCreatePage = () => {
                         setPopupUpdate(false)
                         setIsImageUpdate(false)
                         setDisplayLoading(false);
+                        setDeckSignal(!deckSignal)
         
                     }   
                     catch (error) {
@@ -571,6 +572,7 @@ const DecksCreatePage = () => {
           
                           setPopupDelete(null)             
                           setDisplayLoading(false);
+                          setDeckSignal(!deckSignal)
           
                       }   
                       catch (error) {
