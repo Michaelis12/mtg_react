@@ -1017,7 +1017,7 @@ const CardsDeckPage = () => {
 
       // N'affiche pas les terrains de base
       const maskBaseLand = (value) => {
-        if(value < 7 ) {
+        if(value > 70 ) {
             return "none";
       }
     }
