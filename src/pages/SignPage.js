@@ -34,14 +34,19 @@ const SignPage = function () {
     const [changepassword, setChangePassword] = React.useState(false);
     const [completeState, setCompleteState] = React.useState(false);
     const [errorContent, setErrorContent] = React.useState(null);
-    const [borderPseudoColor, setBorderPseudoColor] = React.useState(null);
-    const [borderPasswordColor, setBorderPasswordColor] = React.useState(null);
+    const [activeButton, setActiveButton] = React.useState(true);
     const [displayLoading, setDisplayLoading] = React.useState(false);
 
     // Passer du form de connexion au form d'inscription
     const switchForm = () => {
         setExistingAccount(!existingAccount);
         setActiveAccount(!activeAccount)
+        setEmail("")
+        setPassword("")
+        setNewPassword("")
+        setConfirmPassword("")
+        setConfirmNewPassword("")
+        setVerificationCode("")
         setErrorContent(null)
     }
 
@@ -377,7 +382,7 @@ const SignPage = function () {
                     style={{borderColor: passwordStyle()}} required/>
                 </div> 
                 <div className="link-group">
-                    <button className="valid-form" type="submit" disabled={!completeState}
+                    <button className="valid-form" type="submit" disabled={displayLoading || !completeState}
                     ><h4>S'inscrire</h4></button>
                 </div>
                 <div className="nav-form-container">
@@ -407,7 +412,7 @@ const SignPage = function () {
                     </div>
 
                     <div className="link-group">
-                        <button className="valid-form" type="submit" disabled={verificationCode === ""} ><h4>Valider</h4></button>
+                        <button className="valid-form" type="submit" disabled={displayLoading || verificationCode === ""} ><h4>Valider</h4></button>
                     </div>
                     
                 </form>
@@ -442,18 +447,18 @@ const SignPage = function () {
                     style={{borderColor: logStyle()}} required/>
                 </div>
                 <div className="link-group">
-                    <button className="valid-form" type="submit" disabled={email === "" || password === ""} >
+                    <button className="valid-form" type="submit" disabled={displayLoading || email === "" || password === ""} >
                         <h4>Se connecter</h4></button>
                     <button className="nav-form" onClick={()=>switchForm()}>S'inscrire</button>
                      <button className="nav-form" onClick={()=>(setForgotPassword(true), 
-                    setErrorContent(null))}>Mot de passe oublié</button>
+                    setErrorContent(null), setEmail(""))}>Mot de passe oublié</button>
                                       
                 </div>               
             </form>
             </div>       
         )}
 
-        {/* Form de renseignement de l'adresse mail */}
+        {/* Form de mot de passe oublié */}
         {activeAccount && forgotPassword && !sendCode && (
             <div className="login-container" style={{ backgroundImage: `url(${backgroundForm})`}}>
                 <h1 className="title-log">Mot de passe oublié</h1>
@@ -475,7 +480,7 @@ const SignPage = function () {
                     </div>
                     
                     <div className="link-group">
-                        <button className="valid-form" type="submit"  disabled={email === ""} ><h4>Valider</h4></button>
+                        <button className="valid-form" type="submit"  disabled={displayLoading || email === ""} ><h4>Valider</h4></button>
                     </div>
                     
                     
@@ -510,7 +515,7 @@ const SignPage = function () {
                     </div>
 
                     <div className="link-group">
-                        <button className="valid-form" type="submit" disabled={verificationCode === ""} ><h4>Valider</h4></button>
+                        <button className="valid-form" type="submit" disabled={displayLoading || verificationCode === ""} ><h4>Valider</h4></button>
                         <button className="nav-form" type="button"  onClick={()=>sendLinkPassword()}>Renvoyer un code</button>
 
                         { avertCodeSend &&(
@@ -554,7 +559,7 @@ const SignPage = function () {
                       className="sign-input" style={{borderColor: passwordStyle()}} required/>
                 </div> 
                 <div className="link-group">
-                        <button className="valid-form" type="submit" ><h4>Valider</h4></button>
+                        <button className="valid-form" disabled={displayLoading} type="submit" ><h4>Valider</h4></button>
                     </div>
                 </form>
                 <div className="back-icon-container">
