@@ -371,7 +371,9 @@ const SettingPage = function () {
                                      className="sign-input" style={{borderColor: passwordStyle()}} required/>
                                 </div> 
                                 <div className="link-group">
-                                        <button className="valid-popup" disabled={password === "" || newPassword === "" || confirmNewPassword ===""} type="submit" ><h4 className="valid-popup-title" >Valider</h4></button>
+                                        <button className="valid-popup" 
+                                        disabled={password === "" || newPassword === "" || confirmNewPassword ==="" && displayLoading} type="submit" 
+                                        ><h4 className="valid-popup-title" >Valider</h4></button>
                                     </div>
                                 </form>                             
                             </div>
@@ -396,7 +398,7 @@ const SettingPage = function () {
                                         <h4 className="avert-p2">Une fois désactivé votre compte, comme vos decks ne seront plus visibles par les autres utilisateurs</h4> 
                                         <h4 className="avert-p2"> Êtes-vous sûr(e) de vouloir continuer ?</h4>
                     </div>                                     
-                    <ButtonValidPopup onClick={() => desacAccount()}/>
+                    <ButtonValidPopup disabled={displayLoading} onClick={() => desacAccount()}/>
                 </div> 
             <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={() => setDisplayDesacPopUp(false)}/> 
         </div> 

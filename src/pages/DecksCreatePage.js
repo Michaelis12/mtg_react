@@ -809,7 +809,7 @@ const DecksCreatePage = () => {
                                             />
                                             <img className='deck-selected-img' src={deckImage && deckImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deckImage}` : deckImage} alt="deck-img" />
                                             
-                                            <ButtonValidPopup onClick={()=>editDeck()}/>
+                                            <ButtonValidPopup onClick={()=>editDeck()} disabled={displayLoading}/>
                                   </div>
                                  <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>cancelEdit()}/> 
                                 </div>

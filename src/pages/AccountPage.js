@@ -582,7 +582,7 @@ const AccountPage = () => {
                                                     <h4 className="avert-p1"> Votre compte est inactif</h4>
                                                     <h4 className="avert-p2"> Votre profil comme vos decks ne sont plus visibles</h4>
                             </div>                                     
-                            <button className='valid-popup' onClick={()=>reactAccount()}>
+                            <button className='valid-popup' onClick={()=>reactAccount()} disabled={displayLoading}>
                                                     <h4 className="valid-popup-title">Activer</h4>
                             </button>
                             </div> 
@@ -720,7 +720,7 @@ const AccountPage = () => {
                     
                     
                                                             <button  type="button" className="valid-edit-button"
-                                                            disabled={pseudo.length < 6 && bio === "" && avatar === ""}
+                                                            disabled={pseudo.length < 6 && bio === "" && avatar === "" || displayLoading}
                                                             onClick={() => updateDeckBuilder()}>
                                                                 <h3>Valider</h3>
                                                             </button>
@@ -752,7 +752,7 @@ const AccountPage = () => {
                                                             </div>
                             
                                                             <button  type="button" className="valid-edit-button"
-                                                                disabled={pseudo.length < 6 && bio === "" && avatar === ""}
+                                                                disabled={pseudo.length < 6 && bio === "" && avatar === "" || displayLoading}
                                                                 onClick={() => updateDeckBuilder()}>
                                                                     <h3 className="valid-edit-button-title">Valider</h3>
                                                                 </button>

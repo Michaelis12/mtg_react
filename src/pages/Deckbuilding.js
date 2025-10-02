@@ -1392,7 +1392,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 />
                                 <img className='deck-selected-img' src={newImage && newImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${newImage}` : newImage} alt="deck-img" />
                                 
-                                <ButtonValidPopup onClick={()=>editDeck()}/>
+                                <ButtonValidPopup disabled={displayLoading} onClick={()=>editDeck()}/>
                       </div>
                      <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>cancelEdit()}/> 
                     </div>
@@ -2170,7 +2170,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 <h2 style={{color: 'white', fontFamily: 'MedievalSharp, cursive'}}>Modifications effectuées</h2>
                                             </div>
                                             <h4 className='active-p1' style={{padding:'5%', color: 'black', textAlign: 'center'}} >{updateCardText()}</h4>                               
-                                            <button className='valid-popup' onClick={() => updateCards()}><h4 className='valid-poup-title'>Enregistrer</h4></button>
+                                            <button className='valid-popup' onClick={() => updateCards()} disabled={displayLoading}><h4 className='valid-poup-title'>Enregistrer</h4></button>
                                           </div> 
                                           <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayAddPopUp(false)}/> 
                                       </div>

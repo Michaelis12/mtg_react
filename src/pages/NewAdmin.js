@@ -84,7 +84,7 @@ const NewAdmin = function () {
 
     // Form ajout d'admin 
     const addAdmin = async (e) => {
-    e.preventDefault();
+       e.preventDefault();
        setErrorContent(null) 
        setDisplayLoading(true)
         const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,20}$/;
@@ -178,7 +178,7 @@ return (
                         style={{borderColor: passwordStyle()}} value={confirmPassword} required/>
                     </div> 
                     <div className="link-group">
-                        <button className="valid-form" type="submit" disabled={!completeState}
+                        <button className="valid-form" type="submit" disabled={!completeState || displayLoading}
                         ><h4>Ajouter</h4></button>
                     </div>
                     

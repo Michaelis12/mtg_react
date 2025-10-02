@@ -713,7 +713,7 @@ const UserSelectedAdmin = () => {
                                 <h2 style={{color: 'white', fontFamily: 'MedievalSharp, cursive'}}>Réactiver le compte {deckBuilder.pseudo}</h2>
                             </div>
                             <h4 className='active-p1' style={{padding:'5%', color: 'black', textAlign: 'center'}} >Le compte {deckBuilder.pseudo} sera à nouveau actif</h4>                               
-                            <button className='valid-popup' onClick={() => activeDeckBuilder()}><h4 className='valid-poup-title'>Valider</h4></button>
+                            <button className='valid-popup' disabled={displayLoading} onClick={() => activeDeckBuilder()}><h4 className='valid-poup-title'>Valider</h4></button>
                           </div> 
                           <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayActivePopUp(false)}/> 
                       </div>
@@ -749,7 +749,7 @@ const UserSelectedAdmin = () => {
                                              onChange={(e) => setCause(e.target.value)} >
                                 </textarea>
                             </div>
-                                <ButtonValidPopup  onClick={() => desacDeckBuilder()}/>
+                                <ButtonValidPopup disabled={displayLoading}  onClick={() => desacDeckBuilder()}/>
                           </div> 
                           <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayDesacPopUp(false)}/> 
                       </div>

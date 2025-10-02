@@ -87,6 +87,7 @@ const RulesPage = function () {
       await axiosInstance.put(`f_admin/updateRegle?regleID=${id}`, regleForm, { withCredentials: true });   
       
       setRuleToUpdate(null)
+      setDisplayLoading(false)
       setTitle("")
       setText("")
     }   
@@ -144,7 +145,7 @@ const RulesPage = function () {
                  </textarea> 
 
                  <button  type="button" className="valid-form"
-                            disabled={title === "" && text === ""}
+                            disabled={title === "" && text === "" || displayLoading}
                             onClick={() => updateRule(rule.id)}><h4>
                                 Valider
               </h4></button>

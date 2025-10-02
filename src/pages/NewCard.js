@@ -290,7 +290,6 @@ const NewCard = function () {
 
     const [alertCardSend, setAlertCardSend] = React.useState(false)
     const [alertCardDontSend, setAlertCardDontSend] = React.useState(false)
-    const [popupPub, setPopupPub]= React.useState(false)
 
     // Créer la carte 
     const addCard = async () => {
@@ -319,7 +318,6 @@ const NewCard = function () {
             
             setAlertCardSend(true)
             setDisplayLoading(false);
-            //window.location.reload();
             setName("")
             setText("")
             setImage("")
@@ -462,7 +460,7 @@ const NewCard = function () {
                 </div>
                 
                 <div className='valid-button-container'>
-                    <ButtonValidPopup   disabled={!completeState} onClick={() => addCard()}/>
+                    <ButtonValidPopup   disabled={!completeState || displayLoading } onClick={() => addCard()}/>
                     {/* Alertes */}
                     { alertCardSend &&(
                         <h5 className="alert-send-card" style={{color: 'green'}}>Carte publiée !</h5>
@@ -632,7 +630,7 @@ const NewCard = function () {
 
         {/* Bouton de validation */}
         <div className='valid-button-container' style={{padding: '5%'}}>
-            <ButtonValidPopup disabled={!completeState} onClick={() => addCard()} />
+            <ButtonValidPopup disabled={!completeState || displayLoading} onClick={() => addCard()} />
             {/* Alertes */}
             { alertCardSend &&(
                 <h4 className="alert-send-card" style={{color: 'green', position : 'absolute', marginTop: "100px"}}>Carte publiée !</h4>
@@ -800,7 +798,7 @@ const NewCard = function () {
                     </div>
 
                      <div className='valid-button-container' style={{padding: '5%'}}>
-                        <ButtonValidPopup disabled={!completeState} onClick={() => addCard()} />
+                        <ButtonValidPopup disabled={!completeState || displayLoading} onClick={() => addCard()} />
                         {/* Alertes */}
                         { alertCardSend &&(
                             <h4 className="alert-send-card" style={{color: 'green'}}>Carte publiée !</h4>

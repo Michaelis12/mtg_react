@@ -1641,7 +1641,7 @@ const CardsPageAdmin = () => {
               </div>
             </div>
             <div className='valid-button-container'>
-              <ButtonValidPopup onClick={() => editCard(cardToUpdate)}/>
+              <ButtonValidPopup onClick={() => editCard(cardToUpdate)} disabled={displayLoading}/>
             </div>
           </div>
           {/* Version medium */}
@@ -1758,7 +1758,7 @@ const CardsPageAdmin = () => {
                   </div>
                 </div>
                 <div className='valid-button-container'>
-                  <ButtonValidPopup onClick={() => editCard(cardToUpdate)}/>
+                  <ButtonValidPopup onClick={() => editCard(cardToUpdate)} disabled={displayLoading}/>
                 </div>
           </div>
 
@@ -1876,7 +1876,7 @@ const CardsPageAdmin = () => {
                   </div>
                 </div>
                 <div className='valid-button-container'>
-                  <ButtonValidPopup onClick={() => editCard(cardToUpdate)}/>
+                  <ButtonValidPopup onClick={() => editCard(cardToUpdate)} disabled={displayLoading}/>
                 </div>
           </div>
 

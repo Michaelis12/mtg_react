@@ -1590,7 +1590,7 @@ const CardsDeckPage = () => {
                                               </div>
                                               </div>                                       
                                                 <div className='valid-popup-container'>                                   
-                                                  <button className='valid-popup' >
+                                                  <button className='valid-popup' disabled={displayLoading}>
                                                       <h4 className='valid-popup-title' onClick={() => addCards()}>Ajouter au deck</h4>
                                                   </button>
                                                 </div>
@@ -1634,7 +1634,7 @@ const CardsDeckPage = () => {
                               </div>
                             </div>
                             
-                              <button className='valid-popup' style={{padding : '2%'}}>
+                              <button className='valid-popup' style={{padding : '2%'}} disabled={displayLoading}>
                                 <h4 className='valid-popup-title' onClick={() => addCards()}>Ajouter au deck</h4>
                               </button>
                         </div>

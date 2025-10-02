@@ -87,7 +87,7 @@ const NewRegle = function () {
                     onChange={(e) => setText(e.target.value)}required/>
                 </div> 
             <div className='valid-button-container' style={{padding: '1%'}}>
-                <ButtonValidPopup disabled={!completeState} onClick={() => sendRegle()} />
+                <ButtonValidPopup disabled={!completeState || displayLoading} onClick={() => sendRegle()} />
                 {/* Alertes */}
                 { alertDataSend &&(
                     <h4 className="alert-send-rule" style={{color: 'green'}}>Règle publiée !</h4>
