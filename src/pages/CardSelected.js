@@ -812,7 +812,8 @@ const CardSelected = () => {
 
                 <div className="card-selected-mobile"> 
                                         <div className="header-card" style={{backgroundImage:`url(${backgroundPopup})`}}>
-                                            <img src={getImageUrl(card.image)} className="card-image-mobile" alt="user-pp"/>
+                                            <img src={getImageUrl(card.image)}  onClick={()=> setDisplayPopup(true)}
+                                            className="card-image-mobile" alt="user-pp"/>
                                                 <h1 className="user-pseudo">{card.name}</h1>   
                                         </div>  
 

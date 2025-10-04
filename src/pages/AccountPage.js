@@ -509,14 +509,14 @@ const AccountPage = () => {
                 if(avatar === "") {
                     // Si pas d'avatar sélectionné, afficher l'avatar existant
                     if(deckBuilder.avatar && deckBuilder.avatar.startsWith('/uploads/')) {
-                        return `https://mtg-spring.onrender.com${deckBuilder.avatar}`;
+                        return `http://localhost:8080${deckBuilder.avatar}`;
                     }
                     return deckBuilder.avatar;
                 }
                 else {
                     // Si un nouvel avatar a été sélectionné
                     if(avatar.startsWith('/uploads/')) {
-                        return `https://mtg-spring.onrender.com${avatar}`;
+                        return `http://localhost:8080${avatar}`;
                     }
                     return avatar;
                 }
@@ -568,7 +568,7 @@ const AccountPage = () => {
 
                     <img src={BackgroundPage} className="background-image" alt="background" />
                     { displayLoading && (
-                            <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
+                             <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
                             )}
 
                     { activeProfil && (
@@ -779,7 +779,7 @@ const AccountPage = () => {
                         
                         {/*Mapping des decks créés*/}
                         <TitleArrow onClick={()=>setNavDecks(!navDecks)} style={{marginTop: '0%'}}
-                                    title={`Mes decks (${deckBuilder.decksNumber})`}
+                                    title={`Mes decks (${deckBuilder?.decksNumber || 0})`}
                                     icon={arrowSens}
                         />
 
@@ -835,13 +835,20 @@ const AccountPage = () => {
                                                     size={'0.9em'}  color='red' /></p>
                                 </div> 
                         
-                            ))}
+                            ))} 
                                 <div className="deck-details">
                                     <div className='new-user-deck-contenair'>
-                                        <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
-                                        style={{ width: '150px', height: '150px', backgroundColor: '#5D3B8C', marginBottom: '5%'
-                                                }}/>
-                                        <h5 style={{padding:'5%'}}><strong>Nouveau deck</strong></h5>                              
+                                        <div className='new-deck-button-desktop'>
+                                            <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
+                                            style={{ width: '150px', height: '150px', backgroundColor: '#5D3B8C', marginBottom: '5%'
+                                                    }}/>
+                                        </div>
+                                        <div className='new-deck-button-mobile'>
+                                            <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
+                                            style={{ width: '100px', height: '100px', backgroundColor: '#5D3B8C', marginBottom: '5%'
+                                                    }}/>
+                                        </div>
+                                        <h5 style={{padding:'5%'}} ><strong className="deck-named">Nouveau deck</strong></h5>                              
                                     </div>
                                 <h6 className='deck-public' style={{visibility: 'hidden'}}>privé</h6>
                                 <ButtonModif style={{visibility: 'hidden'}} />
@@ -854,12 +861,13 @@ const AccountPage = () => {
                             )}
                             </div>
                             
-                            }
+                            } 
 
                         {/*Mapping des cartes likées*/}
                         <TitleArrow onClick={()=>(setArrowSens2((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>)),
                             setArrowUp2(!arrowUp2))} 
-                                    title={"Mes cartes likées (" + deckBuilder.cardsLikedNumber + ")"}
+                                    title={ `Mes cartes likées (${deckBuilder?.cardsLikedNumber || 0})`}
+                                   
                                     icon={arrowSens2}
                         />
                                 {arrowUp2 === true && cardsLiked.length > 0 &&
@@ -902,7 +910,7 @@ const AccountPage = () => {
                     {/*Mapping des decks likés*/}
                     <TitleArrow onClick={()=>(setArrowSens3((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>)),
                             setArrowUp3(!arrowUp3))} 
-                                    title={"Mes decks likés (" + deckBuilder.decksLikedNumber + ")"}
+                                    title={`Mes decks likés (${deckBuilder?.decksLikedNumber || 0})`}
                                     icon={arrowSens3}
                         />
                     
@@ -911,7 +919,7 @@ const AccountPage = () => {
                                         <div className='deck-liked-section'>
                                             {decksLiked.map(deck => ( 
                                                     <div className="deck-details" id='decks-liked-user'  key={deck.id}>
-                                                            <img className="deck-pp" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck avatar" onClick={() => navDeckLiked(deck.id)}
+                                                            <img className="deck-pp" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8080${deck.image}` : deck.image} alt="Deck avatar" onClick={() => navDeckLiked(deck.id)}
                                                             onMouseEnter={() => hoveredDeckLiked(deck.id, deck.name, deck.format)} onMouseOut={() => hoveredDeckLiked()}/>
                                                             <strong className="deck-named" style={{paddingTop:'5%'}}> {deck.name} </strong>
                                                             <button style={{marginBottom: '5%'}}><strong className="deck-db" onClick={() => chooseUser(deck.id)} 
@@ -934,7 +942,7 @@ const AccountPage = () => {
                                                             {detailsDeckLiked && detailsDeckLiked.id === deck.id && (
                                                                             <div className="hover-deck-card">
                                                                                         <div className="img-container">
-                                                                                                <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck mtg"/>
+                                                                                                <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8080${deck.image}` : deck.image} alt="Deck mtg"/>
                                                                                         </div>
                                                                                                         <div className="deck-hover-body" >
                                                                                                             <div className='name-line'>

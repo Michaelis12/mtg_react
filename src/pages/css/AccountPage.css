@@ -42,6 +42,18 @@
   }
 
 
+.new-deck-button-desktop {
+  display: flex;
+  width: 100%;
+}
+
+
+.new-deck-button-mobile {
+  display: none;
+
+}
+
+
 @media (max-width: 1000px) {
 
 
@@ -110,6 +122,17 @@
     font-size: 0.7em;
     width: 100px;
     margin-top: -60px;
+  }
+
+  .new-deck-button-desktop {
+    display: none;
+  }
+
+
+  .new-deck-button-mobile {
+    display: flex;
+     width: 100%;
+
   }
 }
 
