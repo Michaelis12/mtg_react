@@ -1413,7 +1413,7 @@ const CardsDeckPage = () => {
 
                       { deck.format === "COMMANDER" && ( 
                       <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
+                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navTopCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         style={{opacity: desacCardsCedh(card.id)}} />                
                         <AddButton onClick={() => selectCardCedh(card)} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }}
@@ -1423,7 +1423,7 @@ const CardsDeckPage = () => {
 
                       { deck.format !== "COMMANDER" && (                 
                       <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
+                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navTopCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         style={{opacity: desacCardsDeck(card.id)}} />
 

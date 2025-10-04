@@ -793,7 +793,7 @@ const AccountPage = () => {
                                     <img className="deck-pp" src={getImageUrl(deck.image)} alt="Deck avatar" onClick={() => newDeck(deck.id)}
                                     onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } onMouseOut={() => hoveredDeck()}/>
                                     
-                                    <strong className="deck-named" style={{padding:'5%'}}> {deck.name} </strong>
+                                    <strong className="decks-name" style={{padding:'2%'}}> {deck.name} </strong>
 
                                     {!deck.isPublic && (
                                         <h6 className='deck-public' style={{backgroundColor: 'red'}}>privé</h6>

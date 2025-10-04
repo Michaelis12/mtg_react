@@ -643,49 +643,80 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 console.log(error);
             }
         } 
+
+
+
+        // Récupérer les cartes sélectionnées dans le storage si l'user a navigué vers une carte
+              useEffect(() => {
+              const recupStorage = () => {
+                  try {
+                      const cardsSelected = sessionStorage.getItem('cardsSelected');
+                      const cardsUnselected = sessionStorage.getItem('cardsUnselected');
+                      
+                        
+                      if (cardsSelected) {
+                          setCardsSelected(JSON.parse(cardsSelected));
+                          sessionStorage.removeItem('cardsSelected');
+                      }
+                      if (cardsUnselected) {
+                          setCardsUnselected(JSON.parse(cardsUnselected));
+                          sessionStorage.removeItem('cardsUnselected');
+                      }
+                                                            
+                  } catch (error) {
+                      console.error("Erreur lors de la récupération du sessionStorage :", error);
+                  }
+              };
+              
+            recupStorage();
+        }, []);
         
 
 
        // Naviguer vers le commandant
-            const chooseCedh = (id) => {
-                //const cardsIds = deckLandsUnit.map(card => card.id);
+            const navCedh = (id) => {
+                // On sauvegarde dans le sessionStorage les cartes sélectionnées
+                sessionStorage.setItem('cardsSelected', JSON.stringify(cardsSelected));
+                sessionStorage.setItem('cardsUnselected', JSON.stringify(cardsUnselected));
+
                 navigate(`/cardSelected`, { state: { cardID: id, ListCard: id  }})
                     }; 
 
-       // Naviguer vers les terrains
-            const chooseLand = (id) => {
-                const cardsIds = deckLandsUnit.map(card => card.id);
-                navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
-                    }; 
-
-            // Naviguer vers les créatures 
-            const chooseCreature = (id) => {
-                const cardsIds = deckCreatures.map(card => card.id);
-                navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
-                    };
-                    
-            // Naviguer vers les enchantements 
-            const chooseEnchant = (id) => {
-                const cardsIds = deckEnchants.map(card => card.id);
-                navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
-                    };
-                    
-            // Naviguer vers les sorts 
-            const chooseSpell = (id) => {
-                const cardsIds = deckSpells.map(card => card.id);
-                navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
-                    };
-
             // Naviguer vers les artefacts 
-            const chooseArtefact = (id) => {
-                const cardsIds = deckArtefacts.map(card => card.id);
-                navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
-                    };
+            const navCard = (card) => {
+                const cardID = card.id               
+                let cardsIds = [];
 
-            // Naviguer vers les artefacts 
-            const choosePlaneswalker = (id) => {
-                const cardsIds = deckPlaneswalkers.map(card => card.id);
-                navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
+                // On sauvegarde dans le sessionStorage les cartes sélectionnées
+                sessionStorage.setItem('cardsSelected', JSON.stringify(cardsSelected));
+                sessionStorage.setItem('cardsUnselected', JSON.stringify(cardsUnselected));
+
+                switch(card.type) {
+                        case "TERRAIN":
+                            cardsIds = deckLandsUnit.map(card => card.id);
+                            break;
+                        case "CREATURE":
+                            cardsIds = deckCreatures.map(card => card.id);
+                            break;
+                        case "ENCHANTEMENT":
+                            cardsIds = deckEnchants.map(card => card.id);
+                            break;
+                        case "EPHEMERE":
+                        case "RITUEL":
+                        case "BATAILLE":
+                            cardsIds = deckSpells.map(card => card.id);
+                            break;
+                        case "ARTEFACT":
+                            cardsIds = deckArtefacts.map(card => card.id);
+                            break;
+                        case "PLANESWALKER":
+                            cardsIds = deckPlaneswalkers.map(card => card.id);
+                            break;
+                        default:
+                            cardsIds = [];
+                    }
+
+                navigate(`/cardSelected`, { state: { cardID: cardID, ListCard: cardsIds }})
                     };
             
             const [popupHand, setPopupHand]= React.useState(false)
@@ -1106,7 +1137,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             setCardsSelected([])
             setCardsUnselected([])
             setDeckSignal(!deckSignal)
-        }
+        } 
 
         const updateCardText = () => {
 
@@ -1122,7 +1153,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
         }
 
-
+        // Masque les cartes si elles otn été retirées de la liste
         const maskCard = (id) => {
             const deckCardsid = deckCards.map(card => card.id);
             if(!deckCardsid.includes(id)) {
@@ -1394,7 +1425,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
              <div className="cedh-details">
                 
                 <div className='card-link-desktop'>
-                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8080${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>chooseCedh(deckCedh.id)}
+                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8080${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>navCedh(deckCedh.id)}
                                                 onMouseEnter={() => hoveredCard(deckCedh.id) } onMouseOut={() => hoveredCard()}/>
                 </div>
 
@@ -1425,7 +1456,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 <div className="land-text-details" id='land-card'  style={{display: maskCard(land.id)}} key={land.id}>
                                     
                                     <div className='card-link-desktop'>
-                                        <h5 className='land-text-name' onMouseEnter={() => hoveredCard(land.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseLand(land.id)}>{land.name}</h5>
+                                        <h5 className='land-text-name' onMouseEnter={() => hoveredCard(land.id) } onMouseOut={() => hoveredCard()} onClick={()=>navCard(land)}>{land.name}</h5>
                                     </div>
 
                                     <div className='card-link-mobile'>
@@ -1496,7 +1527,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 <div className="land-text-details" id='land-card' style={{display: maskCard(creature.id)}} key={creature.id}>
                                     
                                     <div className='card-link-desktop'>
-                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(creature.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseCreature(creature.id)}>{creature.name}</h5>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(creature.id) } onMouseOut={() => hoveredCard()} onClick={()=>navCard(creature)}>{creature.name}</h5>
                                         </div>
                                         <div className='card-link-mobile'>
                                             <h5 className='land-text-name' onClick={()=> openZoomPopup(creature)} >{creature.name}</h5>
@@ -1546,7 +1577,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 <div className="land-text-details" id='land-card' style={{display: maskCard(enchant.id)}} key={enchant.id}>
                                     
                                     <div className='card-link-desktop'>
-                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(enchant.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseEnchant(enchant.id)}>{enchant.name}</h5>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(enchant.id) } onMouseOut={() => hoveredCard()} onClick={()=>navCard(enchant)}>{enchant.name}</h5>
                                         </div>
                                     <div className='card-link-mobile'>
                                             <h5 className='land-text-name' onClick={()=> openZoomPopup(enchant)} >{enchant.name}</h5>
@@ -1596,7 +1627,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 <div className="land-text-details" id='land-card' style={{display: maskCard(spell.id)}}  key={spell.id}>
                                     
                                     <div className='card-link-desktop'>
-                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(spell.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseSpell(spell.id)}>{spell.name}</h5>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(spell.id) } onMouseOut={() => hoveredCard()} onClick={()=>navCard(spell)}>{spell.name}</h5>
                                         </div>
                                         <div className='card-link-mobile'>
                                             <h5 className='land-text-name' onClick={()=> openZoomPopup(spell)} >{spell.name}</h5>
@@ -1642,7 +1673,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 <div className="land-text-details" id='land-card' style={{display: maskCard(artefact.id)}}  key={artefact.id}>
 
                                         <div className='card-link-desktop'>
-                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(artefact.id) } onMouseOut={() => hoveredCard()} onClick={()=>chooseArtefact(artefact.id)}>{artefact.name}</h5>
+                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(artefact.id) } onMouseOut={() => hoveredCard()} onClick={()=>navCard(artefact)}>{artefact.name}</h5>
                                         </div>
                                        <div className='card-link-mobile'>
                                             <h5 className='land-text-name' onClick={()=> openZoomPopup(artefact)} >{artefact.name}</h5>
@@ -1692,7 +1723,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                         <h5 className='land-text-name' 
                                         onMouseEnter={() => hoveredCard(planeswalker.id)} 
                                         onMouseOut={() => hoveredCard()} 
-                                        onClick={() => choosePlaneswalker(planeswalker.id)}>
+                                        onClick={() => navCard(planeswalker)}>
                                         {planeswalker.name}
                                         </h5>
                                     </div>
