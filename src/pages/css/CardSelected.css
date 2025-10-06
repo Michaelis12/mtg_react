@@ -695,3 +695,9 @@
     background-color: white;
     padding-bottom : 2%;
 }
+
+/*Css spécifique à la page de l'api externe*/
+
+.card-line-manacost {
+    font-size: 2em;
+}
