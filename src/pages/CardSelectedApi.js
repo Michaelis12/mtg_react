@@ -226,7 +226,7 @@ const CardSelectedApi = () => {
             return bloomburrow;    
 
     }
-};
+        }; 
 
       // Désactive le bouton si il n'y a plus de cartes qui suivent     
         const [displayPopup, setDisplayPopup] = useState(false)
