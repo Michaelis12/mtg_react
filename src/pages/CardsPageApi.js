@@ -27,7 +27,6 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png" 
 import loading from "../assets/loading.gif"
 import { getImageUrl } from '../utils/imageUtils';
 
@@ -43,7 +42,9 @@ const CardsPage = () => {
     const [format, setFormat] = React.useState([])
 
     // Filtre recherche
+    const [name, setName] = React.useState("")
     const [filterName, setFilterName] = React.useState("")
+    const [text, setText] = React.useState("")
     const [filterText, setFilterText] = React.useState("")
     const [inputValueMin, setInputValueMin] = React.useState("")
     const [inputValueMax, setInputValueMax] = React.useState("")
@@ -97,7 +98,8 @@ const CardsPage = () => {
                     text : filterText,
                     cmc : inputManaCost,
                     rarity : filterRarities,
-                    type : filterTypes,
+                    types : filterTypes,
+                    supertypes : filterLegendary,
                     colors: filterColors                
                 };
                 
@@ -152,7 +154,7 @@ const CardsPage = () => {
           // Contient les RequestParams de la requete
           // Contient les RequestParams de la requete
                 const params = {
-                    page: 1,                
+                    page: page,                
                     pageSize: pageSize,  
                     name: filterName,
                     text : filterText,
@@ -272,7 +274,19 @@ const CardsPage = () => {
           }
 
 
+        // Affiche le bouton de la searchbar name
+          const displayResetName = () => {
+               if(filterName === "") {
+                 return 'none'
+               }
+            }
 
+        // Affiche le bouton de la searchbar text
+          const displayResetText = () => {
+               if(filterText === "") {
+                 return 'none'
+               }
+            }
 
         // Affiche les filtres au format mobile
 
@@ -550,76 +564,6 @@ const CardsPage = () => {
           setFilterFormats(formats)
         } 
 
-        // Filtre editions 
-        
-        const [arrowEditionSens, setArrowEditionSens] = React.useState(<SlArrowDown/>)
-        const [displayFilterEditions, setDisplayFilterEditions] = React.useState(false)
-        
-        // Affiche le filtre des éditions
-        const OpenFilterEdition = () => {
-              setArrowEditionSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
-              setDisplayFilterEditions(!displayFilterEditions)                     
-                                 }
-
-        // Récupère toutes les éditions pour les mapper
-        const [editions, setEditions] = React.useState([])
-        const callEditions = useRef(false);
-        
-        // Récupère les formats dans le storage si l'user vient de cardSelected
-        const recupStorageEdition = (response) => {
-              try {
-        
-                  if (callEditions.current) return;
-                
-                  const stored = sessionStorage.getItem('cpFilterEditions');
-        
-                    if (stored) {
-                        
-                        setFilterEditions(JSON.parse(stored));
-                        sessionStorage.removeItem('cpFilterEditions');
-                        callEditions.current = true;
-                    } else {
-                        setFilterEditions(response);
-                        
-                    }
-            } catch (error) {
-                console.error("Erreur lors de la récupération du sessionStorage :", error);
-            }
-        };
-
-        useEffect(() => {
-            const getEditions = async () => {
-                try {
-                    const request = await axiosInstance.get(`f_all/getEditions`);
-
-                    const response = request.data
-        
-                    setEditions(response)
-                    recupStorageEdition(response)
-
-                }   
-                catch (error) {
-                    console.log(error);
-                }
-            }
-            getEditions();
-            }, []);
-
-        
-        const selectEditions = (newEdition) => {
-          setFilterEditions(prevEditions => {
-            const editionsArray = Array.isArray(prevEditions) ? prevEditions : (prevEditions || '').split(',').filter(edition => edition.trim() !== '');
-            if (editionsArray.includes(newEdition)) {
-              return editionsArray.filter(edition => edition !== newEdition).join(',');
-            } else {
-              return [...editionsArray, newEdition].join(',');                 
-            }
-          });
-        };
-        const removeEditions = () => {
-          setFilterEditions(editions)
-        } 
-
 
       // Récupère tous les types pour les mapper
 
@@ -692,14 +636,17 @@ const CardsPage = () => {
         } 
 
         // Filtre légendaire
-        const checkoutLegendary = () => {
-          if(filterLegendary === null && filterTypes.includes("CREATURE")) {
-            setFilterLegendary("legendary")
-          }
-          else {
-            setFilterLegendary(null)
-          }
-        }
+
+
+      const [arrowLegendarySens, setArrowLegendarySens] = React.useState(<SlArrowDown/>)
+      const [displayFilterLegendary, setDisplayFilterLegendary] = React.useState(false)
+
+
+      // Affiche le filtre des éditions
+      const OpenFilterLegendary = () => {
+            setArrowLegendarySens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
+            setDisplayFilterLegendary(!displayFilterLegendary)                     
+                               }
 
 
       // N'affiche pas les terrains de base
@@ -741,9 +688,16 @@ const CardsPage = () => {
             <OpenButtonLarge  text="Afficher les filtres" icon={arrowFiltersSens} onClick={OpenFilters}/>
 
             <div className="search-line">            
-            <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} placeholder={" Chercher une carte"} />
-            <SearchBar value={filterText}  onChange={(event) => (setFilterText(event.target.value))} placeholder={" Chercher le texte d'une carte"}
-            style={{marginBottom: '30px'}} />
+            <SearchBar value={name} onChange={(event) => (setName(event.target.value))}
+             style={{position : "relative", width: '80%'}}
+             onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
+             onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName(), position: 'absolute', marginLeft: '75%' }} />
+
+            <SearchBar value={text}  onChange={(event) => (setText(event.target.value))}
+              style={{position : "relative", width: '80%', marginBottom: '30px'}}
+              onClick={() => (setFilterText(text))} placeholder={" Chercher le texte d'une carte"}
+              onPush={() => (setText(""), setFilterText(""))}
+              iconStyle={{ display: displayResetText(), position: 'absolute', marginLeft: '75%'  }} />
             </div>
 
               {/*Les filtres pour la requete de carte*/}
@@ -875,106 +829,46 @@ const CardsPage = () => {
                     </div>  
                     </div>
                   )}  
+                </div>
+
+                <div className="filter-subtypes-container">
+                <OpenButton
+                  text="Filtrer les légendaires"
+                  icon={arrowLegendarySens}
+                  onClick={OpenFilterLegendary}
+                />
+
+                {displayFilterLegendary && (
+                  <div className='add-card-filter-container' style={{ zIndex: filterZIndex-- }}>
+                    <div className="compenant-checkbox">
+                      <div className="compenant-checkbox-map-large">
+
+                          <li className="li-checkbox">
+                            <input
+                              className='component-input'
+                              type="checkbox"
+                              name="Legendary"
+                              value="Legendary"
+                              onChange={(event) => setFilterLegendary(event.target.value)}
+                              checked={filterLegendary === "Legendary"}
+                            />
+                            <p
+                              className='checkbox-type-p'
+                              style={{ margin: '0px' }}
+                            >
+                              LEGENDAIRE
+                            </p>
+                          </li>
+
+                      </div>
+                      <TbFilterCancel className='compenant-reset' onClick={() => setFilterLegendary("")}/>
+                    </div>
                   </div>
+                )}
+                </div>
                    
 
               </div>
-
-            
-              {/*Les filtres formats mobile*/}
-              { displayFilters && (
-              <div className="filters-line-mobile">
-                <div className='filter-mobile-container' style={{ backgroundImage: `url(${backgroundWhite})`}} >
-                  <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} 
-                  placeholder={" Chercher une carte"} style={{marginTop: '20px'}} />
-                  <SearchBar value={filterText} style={{height : '80px'}}
-                  onChange={(event) => (setFilterText(event.target.value))} placeholder={" Chercher le texte d'une carte"}
-                  />
-                
-                    
-                    <div className="filter-value-container">
-                  <OpenButton text="Filtrer par valeur €" icon={arrowValueSens} onClick={OpenFilterValue} />
-                  {displayFilterValue && (
-                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                          <InputValue  value={inputValueMin}
-                          onChange={(event) => (setInputValueMin(event.target.value))} placeholder={"min"}/>
-                          <InputValue  value={inputValueMax}
-                          onChange={(event) => (setInputValueMax(event.target.value))} placeholder={"max"}/>
-                          <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterValue()} />
-                      </div>
-                  )}
-                </div>
-                
-                <div className="filter-manaCost-container">
-                  <OpenButton text="Filtrer par cout en mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />
-                  {displayFilterManaCost && (
-                  <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                    <InputManaCost style={{width: '150px'}}  value={inputManaCost}
-                      onChange={(event) => (setInputManaCost(event.target.value))} placeholder={"exemple : 5"}/>
-
-                    <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterManaCost()} />
-                  </div>
-                  )}
-                </div>
-
-                <div className="filter-colors-container">
-                <OpenButton text="Filtrer par couleur" icon={arrowColorSens} onClick={OpenFilterColor} />
-                  { displayFilterColors && (
-                  <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                    <CheckboxColor attributs={colors} onChange={(event) => selectColors(event.target.value)} filter={filterColors}
-                    image={getColorPics} onPush={removeColors} />
-                  </div>
-                  )}
-                </div>
-
-
-                <div className="filter-formats-container">
-                  <OpenButton text="Filtrer par format" icon={arrowFormatSens} onClick={OpenFilterFormat} />
-                  {displayFilterFormats && (
-                  <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                    <Checkbox attributs={formats} onChange={(event) => selectFormats(event.target.value)} filter={filterFormats}
-                    onPush={removeFormats} classNameP='checkbox-format-p'/>
-                  </div>
-                  )}                 
-                </div>
-
-             
-
-                <div className="filter-rarities-container">
-                  <OpenButton text="Filtrer par rareté" icon={arrowRaritiesSens} onClick={OpenFilterRarities} />
-                  {displayFilterRarities && (
-                  <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                    <CheckboxRarity attributs={rarities} onChange={(event) => selectRarities(event.target.value)} filter={filterRarities}
-                    onPush={removeRarities} className='checkbox-rarity-p'/>
-                  </div>
-                  )}                 
-                </div>
-          
-                 
-                <div className="filter-editions-container">
-                  <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
-                  { displayFilterEditions && ( 
-                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                      <CheckboxEdition attributs={editions} onChange={(event) => selectEditions(event.target.value)} filter={filterEditions}
-                        onPush={removeEditions}/>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="filter-types-container">
-                  <OpenButton text="Filtrer par type" icon={arrowTypeSens} onClick={OpenFilterType} />
-                  { displayFilterTypes && (
-                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--, marginBottom: '10%'}}>
-                      <Checkbox attributs={types} onChange={(event) => selectTypes(event.target.value)} filter={filterTypes}
-                      onPush={removeTypes} iconStyle={{marginBottom: '2%'}}  classNameP='checkbox-type-p'/>               
-                      
-                    </div>
-                  )}
-                  </div>
-                      
-                </div>
-              </div>
-              )}
 
  
             
@@ -988,7 +882,7 @@ const CardsPage = () => {
           <div className='map-cards-section'>
                 {cards.map(card => ( 
                     <div className="cards-details" key={card.id} style={{display:(maskBaseLand(card.id))}}>
-                        <img className="cards-img" src={getImageUrl(card.image)} alt="Card-image" onClick={() => navCard(card.id)}
+                        <img className="cards-img" src={getImageUrl(card.image)} alt={card.name} onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         />
                 

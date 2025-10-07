@@ -28,6 +28,7 @@
     cursor: pointer;
     margin-top: 10px;
     font-size: 2.5em;
+    background-color: white;
 }
 
 .compenant-reset:hover {

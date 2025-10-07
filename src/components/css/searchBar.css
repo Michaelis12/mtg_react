@@ -8,7 +8,8 @@
 .form-control-rounded {
     width : 1000px;
     height: 60px;
-    border-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
     padding: 1%;
     font-size: 20px;
     background-color: #f3eaff;
@@ -59,3 +60,17 @@
       text-align: center;
     }
   }
+
+.searchbar-button {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: 2px solid black;
+  border-left: none;
+
+}
+
+.searchbar-icon {
+  font-size: 1.5em;
+}
