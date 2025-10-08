@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useLocation ,  useNavigate} from 'react-router-dom';
 import "./css/Deckbuilding.css";
-import Card from '../model/Card';
+import Card from '../model/CardApiSave';
 import deckPile from "../assets/deck_pile.png"
 import backgroundRedGreen from "../assets/background_cardsPage2.jpg"
 import backgroundHand from "../assets/background_hand.png"
@@ -36,7 +36,6 @@ import ButtonValid from '../components/buttonValid';
 import PopupDelete from '../components/popupDelete';
 import Title from '../components/title';
 import TitleType from '../components/titleType';
-import TitleArrow from '../components/titleArrow';
 import FooterSection from '../components/footerSection';
 import { getImageUrl } from '../utils/imageUtils';
 import axiosInstance from '../api/axiosInstance';
@@ -160,6 +159,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             setNewName("")
             setNewImage("")
             setUpdateDeck(false)
+            
+
             if(isImageUpdate) {
                 setIsImageUpdate(false)
             }
@@ -355,22 +356,22 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
         
           // Requete les cartes du deck par type 
-            const getCardByType = async (...cardTypes  ) => {
+            const getCardByType = async (cardType) => {
                 try {
                     setDisplayLoading(true);
                     const params = {
-                        deckID : id,
-                        type: cardTypes.join(',')
+                        deckId : id,
+                        type: cardType
                     }
-                    const request = await axiosInstance.get(`/f_all/getTypeCardDeckID`, {params});
-                    
-                    const listCards = request.data.map(
-                        card => new Card (card.id, card.name, card.text, card.image, card.manaCost, card.value, card.formats,
-                                        card.colors, card.type, card.rarity, card.edition, card.decks
-                ) ) 
+                    const request = await axiosInstance.get(`/f_all/getCardsApiOnDeck`, {params});
+                
+                     const listCards = request.data.map(cardData => Card.fromApi(cardData));
+
+                     console.log(listCards)
+                
                 
                 // Si la méthode est  appelée avec TERRAIN renvoie le résultat dans deckLands
-                if(cardTypes.includes("TERRAIN")) {
+                if(cardType === "Land") {
                     setDeckLands(listCards)
 
                     const uniqueLandsMap = new Map();
@@ -379,8 +380,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                         // Si la carte n'a pas encore été rencontrée (par son ID), on l'ajoute au Map
                         if (!uniqueLandsMap.has(card.id)) {
                             uniqueLandsMap.set(card.id, true);  // Enregistrer l'ID comme déjà vu
-                            return new Card (card.id, card.name, card.text, card.image, card.manaCost, card.value, card.formats,
-                                card.colors, card.type, card.rarity, card.edition, card.decks );
+                            return new Card (card.id, card.apiID, card.name, card.image, card.manaCost, card.cmc,
+                                        card.colors, card.types, card.legendary, card.decksNumber);
                         }
                         return null;  // Ignorer les cartes dupliquées
                     }).filter(card => card !== null);
@@ -391,24 +392,37 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 }
 
                 // Si la méthode est appelée avec CREATURE renvoie le résultat dans deckCreatures
-                if(cardTypes.includes("CREATURE")) {
+                if(cardType === "Creature") {
+
                     setDeckCreatures(listCards)
+                    const uniqueCards = Array.from(
+                    new Map(deckCreatures.map(card => [card.id, card])).values())
+                    setDeckCreaturesUnit(uniqueCards);
 
-                    const uniqueCreaturesMap = new Map();
-                    const listUnitCreatures = request.data.map(card => {
-                        if (!uniqueCreaturesMap.has(card.id)) {
-                            uniqueCreaturesMap.set(card.id, true);
-                            return new Card (card.id, card.name, card.text, card.image, card.manaCost, card.value, card.formats,
-                                card.colors, card.type, card.rarity, card.edition, card.decks );
-                        }
-                        return null;
-                    }).filter(card => card !== null);
-
-                    setDeckCreaturesUnit(listUnitCreatures)
                     setDisplayLoading(false);
                     return
                 }
 
+
+                // Si la méthode est appelée avec ARTEFACT renvoie le résultat dans deckArtefacts
+                if(cardType === "Artifact") {
+                    setDeckArtefacts(listCards)
+
+                    const uniqueArtefactsMap = new Map();
+                    const listUnitArtefacts = request.data.map(card => {
+                        if (!uniqueArtefactsMap.has(card.id)) {
+                            uniqueArtefactsMap.set(card.id, true);
+                            return new Card (card.id, card.apiID, card.name, card.manaCost, card.cmc,
+                                        card.colors, card.types,  card.legendary, card.image, card.decksNumber);
+                        }
+                        return null;
+                    }).filter(card => card !== null);
+
+                    setDeckArtefactsUnit(listUnitArtefacts)
+                    setDisplayLoading(false);
+                    return
+                }
+/*
                  // Si la méthode est appelée avec ENCHANTEMENT renvoie le résultat dans deckEnchants
                 if(cardTypes.includes("ENCHANTEMENT")) {
 
@@ -509,7 +523,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 setDisplayLoading(false);
                 return;
                 }
-
+*/                
+                setDisplayLoading(false);
                 
                  
                 }   
@@ -523,12 +538,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
        // Appelle la méthode précédente pour les terrains, créatures et sorts (se met à jour dés qu'une carte du deck est modifié)
        useEffect(() => {
                 const DisplayCardByType = () => {
-                    getCardByType("TERRAIN");
-                    getCardByType("CREATURE");
-                    getCardByType("ENCHANTEMENT");
-                    getCardByType("EPHEMERE", "RITUEL", "BATAILLE");
-                    getCardByType("PLANESWALKER");
-                    getCardByType("ARTEFACT");
+                    getCardByType("Land");
+                    getCardByType("Creature");
+                    getCardByType("Artifact");
              } 
        DisplayCardByType() }, [deckCards]); 
 
@@ -1153,11 +1165,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
         }
 
-        // Masque les cartes si elles otn été retirées de la liste
+        // Masque les cartes si elles ont été retirées de la liste
         const maskCard = (id) => {
             const deckCardsid = deckCards.map(card => card.id);
             if(!deckCardsid.includes(id)) {
-                return 'none'
+                return 'flex'
             }
         }
 

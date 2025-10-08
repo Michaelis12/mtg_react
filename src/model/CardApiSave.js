@@ -3,7 +3,7 @@ class Card {
     id,
     name,
     text,
-    imageUrl,
+    image,
     manaCost,
     cmc,
     colors,
@@ -16,7 +16,7 @@ class Card {
     this.id = id;
     this.name = name;
     this.text = text;
-    this.image = imageUrl || null;      
+    this.image = image || null;      
     this.manaCost = manaCost || null;
     this.cmc = cmc || 0;
     this.colors = colors || [];
@@ -41,7 +41,7 @@ class Card {
       id: cardData.id,
       name: cardData.name,
       text: cardData.text,
-      imageUrl: cardData.imageUrl,
+      image: cardData.image,
       manaCost: cardData.manaCost,
       cmc: cardData.cmc, 
       colors: cardData.colors,

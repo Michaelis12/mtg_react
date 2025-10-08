@@ -9,19 +9,17 @@ import SettingPage from './pages/SettingPage';
 import RulesPage from './pages/RulesPage';
 import RulesPageAdmin from './pages/RulesPageAdmin';
 import RuleSelected from './pages/RuleSelected';
-import CardsPage from './pages/CardsPage';
-import CardsPageApi from './pages/CardsPageApi';
+import CardsPage from './pages/CardsPageApi';
 import CardsLikedPage from './pages/CardsLikedPage';
-import CardSelected from './pages/CardSelected';
-import CardSelectedApi from './pages/CardSelectedApi';
+import CardSelected from './pages/CardSelectedApi';
 import DecksPage from './pages/DecksPage';
 import DeckSelected from './pages/DeckSelected';
 import DecksCreatePage from './pages/DecksCreatePage';
 import DecksLikedPage from './pages/DecksLikedPage';
 import UserSelected from './pages/UserSelected';
 import UserSelectedAdmin from './pages/UserSelectedAdmin';
-import Deckbuilding from './pages/Deckbuilding';
-import CardsDeckPage from './pages/CardsDeckPage';
+import Deckbuilding from './pages/DeckbuildingApi';
+import CardsDeckPage from './pages/CardsDeckPageApi';
 import NewDeck from './pages/NewDeck';
 // Pages légales
 import Mentions from './pages/Mentions';
@@ -61,14 +59,10 @@ const Router = createBrowserRouter([
       element: <NewRule/>},
     {path: "/cards",
       element: <CardsPage/>},
-    {path: "/cardsApi",
-      element: <CardsPageApi/>},
     {path: "/cardsLiked",
       element: <CardsLikedPage/>},
     {path: "/cardSelected",
       element: <CardSelected/>},
-    {path: "/cardSelectedApi",
-      element: <CardSelectedApi/>},
     {path: "/decks",
       element: <DecksPage/>},
     {path: "/decksCreate",

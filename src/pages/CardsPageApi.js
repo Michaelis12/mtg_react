@@ -11,12 +11,7 @@ import Title from '../components/title';
 import OpenButtonLarge from '../components/openButtonLarge';
 import OpenButton from '../components/openButton';
 import SearchBar from '../components/searchBar';
-import InputValue from '../components/inputValue';
 import InputManaCost from '../components/inputManaCoast';
-import Checkbox from '../components/checkbox';
-import CheckboxColor from '../components/checkboxColor';
-import CheckboxRarity from '../components/checkboxRarity';
-import CheckboxEdition from '../components/checkboxEdition';
 import FooterSection from '../components/footerSection';
 import Card from '../model/CardApi';
 import axios from "axios";
@@ -46,8 +41,6 @@ const CardsPage = () => {
     const [filterName, setFilterName] = React.useState("")
     const [text, setText] = React.useState("")
     const [filterText, setFilterText] = React.useState("")
-    const [inputValueMin, setInputValueMin] = React.useState("")
-    const [inputValueMax, setInputValueMax] = React.useState("")
     const [inputManaCost, setInputManaCost] = React.useState("")
     const [filterColors, setFilterColors] = React.useState([])
     const [filterFormats, setFilterFormats] = React.useState([])
@@ -78,7 +71,7 @@ const CardsPage = () => {
 
         // Récupère les cartes triées par id 
  
-    const getCardsWithID = async () => {
+    const getCards = async () => {
             try {
                 setDisplayLoading(true); 
                 /*
@@ -89,6 +82,8 @@ const CardsPage = () => {
                     return;
                 }
                 */
+
+                
 
                 // Contient les RequestParams de la requete
                 const params = {
@@ -102,6 +97,7 @@ const CardsPage = () => {
                     supertypes : filterLegendary,
                     colors: filterColors                
                 };
+
                 
                 const response = await axios.get('https://api.magicthegathering.io/v1/cards', {
                   params,
@@ -112,6 +108,7 @@ const CardsPage = () => {
 
                 
                 const listCards = response.data.cards.map(cardData => Card.fromApi(cardData));
+
                 
                 // Crée un Set pour stocker les noms uniques
                 const seenNames = new Set();
@@ -141,12 +138,12 @@ const CardsPage = () => {
     
         }
         React.useEffect(() => {
-          getCardsWithID();
-      }, [ displayCards, filterName, filterText, inputValueMin, inputValueMax, inputManaCost,
+          getCards();
+      }, [ displayCards, filterName, filterText, inputManaCost,
          filterColors, filterFormats, filterRarities, filterEditions, filterTypes, filterLegendary]);
 
 
-    const displayMoreCardsWithID = async () => {
+    const displayMoreCards = async () => {
  
        try {
           setIsLoading(true);
@@ -206,8 +203,6 @@ const CardsPage = () => {
 
           sessionStorage.setItem('cpFilterName', JSON.stringify(filterName));
           sessionStorage.setItem('cpFilterText', JSON.stringify(filterText));
-          sessionStorage.setItem('cpInputValueMin', JSON.stringify(inputValueMin));
-          sessionStorage.setItem('cpInputValueMax', JSON.stringify(inputValueMax));
           sessionStorage.setItem('cpInputManacost', JSON.stringify(inputManaCost));
           sessionStorage.setItem('cpFilterColors', JSON.stringify(filterColors));
           sessionStorage.setItem('cpFilterFormats', JSON.stringify(filterFormats));
@@ -227,8 +222,6 @@ const CardsPage = () => {
                   try {
                       const filterName = sessionStorage.getItem('cpFilterName');
                       const filterText = sessionStorage.getItem('cpFilterText');
-                      const inputValueMin = sessionStorage.getItem('cpInputValueMin');
-                      const inputValueMax = sessionStorage.getItem('cpInputValueMax');
                       const inputManaCost = sessionStorage.getItem('cpInputManacost');
                       const filterLegendary = sessionStorage.getItem('cpFilterLegendary');  
                       
@@ -239,14 +232,6 @@ const CardsPage = () => {
                       if (filterText) {
                           setFilterText(JSON.parse(filterText));
                           sessionStorage.removeItem('cpFilterText');
-                      }
-                      if (inputValueMin) {
-                          setInputValueMin(JSON.parse(inputValueMin));
-                          sessionStorage.removeItem('cpInputValueMin');
-                      }
-                      if (inputValueMax) {
-                          setInputValueMax(JSON.parse(inputValueMax));
-                          sessionStorage.removeItem('cpInputValueMax');
                       }
                       if (inputManaCost) {
                           setInputManaCost(JSON.parse(inputManaCost));
@@ -298,23 +283,7 @@ const CardsPage = () => {
               setArrowFiltersSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
               setDisplayFilters(!displayFilters)                     
                                  }
-
-        // Filtre value 
-
-        const [arrowValueSens, setArrowValueSens] = React.useState(<SlArrowDown/>)
-        const [displayFilterValue, setDisplayFilterValue] = React.useState(false)
         
-        // Affiche le filtre value
-        const OpenFilterValue = () => {
-              setArrowValueSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
-              setDisplayFilterValue(!displayFilterValue)
-              }
-
-        // Reset le filtre value
-        const ResetFilterValue = () => {
-          setInputValueMin("")
-          setInputValueMax("")
-          }
 
         // Filtre manaCost
 
@@ -368,24 +337,6 @@ const CardsPage = () => {
     }
 };
 
-        // Récupère toutes les raretés pour les mapper
-        useEffect(() => {
-            const getRarities = async () => {
-                try {
-                    const request = await axiosInstance.get(`f_all/getRarities`);
-
-                    const response = request.data
-        
-                    setRarities(response)
-                    recupStorageRarity(response)
-
-                }   
-                catch (error) {
-                    console.log(error);
-                }
-            }
-            getRarities();
-            }, []);
                     
           const selectRarities = (newRarity) => {
             setFilterRarities(prevRarities => {
@@ -431,25 +382,7 @@ const CardsPage = () => {
             }
         };
         
-        // Récupère toutes les couleurs
-        useEffect(() => {
-            const getColors = async () => {
-                try {
-                    const request = await axiosInstance.get(`f_all/getColors`);
 
-                    const response = request.data
-        
-                    setColors(response)
-                    recupStorageColor(response)
-
-                }   
-                catch (error) {
-                    console.log(error);
-                }
-            }
-            getColors();
-            }, []);
-        
         // Affiche le filtre des couleurs
         const OpenFilterColor = () => {
               setArrowColorSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
@@ -494,83 +427,12 @@ const CardsPage = () => {
           } 
 
 
-        // Filtre formats 
-        
-        const [arrowFormatSens, setArrowFormatSens] = React.useState(<SlArrowDown/>)
-        const [displayFilterFormats, setDisplayFilterFormats] = React.useState(false)
-        
-        // Affiche le filtre des formats
-        const OpenFilterFormat = () => {
-              setArrowFormatSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
-              setDisplayFilterFormats(!displayFilterFormats)                     
-                                 }
-
-        // Récupère toutes les formats pour les mapper
-        const [formats, setFormats] = React.useState([])
-        const callFormats = useRef(false);
-        
-        // Récupère les formats dans le storage si l'user vient de cardSelected
-        const recupStorageFormat = (response) => {
-              try {
-        
-                  if (callFormats.current) return;
-                
-                  const stored = sessionStorage.getItem('cpFilterFormats');
-        
-                    if (stored) {
-                        
-                        setFilterFormats(JSON.parse(stored));
-                        sessionStorage.removeItem('cpFilterFormats');
-                        callFormats.current = true;
-                    } else {
-                        setFilterFormats(response);
-                        
-                    }
-            } catch (error) {
-                console.error("Erreur lors de la récupération du sessionStorage :", error);
-            }
-        };
-        
-        useEffect(() => {
-            const getFormats = async () => {
-                try {
-                    const request = await axiosInstance.get(`f_all/getFormats`);
-
-                     const response = request.data.map(format => format.name);
-        
-                    setFormats(response)
-                    recupStorageFormat(response)
-
-                }   
-                catch (error) {
-                    console.log(error);
-                }
-            }
-            getFormats();
-            }, []);
-
-        
-        const selectFormats = (newFormat) => {
-          setFilterFormats(prevFormat => {
-            const formatsArray = Array.isArray(prevFormat) ? prevFormat : (prevFormat || '').split(',').filter(format => format.trim() !== '');
-            if (formatsArray.includes(newFormat)) {
-              return formatsArray.filter(edition => edition !== newFormat).join(',');
-            } else {
-              return [...formatsArray, newFormat].join(',');                 
-            }
-          });
-        };
-        const removeFormats = () => {
-          setFilterFormats(formats)
-        } 
-
-
       // Récupère tous les types pour les mapper
 
       const [arrowTypeSens, setArrowTypeSens] = React.useState(<SlArrowDown/>)
       const [displayFilterTypes, setDisplayFilterTypes] = React.useState(false)
       
-      // Affiche le filtre des éditions
+      // Affiche le filtre des types
       const OpenFilterType = () => {
             setArrowTypeSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
             setDisplayFilterTypes(!displayFilterTypes)                     
@@ -602,25 +464,7 @@ const CardsPage = () => {
             }
         };
 
-        useEffect(() => {
-            const getTypes = async () => {
-                try {
-                    const request = await axiosInstance.get(`f_all/getTypes`);
 
-                    const response = request.data
-        
-                    setTypes(response)
-                    recupStorageTypes(response)
-
-                }   
-                catch (error) {
-                    console.log(error);
-                }
-            }
-            getTypes();
-            }, []);
-
-         // Filtre types
          const selectTypes = (newType) => {
             setFilterTypes(prevTypes => {
             const typesArray = Array.isArray(prevTypes) ? prevTypes : (prevTypes || '').split(',').filter(type => type.trim() !== '');
@@ -637,7 +481,6 @@ const CardsPage = () => {
 
         // Filtre légendaire
 
-
       const [arrowLegendarySens, setArrowLegendarySens] = React.useState(<SlArrowDown/>)
       const [displayFilterLegendary, setDisplayFilterLegendary] = React.useState(false)
 
@@ -649,12 +492,6 @@ const CardsPage = () => {
                                }
 
 
-      // N'affiche pas les terrains de base
-      const maskBaseLand = (value) => {
-        if(value < 7) {
-            return "none";
-      }
-    }   
 
 
     // Affichage de couleur d'arrière-plan en fonction de la rareté
@@ -881,7 +718,7 @@ const CardsPage = () => {
         {/* affichage cartes */}
           <div className='map-cards-section'>
                 {cards.map(card => ( 
-                    <div className="cards-details" key={card.id} style={{display:(maskBaseLand(card.id))}}>
+                    <div className="cards-details" key={card.id}>
                         <img className="cards-img" src={getImageUrl(card.image)} alt={card.name} onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         />
@@ -897,7 +734,7 @@ const CardsPage = () => {
               
       
       {/* Bouton pour afficher plus de cartes */}
-      <button className='next-page-button' disabled={!hasMore} onClick={()=>displayMoreCardsWithID()}>Afficher plus</button> 
+      <button className='next-page-button' disabled={!hasMore} onClick={()=>displayMoreCards()}>Afficher plus</button> 
 
       </div>
 
