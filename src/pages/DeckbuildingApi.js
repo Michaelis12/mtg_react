@@ -219,16 +219,13 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             const getCardsDeck = async () => {
                 try {
                     setDisplayLoading(true);
-                    const response = await axiosInstance.get(`/f_all/getCardDeckID?deckID=${id}`);
+                    const request = await axiosInstance.get(`/f_all/getCardDeckID?deckID=${id}`);
 
-                    const listCards = response.data.map(
-                        card => new Card (card.id, card.name, card.text, card.image, card.manaCost, card.value, card.formats,
-                                        card.colors, card.type, card.rarity, card.edition, card.decks
-                ) ) 
-                setDeckCards(listCards)
-                setDeckCardsLength(listCards.length)
-                setDeckCardsGraphic(listCards)
-                setDisplayLoading(false);
+                    const listCards = request.data.map(cardData => Card.fromApi(cardData));
+                    setDeckCards(listCards)
+                    setDeckCardsLength(listCards.length)
+                    setDeckCardsGraphic(listCards)
+                    setDisplayLoading(false);
 
                 }   
                 catch (error) {
@@ -276,84 +273,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             }, [deck]);
 
 
-        const [arrowSens, setArrowSens] = useState(<SlArrowDown/>)
-        const [arrowUp, setArrowUp] = useState(false)
-        const [lands, setLands] = useState(false)
-        
-        // Affiche les terrains du deck
-        useEffect(() => {
-              const DisplayLands = () => {
-                
-                if (lands) {
-                    setArrowSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));
-                    setArrowUp(true)                    
-                   } 
-                else {
-                    setArrowSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));
-                    setArrowUp((prevArrowSens) => !prevArrowSens);
-                     }
-                } 
-                DisplayLands() }, [lands]); 
-
-
-        const [arrowSens2, setArrowSens2] = useState(<SlArrowDown/>)
-        const [arrowUp2, setArrowUp2] = useState(false)
-        const [creatures, setCreatures] = useState(false)
-
-        // Affiche les créatures du deck
-        useEffect(() => {
-            const DisplayCreatures = () => {
-              
-              if (creatures) {
-                  setArrowSens2((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));
-                  setArrowUp2(true)
-                 } 
-              else {
-                setArrowSens2((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));
-                setArrowUp2((prevArrowSens) => !prevArrowSens);
-                   }
-              } 
-              DisplayCreatures() }, [creatures]);
-              
-
-        const [arrowSens3, setArrowSens3] = useState(<SlArrowDown/>)
-        const [arrowUp3, setArrowUp3] = useState(false)
-        const [spells, setSpells] = useState(false)
-
-        // Affiche les sorts du deck
-        useEffect(() => {
-            const DisplaySpells = () => {
-              
-              if (spells) {
-                setArrowSens3((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));
-                setArrowUp3(true)
-                 } 
-              else {
-                setArrowSens3((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));
-                setArrowUp3((prevArrowSens) => !prevArrowSens);
-                   }
-              } 
-              DisplaySpells() }, [spells]);
-
-        const [arrowSens4, setArrowSens4] = useState(<SlArrowDown/>)
-        const [arrowUp4, setArrowUp4] = useState(false)
-        const [artefacts, setArtefacts] = useState(false)
-
-        // Affiche les artefacts du deck
-        useEffect(() => {
-            const DisplayArtefacts = () => {
-              
-              if (artefacts) {
-                setArrowSens4((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));
-                setArrowUp4(true)
-                 } 
-              else {
-                setArrowSens4((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));
-                setArrowUp4((prevArrowSens) => !prevArrowSens);
-                   }
-              } 
-              DisplayArtefacts() }, [artefacts]);
-
         
           // Requete les cartes du deck par type 
             const getCardByType = async (cardType) => {
@@ -363,30 +282,20 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                         deckId : id,
                         type: cardType
                     }
-                    const request = await axiosInstance.get(`/f_all/getCardsApiOnDeck`, {params});
+                    const request = await axiosInstance.get(`/f_all/getCardsApiOnDeckByType`, {params});
                 
-                     const listCards = request.data.map(cardData => Card.fromApi(cardData));
+                    const listCards = request.data.map(cardData => Card.fromApi(cardData));
 
-                     console.log(listCards)
                 
                 
                 // Si la méthode est  appelée avec TERRAIN renvoie le résultat dans deckLands
                 if(cardType === "Land") {
                     setDeckLands(listCards)
 
-                    const uniqueLandsMap = new Map();
+                    const uniqueCards = Array.from(
+                    new Map(deckLands.map(card => [card.id, card])).values())
+                    setDeckLandsUnit(uniqueCards);
 
-                    const listUnitLands = request.data.map(card => {
-                        // Si la carte n'a pas encore été rencontrée (par son ID), on l'ajoute au Map
-                        if (!uniqueLandsMap.has(card.id)) {
-                            uniqueLandsMap.set(card.id, true);  // Enregistrer l'ID comme déjà vu
-                            return new Card (card.id, card.apiID, card.name, card.image, card.manaCost, card.cmc,
-                                        card.colors, card.types, card.legendary, card.decksNumber);
-                        }
-                        return null;  // Ignorer les cartes dupliquées
-                    }).filter(card => card !== null);
-
-                    setDeckLandsUnit(listUnitLands)
                     setDisplayLoading(false);
                     return
                 }
@@ -395,6 +304,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 if(cardType === "Creature") {
 
                     setDeckCreatures(listCards)
+
                     const uniqueCards = Array.from(
                     new Map(deckCreatures.map(card => [card.id, card])).values())
                     setDeckCreaturesUnit(uniqueCards);
@@ -408,17 +318,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 if(cardType === "Artifact") {
                     setDeckArtefacts(listCards)
 
-                    const uniqueArtefactsMap = new Map();
-                    const listUnitArtefacts = request.data.map(card => {
-                        if (!uniqueArtefactsMap.has(card.id)) {
-                            uniqueArtefactsMap.set(card.id, true);
-                            return new Card (card.id, card.apiID, card.name, card.manaCost, card.cmc,
-                                        card.colors, card.types,  card.legendary, card.image, card.decksNumber);
-                        }
-                        return null;
-                    }).filter(card => card !== null);
+                    const uniqueCards = Array.from(
+                    new Map(deckArtefacts.map(card => [card.id, card])).values())
+                    setDeckArtefactsUnit(uniqueCards);
 
-                    setDeckArtefactsUnit(listUnitArtefacts)
                     setDisplayLoading(false);
                     return
                 }
@@ -554,44 +457,24 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
     // Affichage d'image correspondant aux couleurs de la carte
             const getColors = (value ) => {
-                if(value === "BLANC") {
-                    return white
-                }
-                if(value === "BLEU") {
-                    return blue
-                }
-                if(value === "VERT") {
-                    return green
-                }
-                if(value === "ROUGE") {
-                    return red
-                }
-                if(value === "NOIR") {
-                    return black
-                }
-                if(value === "INCOLORE") {
-                    return incolore
-                }
+                    if(value === "W") {
+                          return white
+                     }
+                      if(value === "U") {
+                          return blue
+                      }
+                      if(value === "G") {
+                          return green
+                      }
+                      if(value === "R") {
+                          return red
+                      }
+                      if(value === "B") {
+                          return black
+                      }
                
             };
 
-
-        // Choisir le nombre d'exemplaire d'une carte dans le deck
-         const setNumberCardOnDeck = async (value, number) => {
-            try {
-            setDisplayLoading(true);
-            const response = await axiosInstance.put(`/f_user/setNumberCardOnDeck?cardID=${value}&deckID=${id}&number=${number}`, 
-            { withCredentials: true });
-            setDeckSignal(!deckSignal)
-            setDisplayLoading(false);
-                
-            } catch (error) {
-                setDisplayLoading(false);
-                console.log(error);               
-            }
-            
-
-         }
 
         // Consultez les cartes (en masquant les cartes qui seront deja dans le deck si le format est CEDH)
         const navigateCards = () => {
@@ -977,14 +860,14 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         // Graphique de répartition des cartes par cout en mana
         const getCardsByManaCost = () => {
             const manacostCount = deckCardsGraphic.reduce((acc, card) => {
-            if (card.manaCost) {
-                acc[card.manaCost] = acc[card.manaCost] ? acc[card.manaCost] + 1 : 1;
+            if (card.cmc) {
+                acc[card.cmc] = acc[card.cmc] ? acc[card.cmc] + 1 : 1;
             }
             return acc;
             }, {});
 
-            return Object.entries(manacostCount).map(([manaCost, count]) => ({
-            name: manaCost,
+            return Object.entries(manacostCount).map(([cmc, count]) => ({
+            name: cmc,
             value: count
             }));
         };
@@ -1011,12 +894,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         const colorData = getCardsByColor();
 
         const COLOR_MAP = { 
-                'BLEU': '#b5cbe4',
-                'BLANC': '#f8ecc0',
-                'VERT': '#177244',
-                'ROUGE': '#c13534',
-                'NOIR': '#140f0c',
-                'INCOLORE': '#9b8e8a'
+                'U': '#b5cbe4',
+                'W': '#f8ecc0',
+                'G': '#177244',
+                'R': '#c13534',
+                'B': '#140f0c'
                 };
 
         const TYPE_COLORS = [
@@ -1024,12 +906,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         ];
 
         const LEGEND_IMAGES = {
-                'BLEU': blue,
-                'BLANC': white,
-                'VERT': green,
-                'ROUGE': red,
-                'NOIR': black,
-                'INCOLORE': incolore
+                'U': blue,
+                'W': white,
+                'G': green,
+                'R': red,
+                'B': black
         };
 
 
@@ -1461,7 +1342,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
           
             { deckLands.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Terrains ("+ deckCards.filter(card => card.type === "TERRAIN").length + ")"}/>
+                    <TitleType title={"Terrains ("+ deckLands.length + ")"}/>
                     <div className='deck-text-map'>
                         {deckLandsUnit.map(land => {
                             return (
@@ -1533,7 +1414,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
             { deckCreatures.length > 0 && (    
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Créatures (" + deckCards.filter(card => card.type === "CREATURE").length + ")"}/>
+                    <TitleType title={"Créatures (" + deckCreatures.length + ")"}/>
                     <div className='deck-text-map'>
                             {deckCreaturesUnit.map(creature => ( 
                                 <div className="land-text-details" id='land-card' style={{display: maskCard(creature.id)}} key={creature.id}>
@@ -1679,7 +1560,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
             { deckArtefacts.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>    
-                    <TitleType title={"Artefacts (" + deckCards.filter(card => card.type === "ARTEFACT").length + ")"}/>
+                    <TitleType title={"Artefacts (" + deckArtefacts.length + ")"}/>
                     <div className='deck-text-map'>
                             {deckArtefactsUnit.map(artefact => ( 
                                 <div className="land-text-details" id='land-card' style={{display: maskCard(artefact.id)}}  key={artefact.id}>
@@ -1726,7 +1607,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             
             { deckPlaneswalkers.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Planeswalkers (" + deckCards.filter(card => card.type === "PLANESWALKER").length + ")"}/>
+                    <TitleType title={"Planeswalkers (" + deckPlaneswalkers.length + ")"}/>
                     <div className='deck-text-map'>
                             {deckPlaneswalkersUnit.map(planeswalker => ( 
                                 <div className="land-text-details" id='land-card' key={planeswalker.id}
