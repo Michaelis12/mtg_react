@@ -849,6 +849,8 @@ const CardsDeckPage = () => {
                               "Land",
                               "Planeswalker",
                               "Sorcery",
+                              "Battle",
+                              "Conspiracy",
                               "Tribal",
                               "Vanguard"
                             ].map((type, index) => (

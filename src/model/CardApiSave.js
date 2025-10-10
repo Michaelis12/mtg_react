@@ -1,6 +1,7 @@
 class Card {
   constructor({
     id,
+    apiID,
     name,
     text,
     image,
@@ -14,6 +15,7 @@ class Card {
     legalities
   }) {
     this.id = id;
+    this.apiID = apiID;
     this.name = name;
     this.text = text;
     this.image = image || null;      
@@ -39,6 +41,7 @@ class Card {
   static fromApi(cardData) {
     return new Card({
       id: cardData.id,
+      apiID: cardData.apiID,
       name: cardData.name,
       text: cardData.text,
       image: cardData.image,
