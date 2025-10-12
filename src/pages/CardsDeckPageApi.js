@@ -100,6 +100,9 @@ const CardsDeckPage = () => {
                 // Sert à mapper les colors pour le filtre
                 setColors(response.colors)
                 setFormat(response.format)
+
+              
+        
               
               
               /*
@@ -145,7 +148,6 @@ const CardsDeckPage = () => {
 
 
   // Récupère les cartes triées par id 
- 
     const getCards = async () => {             
   
           
@@ -162,7 +164,7 @@ const CardsDeckPage = () => {
                     rarity : filterRarities,
                     types : filterTypes,
                     supertypes : filterLegendary,
-                    colors: filterColors                
+                    colors: deck.colors                
                 };
 
                 
@@ -183,13 +185,16 @@ const CardsDeckPage = () => {
           return true;
         });
 
-        console.log(colors)
+        const colorsSet = deck.colors;
+        const allowedColors = new Set(colorsSet);
 
         const listCardsColorsFilter = listCardsUnit.filter(card => {
-          const cardColors = card.colors || []; // [] pour les incolores
-          return cardColors.every(c => colors.includes(c));
-        });
+          // Cas 1 : carte incolore (aucune couleur définie ou tableau vide)
+          if (!card.colors || card.colors.length === 0) return true;
 
+          // Cas 2 : toutes les couleurs de la carte sont dans allowedColors
+          return card.colors.every(color => allowedColors.has(color));
+        });
 
         setCards(listCardsColorsFilter);
         setPage(2);
@@ -202,9 +207,9 @@ const CardsDeckPage = () => {
   };
   useEffect(() => {
     getCards();
-  }, [ filterName, filterText,
+  }, [ deck, filterName, filterText,
     filterColors, filterRarities, filterTypes, filterLegendary]);
-
+  
 
     const displayMoreCards = async () => {
  
@@ -221,7 +226,7 @@ const CardsDeckPage = () => {
                     cmc : inputManaCost,
                     rarity : filterRarities,
                     type : filterTypes,
-                    colors: filterColors                   
+                    colors: deck.colors                   
                     
                 };
                 
@@ -239,7 +244,7 @@ const CardsDeckPage = () => {
                 const seenNames = new Set();
 
                 // Filtre pour ne garder que les cartes dont le nom n'est pas déjà présent
-                const newCardsUnit = newCards.filter(card => {
+                const listCardsUnit = newCards.filter(card => {
                   if (seenNames.has(card.name)) {
                     return false; // ignore si le nom existe déjà
                   } else {
@@ -248,7 +253,19 @@ const CardsDeckPage = () => {
                   }
                 });
 
-          setCards(prevCards => [...prevCards, ...newCardsUnit]);
+                const colorsSet = deck.colors;
+                const allowedColors = new Set(colorsSet);
+
+                const listCardsColorsFilter = listCardsUnit.filter(card => {
+                  // Cas 1 : carte incolore (aucune couleur définie ou tableau vide)
+                  if (!card.colors || card.colors.length === 0) return true;
+
+                  // Cas 2 : toutes les couleurs de la carte sont dans allowedColors
+                  return card.colors.every(color => allowedColors.has(color));
+                }); 
+
+
+          setCards(prevCards => [...prevCards, ...listCardsColorsFilter]);
           setPage(page + 1)
 
       } catch (error) {
