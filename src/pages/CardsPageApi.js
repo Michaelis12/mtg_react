@@ -108,7 +108,7 @@ const CardsPage = () => {
 
                 
                 const listCards = response.data.cards.map(cardData => Card.fromApi(cardData));
-
+                console.log(listCards)
                 
                 // Crée un Set pour stocker les noms uniques
                 const seenNames = new Set();
@@ -212,7 +212,7 @@ const CardsPage = () => {
           sessionStorage.setItem('cpFilterEditions', JSON.stringify(filterEditions));
 
           const cardsIds = cards.map(card => card.id);
-          navigate(`/cardSelectedApi`, { state: { cardID: id, ListCard: cardsIds }})
+          navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
         };
 
 

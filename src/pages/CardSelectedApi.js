@@ -67,10 +67,6 @@ const CardSelectedApi = () => {
         const getCardSelected = async () => {
             try {
 
-
-                console.log(cards)
-
-
                 if(newID === "") {
                     setNewID(id)
                    }
@@ -80,12 +76,9 @@ const CardSelectedApi = () => {
               }
 
                 const request = await axios.get(`https://api.magicthegathering.io/v1/cards/${newID}`);
-
-
-
                 const response = request.data.card   
-                   setCard(response)
-                   setCardFormats(request.data.card.legalities)
+                setCard(response)
+                setCardFormats(request.data.card.legalities)
 
 
             }   

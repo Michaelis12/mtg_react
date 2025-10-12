@@ -136,7 +136,7 @@ const DeckSelected = () => {
                     const getCedh = async () => { 
                         try {
                             
-                            if( deck.format === "COMMANDER") {
+                            if( deck.format === "Commander") {
         
                                 setDisplayLoading(true);
                                     
@@ -754,7 +754,7 @@ const DeckSelected = () => {
 
                     setCardImage(cardOrIndex.image);
                     setCardID(cardOrIndex.id);
-                    if(deck.format === "COMMANDER") {
+                    if(deck.format === "Commander") {
                         if(cardOrIndex.id === deckCedh.id) {
                         setNavigateListID([cardOrIndex.id]);
                         setListImage(cardOrIndex.image);
@@ -1149,7 +1149,7 @@ const DeckSelected = () => {
                  <div className='map-deck-cards'> 
                  
                         {/*Affichage du commandant*/}
-                        { deck.format === "COMMANDER" && ( 
+                        { deck.format === "Commander" && ( 
                                 <div style={{width: '100%', display : 'flex', flexDirection: 'column', alignItems: 'center'}}>               
                                     <div style={{width: '100%'}}>
                                     <TitleType title={"Commandant"}/>
@@ -1225,7 +1225,7 @@ const DeckSelected = () => {
                                         <div className='card-link-mobile'>
                                             <h5 className='land-text-name' onClick={()=> openZoomPopup(creature)} >{creature.name}</h5>
                                         </div>
-                                        { deck.format !== "COMMANDER" && (
+                                        { deck.format !== "Commander" && (
                                             <p className='p-card-length'>{numberCreature(creature.id)}</p>
                                         )}
                                         {detailsCard && detailsCard.id === creature.id && (
@@ -1250,7 +1250,7 @@ const DeckSelected = () => {
                                         <div className='card-link-mobile'>
                                             <h5 className='land-text-name' onClick={()=> openZoomPopup(enchant)} >{enchant.name}</h5>
                                         </div>
-                                        { deck.format !== "COMMANDER" && (
+                                        { deck.format !== "Commander" && (
                                             <p className='p-card-length'>{numberEnchant(enchant.id)}</p>
                                         )}
                                         {detailsCard && detailsCard.id === enchant.id && (
@@ -1274,7 +1274,7 @@ const DeckSelected = () => {
                                         <div className='card-link-mobile'>
                                             <h5 className='land-text-name' onClick={()=> openZoomPopup(spell)} >{spell.name}</h5>
                                         </div>
-                                        { deck.format !== "COMMANDER" && (
+                                        { deck.format !== "Commander" && (
                                             <p className='p-card-length'>{numberSpell(spell.id)}</p>
                                         )}
                                         {detailsCard && detailsCard.id === spell.id && (
@@ -1298,7 +1298,7 @@ const DeckSelected = () => {
                                         <div className='card-link-mobile'>
                                             <h5 className='land-text-name' onClick={()=> openZoomPopup(artefact)} >{artefact.name}</h5>
                                         </div>
-                                        { deck.format !== "COMMANDER" && (
+                                        { deck.format !== "Commander" && (
                                             <p className='p-card-length'>{numberArtefact(artefact.id)}</p>
                                         )}
                                         {detailsCard && detailsCard.id === artefact.id && (
@@ -1327,7 +1327,7 @@ const DeckSelected = () => {
                                     <div className='card-link-mobile'>
                                         <h5 className='land-text-name' onClick={()=> openZoomPopup(planeswalker)} >{planeswalker.name}</h5>
                                     </div>
-                                    { deck.format !== "COMMANDER" && (
+                                    { deck.format !== "Commander" && (
                                         <p className='p-card-length'>{numberPlaneswalker(planeswalker.id)}</p>
                                     )}
                                     {detailsCard && detailsCard.id === planeswalker.id && (

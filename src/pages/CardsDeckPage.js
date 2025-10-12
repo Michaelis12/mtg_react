@@ -1411,7 +1411,7 @@ const CardsDeckPage = () => {
                     {topCards.map(card => ( 
                     <div className="cards-details" key={card.id} style={{display:(maskBaseLand(card.id))}}>                       
 
-                      { deck.format === "COMMANDER" && ( 
+                      { deck.format === "Commander" && ( 
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navTopCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
@@ -1421,7 +1421,7 @@ const CardsDeckPage = () => {
                       </div>
                       )}
 
-                      { deck.format !== "COMMANDER" && (                 
+                      { deck.format !== "Commander" && (                 
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navTopCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }

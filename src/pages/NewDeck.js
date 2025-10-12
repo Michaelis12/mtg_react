@@ -682,7 +682,7 @@ const NewDeck = () => {
     useEffect(() => {
                   const resetCedh = async () => {
                       try {
-                           if( format !== "COMMANDER" && cedhID !== "") {             
+                           if( format !== "Commander" && cedhID !== "") {             
                             setCedh([])
                             setCedhID("")
                             setCedhSelected([])
@@ -1086,7 +1086,7 @@ const NewDeck = () => {
               )} 
 
         {/*Le choix du commandant*/}
-        {format === "COMMANDER" && cedhID === "" && (
+        {format === "Commander" && cedhID === "" && (
             <div className='cedh-add-container'>
 
 
@@ -1328,7 +1328,7 @@ const NewDeck = () => {
         )} 
 
         {/*Le choix de la couleur*/}
-        {format !== "" && format !== "COMMANDER" && colors.length === 0 && ( 
+        {format !== "" && format !== "Commander" && colors.length === 0 && ( 
           <div className='color-group'>
                 <div className='pipeline-container'>
                     <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '0', fontFamily: 'MedievalSharp, cursive'  }}  text={"Format"}/>
@@ -1416,7 +1416,7 @@ const NewDeck = () => {
           )} 
 
         {/*La carte finale pour les decks non commander*/}
-        {colors.length !== 0 && format !== "" && format !== "COMMANDER" && name !== "" && image !== "" && (
+        {colors.length !== 0 && format !== "" && format !== "Commander" && name !== "" && image !== "" && (
           <div className="final-card-group">
               <div className='pipeline-container'>
                   <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: 'rgba(176, 176, 176, 1)', color: 'white', zIndex: '0' }} text={"Format"}/> 
@@ -1540,7 +1540,7 @@ const NewDeck = () => {
         )}
 
         {/*La carte finale pour les decks commander*/}
-        {colors.length !== 0 && format === "COMMANDER" && cedhID !== "" && name !== "" && image !== "" && (
+        {colors.length !== 0 && format === "Commander" && cedhID !== "" && name !== "" && image !== "" && (
           <div className="final-card-group">
 
               <div className='pipeline-container'>

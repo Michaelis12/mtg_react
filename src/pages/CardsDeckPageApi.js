@@ -88,6 +88,8 @@ const CardsDeckPage = () => {
     useEffect(() => {
         const getDeckSelected = async () => {
             try {
+                setDisplayLoading(true);
+
                 const stored = sessionStorage.getItem('filterColors');
                 const request = await axiosInstance.get(`f_all/getDeckID?deckID=${id}`);
 
@@ -98,6 +100,7 @@ const CardsDeckPage = () => {
                 // Sert à mapper les colors pour le filtre
                 setColors(response.colors)
                 setFormat(response.format)
+              
               
               /*
               if (!stored) {
@@ -112,6 +115,9 @@ const CardsDeckPage = () => {
             }   
             catch (error) {
                 console.log(error);
+            }
+            finally {
+              setDisplayLoading(false);
             }
 
     
@@ -136,22 +142,12 @@ const CardsDeckPage = () => {
     const [pageSize, setPageSize] = useState(50);
     const [hasMore, setHasMore] = useState(true);
 
-  
-    // État pour l'affichage des cartes
-    const [displayCards, setDisplayCards] = React.useState("id")
 
-        // Récupère les cartes triées par id 
+
+  // Récupère les cartes triées par id 
  
     const getCards = async () => {             
-    /*
-      if (
-        filterEditions.length < 1 || filterRarities.length < 1 ||
-        filterColors.length < 1 ||
-        filterTypes.length < 1
-      ) {
-        return;
-      }
-    */ 
+  
           
       try {
         setDisplayLoading(true);
@@ -169,7 +165,6 @@ const CardsDeckPage = () => {
                     colors: filterColors                
                 };
 
-        console.log(params); 
                 
         const response = await axios.get('https://api.magicthegathering.io/v1/cards', {
                   params,
@@ -179,24 +174,25 @@ const CardsDeckPage = () => {
         });
 
                 
-                const listCards = response.data.cards.map(cardData => Card.fromApi(cardData));
+        const listCards = response.data.cards.map(cardData => Card.fromApi(cardData));
 
-                
-                // Crée un Set pour stocker les noms uniques
-                const seenNames = new Set();
+        const seenNames = new Set();
+        const listCardsUnit = listCards.filter(card => {
+          if (seenNames.has(card.name)) return false;
+          seenNames.add(card.name);
+          return true;
+        });
 
-                // Filtre pour ne garder que les cartes dont le nom n'est pas déjà présent
-                const listCardsUnit = listCards.filter(card => {
-                  if (seenNames.has(card.name)) {
-                    return false; // ignore si le nom existe déjà
-                  } else {
-                    seenNames.add(card.name);
-                    return true; // garde la carte
-                  }
-                });
+        console.log(colors)
 
-        setCards(listCardsUnit)
-        setPage(2)
+        const listCardsColorsFilter = listCardsUnit.filter(card => {
+          const cardColors = card.colors || []; // [] pour les incolores
+          return cardColors.every(c => colors.includes(c));
+        });
+
+
+        setCards(listCardsColorsFilter);
+        setPage(2);
 
       } catch (error) {
         console.error('Erreur de chargement des cartes :', error);
@@ -204,10 +200,9 @@ const CardsDeckPage = () => {
         setDisplayLoading(false);
       }
   };
-  // 👇 Rechargement des cartes quand la page change
   useEffect(() => {
     getCards();
-  }, [displayCards, filterName, filterText,
+  }, [ filterName, filterText,
     filterColors, filterRarities, filterTypes, filterLegendary]);
 
 
@@ -262,9 +257,6 @@ const CardsDeckPage = () => {
         setDisplayLoading(false);
       }
     }
-
-    
-
 
         // Naviguer vers une carte depuis id
         const navCard = (id) => {     
@@ -628,7 +620,7 @@ const CardsDeckPage = () => {
 
                  // On transforme les cartes sélectionnées pour correspondre au modèle backend
                 const payload = cardsSelected.map(card => ({
-                    apiID: card.id,           // ← renommer id → apiID
+                    apiID: card.id,          
                     name: card.name,
                     image: card.image,
                     manaCost: card.manaCost,
@@ -639,7 +631,7 @@ const CardsDeckPage = () => {
                     decksNumber: card.decksNumber || 0
                 }));
 
-                const response = await axiosInstance.post(`f_user/addCardsApiOnDeck?deckId=${id}`, payload, { withCredentials: true });
+                const response = await axiosInstance.post(`f_user/addCardsOnDeck?deckId=${id}`, payload, { withCredentials: true });
                 const data = id
                 navigate(`/deckbuilding`, { state: { deckID: data }})
                 
@@ -676,25 +668,25 @@ const CardsDeckPage = () => {
 
         const [displayPopup, setDisplayPopup]= React.useState(false)
         const [cardsSelectedUnit, setCardsSelectedUnit]= React.useState(false)
-/*
+
         // Réupère les cartes sélectionnés par l'user avec des id différents
           useEffect(() => {
             const getCardsSelectedUnit =  () => {
                 try {
 
-                      const unitsCardsMap = new Map();
-  
-                      const listUnitCards = cardsSelected.map(card => {
-                          if (!unitsCardsMap.has(card.id)) {
-                              unitsCardsMap.set(card.id, true);  
-                              return new Card (card.id, card.name, card.image);
-                          }
-                          return null; 
-                      }).filter(card => card !== null);
-  
-                      setCardsSelectedUnit(listUnitCards)
+                     const unitsCardsMap = new Map();
 
-                
+                      // On parcourt les cartes sélectionnées et on ne garde qu'une seule par ID
+                      cardsSelected.forEach(card => {
+                        if (!unitsCardsMap.has(card.id)) {
+                          unitsCardsMap.set(card.id, card);
+                        }
+                      });
+
+                      // On récupère uniquement les valeurs uniques (les cartes)
+                      const listUnitCards = Array.from(unitsCardsMap.values());
+
+                      setCardsSelectedUnit(listUnitCards);
 
                 }   
                 catch (error) {
@@ -703,7 +695,7 @@ const CardsDeckPage = () => {
             }
             getCardsSelectedUnit();
             }, [cardsSelected]);
-*/
+
 
       const [cardNumber, setCardNumber] = React.useState(0)
 
@@ -763,23 +755,17 @@ const CardsDeckPage = () => {
                       <div className="compenant-checkbox">
                         <div className="compenant-checkbox-map-large">
 
-                          {[
-                            { value: "W"},
-                            { value: "U"},
-                            { value: "B"},
-                            { value: "R"},
-                            { value: "G"}
-                          ].map((color, index) => (
+                          {colors.map((color, index) => (
                             <li className="li-checkbox" key={index}>
                               <input
                                 className='component-input'
                                 type="checkbox"
-                                name={color.value}
-                                value={color.value}
+                                name={color}
+                                value={color}
                                 onChange={(event) => selectColors(event.target.value)}
-                                checked={filterColors.includes(color.value)}
+                                checked={filterColors.includes(color)}
                               />
-                              <img src={getColorPics(color.value)} className="filter-color-img" alt={color}/>
+                              <img src={getColorPics(color)} className="filter-color-img" alt={color}/>
                             </li>
                           ))}
 
@@ -926,7 +912,7 @@ const CardsDeckPage = () => {
                 {cards.map(card => ( 
                     <div className="cards-details" key={card.id}>                       
 
-                      { deck.format === "COMMANDER" && ( 
+                      { deck.format === "Commander" && ( 
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
@@ -936,7 +922,7 @@ const CardsDeckPage = () => {
                       </div>
                       )}
 
-                      { deck.format !== "COMMANDER" && (   
+                      { deck.format !== "Commander" && (   
                                       
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
@@ -1005,10 +991,10 @@ const CardsDeckPage = () => {
                                               <div className='cards-selected-container'>
                                                 <img className='card-add-img' src={cardImage && cardImage.startsWith('/uploads/') ? `http://localhost:8080${cardImage}` : cardImage} alt="deck-img" />
                                                 <div className='cards-deck-unit-container'> 
-                                                  {cardsSelected.map(card => ( 
+                                                  {cardsSelectedUnit.map(card => ( 
                                                     <div className="land-text-details" id='land-card'  key={card.id}>
                                                         <h5 className='land-text-name' onMouseEnter={() => setCardImage(card.image)} >{card.name}</h5>
-                                                      { format !== "COMMANDER" && (
+                                                      { format !== "Commander" && (
                                                         <div className='land-text-number'>                              
                                                             <button className="addButton" style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => unselectCard(card)}
                                                             disabled={lessCard(card)} >

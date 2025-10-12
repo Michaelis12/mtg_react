@@ -54,6 +54,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
        const [deckCardsGraphic, setDeckCardsGraphic] = React.useState([])
        const [colors, setColors] = React.useState([])
        const [format, setFormat]= React.useState([])
+       const [cmc, setCmc]= React.useState()
 
        // Contient toutes les cartes du deck d'un type
        const [deckLands, setDeckLands] = useState([])
@@ -307,6 +308,24 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             getCedh();
             }, [deck]);
 
+
+         useEffect(() => {
+        const calculateAverageCmc = () => {
+            if (deckCards.length > 0) {
+
+            const validCards = deckCards.filter(card => typeof !card.types.includes("Land"));
+
+            // Calcule la somme des cmc
+            const totalCmc = validCards.reduce((sum, card) => sum + card.cmc, 0);
+
+            // Calcule la moyenne
+            const averageCmc = totalCmc / validCards.length;
+
+            setCmc(averageCmc.toFixed(2))
+            }
+        };
+        calculateAverageCmc();
+        }, [deckCards]);
 
 
         
@@ -868,10 +887,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             try { 
                 setDisplayLoading(true)
 
-                 console.log(cardsUnselected)
 
                 if(cardsSelected.length > 0) {
-                const request1 = await axiosInstance.post(`f_user/addCardsOnDeck?cardId=${cardsSelected}&deckId=${id}`, null, { withCredentials: true });
+                const request1 = await axiosInstance.post(`f_user/duplicateCardsOnDeck?cardsId=${cardsSelected}&deckId=${id}`, null, { withCredentials: true });
                 }
                 if (cardsUnselected.length > 0) {
                 const request2 = await axiosInstance.delete(`/f_user/deleteCardsListOnDeck?cardId=${cardsUnselected}&deckId=${id}`, { withCredentials: true });
@@ -976,7 +994,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                 </div>
                                                                 <div className='card-line-attribut'>              
                                                                     <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
-                                                                    <h3><strong>{deck.manaCost}</strong></h3>
+                                                                    <h3><strong>{cmc}</strong></h3>
                                                                 </div>
                 
                                                               </div>
@@ -1027,7 +1045,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 
                                     <div className='attribut-mobile-container'>              
                                                                     <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
-                                                                    <h3><strong>{deck.manaCost}</strong></h3>
+                                                                    <h3><strong>{cmc}</strong></h3>
                                     </div>
                            
                 
@@ -1074,7 +1092,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
                                                 <div className='attribut-mobile-container'>              
                                                                     <h4 className='attribut-line-title'> Cout en mana moyen : </h4> 
-                                                                    <h4  className='card-manacost'>{deck.manaCost}</h4>
+                                                                    <h4  className='card-manacost'>{cmc}</h4>
                                                 </div>
                 
                                                                 
