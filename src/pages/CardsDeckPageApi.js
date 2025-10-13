@@ -9,7 +9,6 @@ import { TiDeleteOutline } from "react-icons/ti";
 import { CgCloseO  } from "react-icons/cg";
 import backgroundCardsPage from "../assets/background_cardsPage.jpg"
 import backgroundPopup from "../assets/background_white.png"
-import backgroundWhite from "../assets/background_white.png";
 import loading from "../assets/loading.gif"
 import Section from '../components/sectionMap';
 import Title from '../components/title';
@@ -155,8 +154,6 @@ const CardsDeckPage = () => {
         setDisplayLoading(true);
 
 
-        console.log(filterColors)
-
         const params = {
                     page: 1,                
                     pageSize: pageSize,  
@@ -165,10 +162,12 @@ const CardsDeckPage = () => {
                     cmc : inputManaCost,
                     rarity : filterRarities,
                     types : filterTypes,
-                    supertypes : filterLegendary,
+                    supertypes : filterLegendary
+                    /*
                     colorIdentity:filterColors.length === 1
                               ? filterColors[0]
                               : filterColors.join(',')
+                    */
                      };
 
                 

@@ -2,55 +2,47 @@ class Card {
   constructor({
     id,
     name,
-    text,
-    imageUrl,
-    manaCost,
+    oracle_text,
+    image_uris,
+    mana_cost,
     cmc,
-    colorIdentity,
-    types,
-    supertypes,
+    color_identity,
+    type_line,
     rarity,
     set,
     legalities
   }) {
     this.id = id;
     this.name = name;
-    this.text = text;
-    this.image = imageUrl || null;      
-    this.manaCost = manaCost || null;
+    this.text = oracle_text || ""; // Texte de règles
+    this.image = image_uris?.normal || null; // image_uris contient plusieurs tailles
+    this.manaCost = mana_cost || null;
     this.cmc = cmc || 0;
-    this.colors = colorIdentity || [];
-    this.types = types || [];
-    this.legendary = supertypes?.includes("Legendary") || false;
+    this.colors = color_identity || [];
+
+    // Extraire les types depuis type_line (ex: "Legendary Creature — Elf Warrior")
+    const [typesPart] = type_line?.split('—') || [""];
+    const typeWords = typesPart.trim().split(" ");
+
+    this.types = typeWords.filter(t => t !== "Legendary"); // les types sans supertype
+    this.legendary = typeWords.includes("Legendary");
+
     this.rarity = rarity || "";
-    this.edition = set || "";             // set de l'API
-    this.formats = this.extractFormats(legalities); // formats légaux
+    this.edition = set || "";
+    this.formats = this.extractFormats(legalities);
   }
 
   // Méthode pour extraire les formats légaux
   extractFormats(legalities) {
     if (!legalities) return [];
-    return legalities
-      .filter(l => l.legality === "Legal")
-      .map(l => l.format);
+    return Object.entries(legalities)
+      .filter(([format, status]) => status === "legal")
+      .map(([format]) => format);
   }
 
-  // Méthode statique pour créer une Card depuis la réponse de l'API
+  // Crée une carte depuis les données brutes de Scryfall
   static fromApi(cardData) {
-    return new Card({
-      id: cardData.id,
-      name: cardData.name,
-      text: cardData.text,
-      imageUrl: cardData.imageUrl,
-      manaCost: cardData.manaCost,
-      cmc: cardData.cmc, 
-      colorIdentity: cardData.colorIdentity,
-      types: cardData.types, 
-      supertypes: cardData.supertypes,
-      rarity: cardData.rarity,
-      set: cardData.set,
-      legalities: cardData.legalities
-    });
+    return new Card(cardData);
   }
 }
 

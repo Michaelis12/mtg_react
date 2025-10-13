@@ -3,9 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { TbFilterCancel } from "react-icons/tb";
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
-import { FaHeart, FaRegHeart  } from 'react-icons/fa';
 import backgroundCardsPage from "../assets/background_cardsPage2.jpg"
-import backgroundWhite from "../assets/background_white.png"
 import Section from '../components/sectionMap';
 import Title from '../components/title';
 import OpenButtonLarge from '../components/openButtonLarge';
@@ -15,44 +13,47 @@ import InputManaCost from '../components/inputManaCoast';
 import FooterSection from '../components/footerSection';
 import Card from '../model/CardApi';
 import axios from "axios";
-import axiosInstance from '../api/axiosInstance';
 import "./css/CardsPage.css";
+import defaultImg from "../assets/mtg-card-back.jpg"
 import white from "../assets/white-mtg.png"
 import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
+import colorless from "../assets/incolore-mtg.png"
 import loading from "../assets/loading.gif"
 import { getImageUrl } from '../utils/imageUtils';
+import { buildQuery } from '../utils/buildQuery';
+
 
 
 
 const CardsPage = () => {
     const [cards, setCards] = React.useState([])
-    const [topCards, setTopCards] = React.useState([])
     const [detailsCard, setDetailsCard] = React.useState(null)
-    const [cardLikedId, setCardLikedId] = React.useState([])
     const navigate = useNavigate();
-    const [colors, setColors] = React.useState([])
-    const [format, setFormat] = React.useState([])
+    const [editions, setEditions] = React.useState([])
+
 
     // Filtre recherche
     const [name, setName] = React.useState("")
     const [filterName, setFilterName] = React.useState("")
     const [text, setText] = React.useState("")
     const [filterText, setFilterText] = React.useState("")
-    const [inputManaCost, setInputManaCost] = React.useState("")
+    const [inputManaCostMin, setInputManaCostMin] = React.useState("")
+    const [inputManaCostMax, setInputManaCostMax] = React.useState("")
     const [filterColors, setFilterColors] = React.useState([])
     const [filterFormats, setFilterFormats] = React.useState([])
     const [filterRarities, setFilterRarities] = React.useState([])
     const [filterEditions, setFilterEditions] = React.useState([])
     const [filterTypes, setFilterTypes] = React.useState([])
-    const [filterLegendary, setFilterLegendary] = React.useState(null)
+    const [filterLegendary, setFilterLegendary] = React.useState(false)
     const [displayLoading, setDisplayLoading] = React.useState(true);
         
     // États pour la pagination
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(50);
+    const [hasMore, setHasMore] = useState(true);
     
  
 
@@ -70,46 +71,30 @@ const CardsPage = () => {
                 }
                 */
 
-                
-
                 // Contient les RequestParams de la requete
+                
                 const params = {
-                    page: 1,                
-                    pageSize: pageSize,  
-                    name: filterName,
-                    text : filterText,
-                    cmc : inputManaCost,
-                    rarity : filterRarities,
-                    types : filterTypes,
-                    supertypes : filterLegendary,
-                    colorIdentity: filterColors                
+                  q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, filterFormats, 
+                                filterRarities, filterTypes, filterLegendary, filterEditions
+                  ),
+                  page: 1
                 };
 
+
                 
-                const response = await axios.get('https://api.magicthegathering.io/v1/cards', {
+                const response = await axios.get('https://api.scryfall.com/cards/search', {
                   params,
                   paramsSerializer: {
                     indexes: null 
                 }
                 });
-
                 
-                const listCards = response.data.cards.map(cardData => Card.fromApi(cardData));
                 
-                // Crée un Set pour stocker les noms uniques
-                const seenNames = new Set();
-
-                // Filtre pour ne garder que les cartes dont le nom n'est pas déjà présent
-                const listCardsUnit = listCards.filter(card => {
-                  if (seenNames.has(card.name)) {
-                    return false; // ignore si le nom existe déjà
-                  } else {
-                    seenNames.add(card.name);
-                    return true; // garde la carte
-                  }
-                });
+                const listCards = response.data.data.map(cardData => Card.fromApi(cardData));
+                setCards(listCards)
+                setHasMore(response.data.has_more);
+                            
                  
-                setCards(listCardsUnit)
                 setPage(2);
                 setDisplayLoading(false);
                 
@@ -123,8 +108,8 @@ const CardsPage = () => {
         }
         React.useEffect(() => {
           getCards();
-      }, [ filterName, filterText, inputManaCost,
-         filterColors, filterFormats, filterRarities, filterEditions, filterTypes, filterLegendary]);
+      }, [ filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, 
+          filterFormats, filterRarities, filterEditions, filterTypes, filterLegendary]);
 
 
     const displayMoreCards = async () => {
@@ -132,44 +117,27 @@ const CardsPage = () => {
        try {
           setDisplayLoading(true);
 
-          // Contient les RequestParams de la requete
-          // Contient les RequestParams de la requete
-                const params = {
-                    page: page,                
-                    pageSize: pageSize,  
-                    name: filterName,
-                    text : filterText,
-                    cmc : inputManaCost,
-                    rarity : filterRarities,
-                    type : filterTypes,
-                    colorIdentity: filterColors                 
-                    
+          const params = {
+                  q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, filterFormats, 
+                                filterRarities, filterTypes, filterLegendary, filterEditions
+                  ),
+                  page: page
                 };
+
+
                 
-          const response = await axios.get('https://api.magicthegathering.io/v1/cards', {
+          const response = await axios.get('https://api.scryfall.com/cards/search', {
                   params,
                   paramsSerializer: {
                     indexes: null 
                 }
           });
-
                 
-          const newCards = response.data.cards.map(cardData => Card.fromApi(cardData));
+                
+          const listCards = response.data.data.map(cardData => Card.fromApi(cardData));
 
-          // Crée un Set pour stocker les noms uniques
-                const seenNames = new Set();
-
-                // Filtre pour ne garder que les cartes dont le nom n'est pas déjà présent
-                const newCardsUnit = newCards.filter(card => {
-                  if (seenNames.has(card.name)) {
-                    return false; // ignore si le nom existe déjà
-                  } else {
-                    seenNames.add(card.name);
-                    return true; // garde la carte
-                  }
-                });
-
-          setCards(prevCards => [...prevCards, ...newCardsUnit]);
+          setCards(prevCards => [...prevCards, ...listCards])
+          setHasMore(response.data.has_more);
           setPage(page + 1)
 
       } catch (error) {
@@ -187,7 +155,8 @@ const CardsPage = () => {
 
           sessionStorage.setItem('cpFilterName', JSON.stringify(filterName));
           sessionStorage.setItem('cpFilterText', JSON.stringify(filterText));
-          sessionStorage.setItem('cpInputManacost', JSON.stringify(inputManaCost));
+          sessionStorage.setItem('cpInputManacost', JSON.stringify(inputManaCostMin));
+          sessionStorage.setItem('cpInputManacost', JSON.stringify(inputManaCostMax));
           sessionStorage.setItem('cpFilterColors', JSON.stringify(filterColors));
           sessionStorage.setItem('cpFilterFormats', JSON.stringify(filterFormats));
           sessionStorage.setItem('cpFilterTypes', JSON.stringify(filterTypes));
@@ -206,7 +175,8 @@ const CardsPage = () => {
                   try {
                       const filterName = sessionStorage.getItem('cpFilterName');
                       const filterText = sessionStorage.getItem('cpFilterText');
-                      const inputManaCost = sessionStorage.getItem('cpInputManacost');
+                      const inputManaCostMin = sessionStorage.getItem('cpInputManacostMin');
+                      const inputManaCostMax = sessionStorage.getItem('cpInputManacostMax');
                       const filterLegendary = sessionStorage.getItem('cpFilterLegendary');  
                       
                       if (filterName) {
@@ -217,9 +187,13 @@ const CardsPage = () => {
                           setFilterText(JSON.parse(filterText));
                           sessionStorage.removeItem('cpFilterText');
                       }
-                      if (inputManaCost) {
-                          setInputManaCost(JSON.parse(inputManaCost));
-                          sessionStorage.removeItem('cpInputManacost');
+                      if (inputManaCostMin) {
+                          setInputManaCostMin(JSON.parse(inputManaCostMin));
+                          sessionStorage.removeItem('cpInputManacostMin');
+                      }
+                      if (inputManaCostMax) {
+                          setInputManaCostMin(JSON.parse(inputManaCostMax));
+                          sessionStorage.removeItem('cpInputManacostMin');
                       }
                       if(filterLegendary) {
                           setFilterLegendary(JSON.parse(filterLegendary));
@@ -282,7 +256,8 @@ const CardsPage = () => {
 
         // Reset le filtre value
         const ResetFilterManaCost = () => {
-          setInputManaCost("")
+          setInputManaCostMin("")
+          setInputManaCostMax("")
           }
 
         // Filtre raretés
@@ -300,40 +275,49 @@ const CardsPage = () => {
         const callRarities = useRef(false);
 
          // Récupère les rarities dans le storage si l'user vient de cardSelected
-      const recupStorageRarity = (response) => {
-      try {
+        const recupStorageRarity = (response) => {
+        try {
 
-          if (callRarities.current) return;
-        
-          const stored = sessionStorage.getItem('cpFilterRarities');
+            if (callRarities.current) return;
+          
+            const stored = sessionStorage.getItem('cpFilterRarities');
 
-            if (stored) {
-                
-                setFilterRarities(JSON.parse(stored));
-                sessionStorage.removeItem('cpFilterRarities');
-                callRarities.current = true;
-            } else {
-                setFilterRarities(response);
-                
-            }
-    } catch (error) {
-        console.error("Erreur lors de la récupération du sessionStorage :", error);
-    }
-};
+              if (stored) {
+                  
+                  setFilterRarities(JSON.parse(stored));
+                  sessionStorage.removeItem('cpFilterRarities');
+                  callRarities.current = true;
+              } else {
+                  setFilterRarities(response);
+                  
+              }
+      } catch (error) {
+          console.error("Erreur lors de la récupération du sessionStorage :", error);
+      }
+  };
 
                     
           const selectRarities = (newRarity) => {
-            setFilterRarities(prevRarities => {
-              const raritiesArray = Array.isArray(prevRarities) ? prevRarities : (prevRarities || '').split(',').filter(rarity => rarity.trim() !== '');
-              if (raritiesArray.includes(newRarity)) {
-                return raritiesArray.filter(rarity => rarity !== newRarity).join(',');
+            setFilterRarities((prevRarities) => {
+              const rarityArray = Array.isArray(prevRarities)
+                ? prevRarities
+                : typeof prevRarities === 'string'
+                  ? prevRarities.split(',').filter(r => r.trim() !== '')
+                  : [];
+
+              if (rarityArray.includes(newRarity)) {
+                // Si la rareté est déjà sélectionnée, on la retire
+                return rarityArray.filter(rarity => rarity !== newRarity);
               } else {
-                return [...raritiesArray, newRarity].join(',');                 
+                // Sinon on l’ajoute
+                return [...rarityArray, newRarity];
               }
             });
           };
+
+
           const removeRarities = () => {
-            setFilterRarities(rarities)
+            setFilterRarities([])
           } 
 
         
@@ -375,40 +359,126 @@ const CardsPage = () => {
             
                                  }
         const selectColors = (newColor) => {
-          setFilterColors(prevColors => {
-              const colorsArray = Array.isArray(prevColors) ? prevColors : (prevColors || '').split(',').filter(color => color.trim() !== '');
-              if (colorsArray.includes(newColor)) {
-                return colorsArray.filter(filterColor => filterColor !== newColor).join(',');
+          setFilterColors((prevColors) => {
+            const colorsArray = Array.isArray(prevColors)
+              ? prevColors
+              : typeof prevColors === 'string'
+                ? prevColors.split(',').filter(c => c.trim() !== '')
+                : [];
+
+            // Si on clique sur "colorless"
+            if (newColor === "colorless") {
+              if (colorsArray.includes("colorless")) {
+                // Retirer "colorless"
+                return colorsArray.filter(color => color !== "colorless");
               } else {
-                return [...colorsArray, newColor].join(',');                 
+                // Ajouter "colorless" et retirer toutes les autres couleurs
+                return ["colorless"];
               }
-            });
-          };
+            }
+
+            // Si on clique sur une couleur normale
+            if (colorsArray.includes(newColor)) {
+              // La retirer
+              return colorsArray.filter(color => color !== newColor);
+            } else {
+              // Ajouter la couleur, en retirant "colorless" s'il est présent
+              return [...colorsArray.filter(color => color !== "colorless"), newColor];
+            }
+          });
+        };
+
+
 
           // Récupère l'image de chaque couleur
           const getColorPics = (value) => {
-                      if(value === "W") {
+                      if(value === "w") {
                           return white
                       }
-                      if(value === "U") {
+                      if(value === "u") {
                           return blue
                       }
-                      if(value === "G") {
+                      if(value === "g") {
                           return green
                       }
-                      if(value === "R") {
+                      if(value === "r") {
                           return red
                       }
-                      if(value === "B") {
+                      if(value === "b") {
                           return black
+                      }
+                      if(value === "colorless") {
+                          return colorless
                       }
                      
                   };
           
           // Refiltre selon toutes les couleurs du deck
           const removeColors = () => {
-           setFilterColors(colors)
+           setFilterColors([])
           } 
+
+        // Filtre formats
+
+         const [arrowFormatSens, setArrowFormatSens] = React.useState(<SlArrowDown/>)
+         const [displayFilterFormats, setDisplayFilterFormats] = React.useState(false)
+                
+          // Affiche le filtre des formats
+          const OpenFilterFormat = () => {
+                      setArrowFormatSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
+                      setDisplayFilterFormats(!displayFilterFormats)                     
+          }
+        
+          // Récupère toutes les formats pour les mapper
+          const [formats, setFormats] = React.useState([])
+          const callFormats = useRef(false);
+                
+          // Récupère les formats dans le storage si l'user vient de cardSelected
+          const recupStorageFormat = (response) => {
+                      try {
+                
+                          if (callFormats.current) return;
+                        
+                          const stored = sessionStorage.getItem('cpFilterFormats');
+                
+                            if (stored) {
+                                
+                                setFilterFormats(JSON.parse(stored));
+                                sessionStorage.removeItem('cpFilterFormats');
+                                callFormats.current = true;
+                            } else {
+                                setFilterFormats(response);
+                                
+                            }
+                    } catch (error) {
+                        console.error("Erreur lors de la récupération du sessionStorage :", error);
+                    }
+        };
+
+                
+      const selectFormats = (newFormat) => {
+        setFilterFormats((prevFormats) => {
+          const formatArray = Array.isArray(prevFormats)
+            ? prevFormats
+            : typeof prevFormats === 'string'
+              ? prevFormats.split(',').filter(f => f.trim() !== '')
+              : [];
+
+          if (formatArray.includes(newFormat)) {
+            // Si le format est déjà sélectionné, on le retire
+            return formatArray.filter(format => format !== newFormat);
+          } else {
+            // Sinon on l’ajoute
+            return [...formatArray, newFormat];
+          }
+        });
+      };
+
+
+
+      const removeFormats = () => {
+          setFilterFormats(formats)
+      } 
 
 
       // Récupère tous les types pour les mapper
@@ -449,16 +519,24 @@ const CardsPage = () => {
         };
 
 
-         const selectTypes = (newType) => {
-            setFilterTypes(prevTypes => {
-            const typesArray = Array.isArray(prevTypes) ? prevTypes : (prevTypes || '').split(',').filter(type => type.trim() !== '');
-            if (typesArray.includes(newType)) {
-              return typesArray.filter(type => type !== newType).join(',');
-            } else {
-              return [...typesArray, newType].join(',');                 
-            }
-          });
+        const selectTypes = (newType) => {
+  setFilterTypes((prevTypes) => {
+    const typeArray = Array.isArray(prevTypes)
+      ? prevTypes
+      : typeof prevTypes === 'string'
+        ? prevTypes.split(',').filter(t => t.trim() !== '')
+        : [];
+
+    if (typeArray.includes(newType)) {
+      // Si le type est déjà sélectionné, on le retire
+      return typeArray.filter(type => type !== newType);
+    } else {
+      // Sinon on l’ajoute
+      return [...typeArray, newType];
+    }
+  });
         };
+
         const removeTypes = () => {
           setFilterTypes(types)
         } 
@@ -475,6 +553,56 @@ const CardsPage = () => {
             setDisplayFilterLegendary(!displayFilterLegendary)                     
                                }
 
+      // Filtre éditions
+
+      const [arrowEditionSens, setArrowEditionSens] = React.useState(<SlArrowDown/>)
+      const [displayFilterEditions, setDisplayFilterEditions] = React.useState(false)
+
+
+
+      const selectEditions = (newEdition) => {
+        setFilterEditions((prevEditions) => {
+          const editionArray = Array.isArray(prevEditions)
+            ? prevEditions
+            : typeof prevEditions === 'string'
+              ? prevEditions.split(',').filter(e => e.trim() !== '')
+              : [];
+
+          if (editionArray.includes(newEdition)) {
+            // Si l'édition est déjà sélectionnée, on la retire
+            return editionArray.filter(edition => edition !== newEdition);
+          } else {
+            // Sinon on l’ajoute
+            return [...editionArray, newEdition];
+          }
+        });
+      };
+
+
+
+      // Affiche le filtre des éditions
+      const OpenFilterEdition = () => {
+                    setArrowEditionSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
+                    setDisplayFilterEditions(!displayFilterEditions)                     
+      }
+      
+
+       useEffect(() => {
+            const getEditions = async () => {
+                try {
+                    const request = await axios.get(`https://api.scryfall.com/sets`);
+
+                    const response = request.data.data
+        
+                    setEditions(response)
+
+                }   
+                catch (error) {
+                    console.log(error);
+                }
+            }
+            getEditions();
+            }, []);
 
 
 
@@ -526,15 +654,17 @@ const CardsPage = () => {
                 
                 
                 <div className="filter-manaCost-container">
-                  <OpenButton text="Filtrer par cout en mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />
-                  {displayFilterManaCost && (
-                  <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                    <InputManaCost style={{width: '150px'}}  value={inputManaCost}
-                      onChange={(event) => (setInputManaCost(event.target.value))} placeholder={"exemple : 5"}/>
-                    <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterManaCost()} />
-                  </div>
-                  )}
-                </div>
+                                  <OpenButton text="Filtrer par cout en mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />
+                                  {displayFilterManaCost && (
+                                  <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
+                                    <InputManaCost style={{width: '150px'}}  value={inputManaCostMin}
+                                      onChange={(event) => (setInputManaCostMin(event.target.value))} placeholder={"min"}/>
+                                    <InputManaCost style={{width: '150px'}} value={inputManaCostMax}
+                                    onChange={(event) => (setInputManaCostMax(event.target.value))} placeholder={"max"}/>
+                                    <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterManaCost()} />
+                                  </div>
+                                  )}
+                                </div>
 
                 <div className="filter-colors-container">
                 <OpenButton text="Filtrer par couleur" icon={arrowColorSens} onClick={OpenFilterColor} />
@@ -544,11 +674,11 @@ const CardsPage = () => {
                         <div className="compenant-checkbox-map-large">
 
                           {[
-                            { value: "W"},
-                            { value: "U"},
-                            { value: "B"},
-                            { value: "R"},
-                            { value: "G"}
+                            { value: "w"},
+                            { value: "u"},
+                            { value: "b"},
+                            { value: "r"},
+                            { value: "g"},
                           ].map((color, index) => (
                             <li className="li-checkbox" key={index}>
                               <input
@@ -557,11 +687,22 @@ const CardsPage = () => {
                                 name={color.value}
                                 value={color.value}
                                 onChange={(event) => selectColors(event.target.value)}
-                                checked={filterColors.includes(color.value)}
+                                checked={filterColors.includes(color.value) && !filterColors.includes("colorless")}
                               />
                               <img src={getColorPics(color.value)} className="filter-color-img" alt={color}/>
                             </li>
                           ))}
+                          <li className="li-checkbox">
+                              <input
+                                className='component-input'
+                                type="checkbox"
+                                name="colorless"
+                                value="colorless"
+                                onChange={(event) => selectColors(event.target.value)}
+                                checked={filterColors.includes("colorless")}
+                              />
+                              <img src={getColorPics("colorless")} className="filter-color-img" alt="colorless"/>
+                            </li>
 
                         </div>
                         <TbFilterCancel className='compenant-reset' onClick={removeColors}/>
@@ -569,6 +710,59 @@ const CardsPage = () => {
                     </div>
                   )}
                 </div>
+                
+
+                <div className="filter-formats-container">                 
+                  <OpenButton
+                    text="Filtrer par format"
+                      icon={arrowFormatSens}
+                    onClick={OpenFilterFormat}
+                  />
+                  {displayFilterFormats && (
+                    <div className='add-card-filter-container' style={{ zIndex: filterZIndex-- }}>
+                      <div className="compenant-checkbox">
+                        <div className="compenant-checkbox-map-large">
+
+                          {[
+                            { value: "standard", label: "STANDARD" },
+                            { value: "future", label: "FUTURE" },
+                            { value: "historic", label: "HISTORIC" },
+                            { value: "gladiator", label: "GLADIATOR" },
+                            { value: "pioneer", label: "PIONEER" },
+                            { value: "modern", label: "MODERN" },
+                            { value: "legacy", label: "LEGACY" },
+                            { value: "pauper", label: "PAUPER" },
+                            { value: "vintage", label: "VINTAGE" },
+                            { value: "commander", label: "COMMANDER" },
+                            { value: "brawl", label: "BRAWL" },
+                            { value: "alchemy", label: "ALCHEMY" },
+                            { value: "duel", label: "DUEL" },
+                            { value: "oldschool", label: "OLDSCHOOL" },
+                            { value: "premodern", label: "PREMODERN" },
+                            // ajoute ou enlève les formats que tu veux ici
+                          ].map((format, index) => (
+                            <li className="li-checkbox" key={index}>
+                              <input
+                                className='component-input'
+                                type="checkbox"
+                                name={format.value}
+                                value={format.value}
+                                onChange={(event) => selectFormats(event.target.value)}
+                                checked={filterFormats.includes(format.value)}
+                              />
+                              <p className='checkbox-format-p' style={{ margin: '0px' }}>
+                                {format.label}
+                              </p>
+                            </li>
+                          ))}
+
+                        </div>
+                        <TbFilterCancel className='compenant-reset' onClick={removeFormats} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
 
              
                 <div className="filter-rarities-container">
@@ -614,6 +808,32 @@ const CardsPage = () => {
                 )}
                 </div>
 
+                <div className="filter-editions-container" >
+                  <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
+                  { displayFilterEditions && ( 
+                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--}} >
+                      {editions.map((edition, index) => (
+                          <li className="li-checkbox" key={index}>
+                            <input
+                              className='component-input'
+                              type="checkbox"
+                              name={edition.name}
+                              value={edition.code}
+                              onChange={(event) => selectEditions(event.target.value)}
+                              checked={filterEditions.includes(edition.code)}
+                            />
+                            <p
+                              className='checkbox-type-p'
+                              style={{ margin: '0px' }}
+                            >
+                              {edition.name}
+                            </p>
+                          </li>
+                        ))}
+                    </div>
+                  )}
+                </div>
+
                     
                 <div className="filter-types-container">
                   <OpenButton text="Filtrer par type" icon={arrowTypeSens} onClick={OpenFilterType} />
@@ -632,7 +852,10 @@ const CardsPage = () => {
                               "Battle",
                               "Conspiracy",
                               "Tribal",
-                              "Vanguard"
+                              "Vanguard",
+                              "Artifact Creature",
+                              "Enchantment Creature",
+                              "Artifact Land"
                             ].map((type, index) => (
                               <li className="li-checkbox" key={index}>
                                 <input
@@ -654,7 +877,7 @@ const CardsPage = () => {
                   )}  
                 </div>
 
-                <div className="filter-subtypes-container">
+                <div className="filter-legendary-container">
                 <OpenButton
                   text="Filtrer les légendaires"
                   icon={arrowLegendarySens}
@@ -672,8 +895,8 @@ const CardsPage = () => {
                               type="checkbox"
                               name="Legendary"
                               value="Legendary"
-                              onChange={(event) => setFilterLegendary(event.target.value)}
-                              checked={filterLegendary === "Legendary"}
+                              onChange={() => setFilterLegendary(!filterLegendary)}
+                              checked={filterLegendary}
                             />
                             <p
                               className='checkbox-type-p'
@@ -705,13 +928,14 @@ const CardsPage = () => {
           <div className='map-cards-section'>
                 {cards.map(card => ( 
                     <div className="cards-details" key={card.id}>
-                        <img className="cards-img" src={getImageUrl(card.image)} alt={card.name} onClick={() => navCard(card.id)}
+                        <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} 
+                        alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         />
                 
 
                     {detailsCard && detailsCard.id === card.id && (
-                    <img className="card-img-zoom" src={getImageUrl(card.image)} alt="Card-image"/>
+                    <img className="card-img-zoom" src={card.image ? getImageUrl(card.image) : defaultImg} alt={card.name}/>
                     )}  
                 </div>
                 ))} 
@@ -720,7 +944,9 @@ const CardsPage = () => {
               
       
       {/* Bouton pour afficher plus de cartes */}
-      <button className='next-page-button' onClick={()=>displayMoreCards()}>Afficher plus</button> 
+      { hasMore && !displayLoading && (
+        <button className='next-page-button' onClick={()=>displayMoreCards()}>Afficher plus</button> 
+      )}
 
       </div>
 
