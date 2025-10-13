@@ -13,11 +13,10 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png"
+import colorless from "../assets/incolore-mtg.png"
 import loading from "../assets/loading.gif"
 import { TiDeleteOutline } from "react-icons/ti";
 import { RiResetLeftFill } from "react-icons/ri";
-import { SlArrowDown, SlArrowUp } from "react-icons/sl"; 
 import { SlRefresh } from "react-icons/sl";
 import { CgAdd, CgCloseO   } from "react-icons/cg";
 import { IoIosArrowDropleft } from "react-icons/io";
@@ -112,7 +111,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 return
             }
             
-            if(value === "INCOLORE") {
+            if(value === "colorless") {
                 return "none";
             }
             
@@ -337,24 +336,28 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
           }
 
         // Affichage d'image correspondant aux couleurs de la carte
-            const getColors = (value ) => {
-                    if(value === "W") {
+// Affichage d'image correspondant aux couleurs de la carte
+        const getColors = (value) => {
+                      if(value === "w") {
                           return white
-                     }
-                      if(value === "U") {
+                      }
+                      if(value === "u") {
                           return blue
                       }
-                      if(value === "G") {
+                      if(value === "g") {
                           return green
                       }
-                      if(value === "R") {
+                      if(value === "r") {
                           return red
                       }
-                      if(value === "B") {
+                      if(value === "b") {
                           return black
                       }
-               
-            };
+                      if(value === "colorless") {
+                          return colorless
+                      }
+                     
+                  };
 
 
         // Consultez les cartes (en masquant les cartes qui seront deja dans le deck si le format est CEDH)
@@ -969,7 +972,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8080${deck.image}` : deck.image} alt="Deck mtg"/> 
                                 
                                                               <div className="deck-selected-attributs" >
-                                
+                                 
                                                     
                                                                   <div className='card-line-attribut'>
                                                                       <h4 className='deck-selected-line-title'> Format : </h4>

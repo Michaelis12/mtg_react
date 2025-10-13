@@ -13,7 +13,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png"
+import colorless from "../assets/incolore-mtg.png"
 import loading from "../assets/loading.gif"
 import { TiDeleteOutline } from "react-icons/ti";
 import { RiResetLeftFill } from "react-icons/ri";
@@ -541,27 +541,27 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
           }
 
     // Affichage d'image correspondant aux couleurs de la carte
-            const getColors = (value ) => {
-                if(value === "BLANC") {
-                    return white
-                }
-                if(value === "BLEU") {
-                    return blue
-                }
-                if(value === "VERT") {
-                    return green
-                }
-                if(value === "ROUGE") {
-                    return red
-                }
-                if(value === "NOIR") {
-                    return black
-                }
-                if(value === "INCOLORE") {
-                    return incolore
-                }
-               
-            };
+        const getColors = (value) => {
+                      if(value === "w") {
+                          return white
+                      }
+                      if(value === "u") {
+                          return blue
+                      }
+                      if(value === "g") {
+                          return green
+                      }
+                      if(value === "r") {
+                          return red
+                      }
+                      if(value === "b") {
+                          return black
+                      }
+                      if(value === "colorless") {
+                          return colorless
+                      }
+                     
+                  };
 
 
         // Choisir le nombre d'exemplaire d'une carte dans le deck

@@ -52,12 +52,11 @@ const CardsPage = () => {
         
     // États pour la pagination
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(50);
     const [hasMore, setHasMore] = useState(true);
     
  
 
-        // Récupère les cartes triées par id 
+    // Récupère la première page de cartes 
  
     const getCards = async () => {
             try {
@@ -111,6 +110,8 @@ const CardsPage = () => {
       }, [ filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, 
           filterFormats, filterRarities, filterEditions, filterTypes, filterLegendary]);
 
+    
+    // Charge plus de cartes pour la pagination
 
     const displayMoreCards = async () => {
  
@@ -146,8 +147,6 @@ const CardsPage = () => {
         setDisplayLoading(false);
       }
     }
-
- 
 
 
         // Naviguer vers une carte depuis id

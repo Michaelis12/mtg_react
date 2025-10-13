@@ -33,8 +33,9 @@ export const buildQuery = (
 
   // Filtre couleur exact (ci=ub)
   if (colorsFilter && colorsFilter.length > 0) {
-    const colorStr = colorsFilter.join(''); // ['U','B'] => 'ub'
+    const colorStr = colorsFilter.join(''); 
     queryParts.push(`ci=${colorStr}`);
+    console.log(colorStr)
   }
 
   // Filtre format

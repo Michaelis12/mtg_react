@@ -27,15 +27,16 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png"
+import colorless from "../assets/incolore-mtg.png"
 import defaultImg from "../assets/mtg-card-back.jpg"
+import { buildQuery } from '../utils/buildQuery';
+import { getImageUrl } from '../utils/imageUtils';
+
 
 
 
 const CardsDeckPage = () => { 
     const [cards, setCards] = React.useState([])
-    const [topCards, setTopCards] = React.useState([])
-    const [cardsLiked, setCardsLiked] = React.useState([])
     const [detailsCard, setDetailsCard] = React.useState(null)
     const [cardsSelected, setCardsSelected] = React.useState([])
     const navigate = useNavigate();
@@ -44,7 +45,8 @@ const CardsDeckPage = () => {
     const  deckCards = location.state.cardsDesac
     const [deck, setDeck] = React.useState([])
     const [colors, setColors] = React.useState([])
-    const [format, setFormat] = React.useState("")
+    const [format, setFormat] = React.useState([])
+    const [editions, setEditions] = React.useState([])
 
     // Mobile filters toggle (inspired by CardsPage)
     const [arrowFiltersSens, setArrowFiltersSens] = React.useState(<SlArrowDown/>);
@@ -60,7 +62,8 @@ const CardsDeckPage = () => {
     const [filterName, setFilterName] = React.useState("")
     const [text, setText] = React.useState("")
     const [filterText, setFilterText] = React.useState("")
-    const [inputManaCost, setInputManaCost] = React.useState("")
+    const [inputManaCostMin, setInputManaCostMin] = React.useState("")
+    const [inputManaCostMax, setInputManaCostMax] = React.useState("")
     const [filterColors, setFilterColors] = React.useState([])
     const [filterRarities, setFilterRarities] = React.useState([])
     const [filterEditions, setFilterEditions] = React.useState([])
@@ -69,7 +72,6 @@ const CardsDeckPage = () => {
     const [displayLoading, setDisplayLoading] = React.useState(false);
     // États pour la pagination
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(100);
     const [hasMore, setHasMore] = useState(true);
     
 /*
@@ -112,9 +114,30 @@ const CardsDeckPage = () => {
                 setDeck(response)
                     
                 // Sert à mapper les colors pour le filtre
+                
                 setColors(response.colors)
-                setFilterColors(response.colors)
-                setFormat(response.format)
+                
+                // Mapping sécurisé des couleurs
+                if (response.colors) {
+                  const colorsArray = Array.isArray(response.colors)
+                    ? response.colors
+                    : typeof response.colors === 'string'
+                      ? response.colors.split(',').map(c => c.trim().toUpperCase()).filter(Boolean)
+                      : [];
+
+                  setFilterColors(colorsArray);
+                }
+
+                // Mapping sécurisé du format (le mettre dans un tableau)
+                if (response.format) {
+                  const formatArray = typeof response.format === 'string'
+                    ? [response.format.toLowerCase()]
+                    : Array.isArray(response.format)
+                      ? response.format.map(f => f.toLowerCase())
+                      : [];
+
+                  setFormat(formatArray);
+                }
 
               
         
@@ -147,156 +170,103 @@ const CardsDeckPage = () => {
 
 
   // Récupère les cartes triées par id 
-    const getCards = async () => {             
-  
-          
-      try {
-        setDisplayLoading(true);
-
-
-        const params = {
-                    page: 1,                
-                    pageSize: pageSize,  
-                    name: filterName,
-                    text : filterText,
-                    cmc : inputManaCost,
-                    rarity : filterRarities,
-                    types : filterTypes,
-                    supertypes : filterLegendary
-                    /*
-                    colorIdentity:filterColors.length === 1
-                              ? filterColors[0]
-                              : filterColors.join(',')
-                    */
-                     };
-
-                
-        const response = await axios.get('https://api.magicthegathering.io/v1/cards', {
-                  params,
-                  paramsSerializer: {
-                    indexes: null 
-              }
-        });
-
-                
-        const listCards = response.data.cards.map(cardData => Card.fromApi(cardData));
-
-        const seenNames = new Set();
-        const listCardsUnit = listCards.filter(card => {
-          if (seenNames.has(card.name)) return false;
-          seenNames.add(card.name);
-          return true;
-        });
-
-  
-
-        const colorsSet = deck.colors;
-        const allowedColors = new Set(colorsSet);
-        const formatSet = deck.format;
-
-        const listCardsColorsAndFormatFilter = listCardsUnit.filter(card => {
-          // Vérification du format : la carte doit avoir un des formats compatibles avec formatSet
-          const isFormatValid = card.formats && card.formats.includes(formatSet);
-          if (!isFormatValid) return false;
-
-          // Cas 1 : carte incolore (aucune couleur définie ou tableau vide)
-          if (!card.colors || card.colors.length === 0) return true;
-
-          // Cas 2 : toutes les couleurs de la carte sont dans allowedColors
-          return card.colors.every(color => allowedColors.has(color));
-        });
-
-
-        setCards(listCardsColorsAndFormatFilter);
-        setPage(2);
-
-      } catch (error) {
-        console.error('Erreur de chargement des cartes :', error);
-      } finally {
-        setDisplayLoading(false);
-      }
-  };
-  useEffect(() => {
-    getCards();
-  }, [ deck, filterName, filterText,
-    filterColors, filterRarities, filterTypes, filterLegendary]);
-  
-
-    const displayMoreCards = async () => {
- 
-       try {
-          setDisplayLoading(true);
-
-
-          // Contient les RequestParams de la requete
-                const params = {
-                    page: page,                
-                    pageSize: pageSize,  
-                    name: filterName,
-                    text : filterText,
-                    cmc : inputManaCost,
-                    rarity : filterRarities,
-                    type : filterTypes,
-                    colorIdentity: filterColors,                   
-                    
-                };
-                
-          const response = await axios.get('https://api.magicthegathering.io/v1/cards', {
-                  params,
-                  paramsSerializer: {
-                    indexes: null 
-                }
-          });
-
-                
-          const newCards = response.data.cards.map(cardData => Card.fromApi(cardData));
-
-          // Crée un Set pour stocker les noms uniques
-                const seenNames = new Set();
-
-                // Filtre pour ne garder que les cartes dont le nom n'est pas déjà présent
-                const listCardsUnit = newCards.filter(card => {
-                  if (seenNames.has(card.name)) {
-                    return false; // ignore si le nom existe déjà
-                  } else {
-                    seenNames.add(card.name);
-                    return true; // garde la carte
+  const getCards = async () => {
+              try {
+                  setDisplayLoading(true); 
+                  /*
+                  if (filterEditions.length <1 || filterRarities.length <1 || filterColors.length <1
+                      || filterFormats.length <1 || filterTypes.length <1
+                  ) {
+                      setDisplayLoading(false);
+                      return;
                   }
-                });
-
-                
-        const colorsSet = deck.colors;
-        const allowedColors = new Set(colorsSet);
-        const formatSet = deck.format;
-
-        const listCardsColorsAndFormatFilter = listCardsUnit.filter(card => {
-          // Vérification du format : la carte doit avoir un des formats compatibles avec formatSet
-          const isFormatValid = card.formats && card.formats.includes(formatSet);
-          if (!isFormatValid) return false;
-
-          // Cas 1 : carte incolore (aucune couleur définie ou tableau vide)
-          if (!card.colors || card.colors.length === 0) return true;
-
-          // Cas 2 : toutes les couleurs de la carte sont dans allowedColors
-          return card.colors.every(color => allowedColors.has(color));
-        });
-
-          setCards(prevCards => [...prevCards, ...listCardsColorsAndFormatFilter]);
-          setPage(page + 1)
-
-      } catch (error) {
-        console.error('Erreur de chargement des cartes :', error);
-      } finally {
-        setDisplayLoading(false);
+                  */
+  
+                  // Contient les RequestParams de la requete
+                  
+                  const params = {
+                    q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, format,
+                                  filterRarities, filterTypes, filterLegendary, filterEditions
+                    ),
+                    page: 1
+                  };
+  
+  
+                  
+                  const response = await axios.get('https://api.scryfall.com/cards/search', {
+                    params,
+                    paramsSerializer: {
+                      indexes: null 
+                  }
+                  });
+                  
+                  
+                  const listCards = response.data.data.map(cardData => Card.fromApi(cardData));
+                  setCards(listCards)
+                  setHasMore(response.data.has_more);
+                              
+                   
+                  setPage(2);
+                  setDisplayLoading(false);
+                  
+              }   
+              catch (error) {
+                  setDisplayLoading(false);
+                  console.log(error);
+              }
+  
+      
+          }
+          React.useEffect(() => {
+            getCards();
+        }, [ deck, filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, 
+            filterRarities, filterEditions, filterTypes, filterLegendary]);
+  
+      
+      // Charge plus de cartes pour la pagination
+  
+      const displayMoreCards = async () => {
+   
+         try {
+            setDisplayLoading(true);
+  
+            const params = {
+                    q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, deck.format, 
+                                  filterRarities, filterTypes, filterLegendary, filterEditions
+                    ),
+                    page: page
+                  };
+  
+  
+                  
+            const response = await axios.get('https://api.scryfall.com/cards/search', {
+                    params,
+                    paramsSerializer: {
+                      indexes: null 
+                  }
+            });
+                  
+                  
+            const listCards = response.data.data.map(cardData => Card.fromApi(cardData));
+  
+            setCards(prevCards => [...prevCards, ...listCards])
+            setHasMore(response.data.has_more);
+            setPage(page + 1)
+  
+        } catch (error) {
+          console.error('Erreur de chargement des cartes :', error);
+        } finally {
+          setDisplayLoading(false);
+        }
       }
-    }
 
         // Naviguer vers une carte depuis id
         const navCard = (id) => {     
           sessionStorage.setItem('cardsSelected', JSON.stringify(cardsSelected));
           sessionStorage.setItem('filterName', JSON.stringify(filterName));
           sessionStorage.setItem('filterText', JSON.stringify(filterText));
-          sessionStorage.setItem('inputManacost', JSON.stringify(inputManaCost));
+          sessionStorage.setItem('inputManacostMin', JSON.stringify(inputManaCostMin));
+          sessionStorage.setItem('inputManacostMax', JSON.stringify(inputManaCostMax));
           sessionStorage.setItem('filterColors', JSON.stringify(filterColors));
           sessionStorage.setItem('filterTypes', JSON.stringify(filterTypes));
           sessionStorage.setItem('filterLegendary', JSON.stringify(filterLegendary));
@@ -314,7 +284,8 @@ const CardsDeckPage = () => {
               const cardsSelected = sessionStorage.getItem('cardsSelected');
               const filterName = sessionStorage.getItem('filterName');
               const filterText = sessionStorage.getItem('filterText');
-              const inputManaCost = sessionStorage.getItem('inputManacost');
+              const inputManaCostMin = sessionStorage.getItem('inputManacostMin');
+              const inputManaCostMax = sessionStorage.getItem('inputManaCostMax');
               const filterLegendary = sessionStorage.getItem('filterLegendary');
                 
               if (cardsSelected) {
@@ -329,9 +300,13 @@ const CardsDeckPage = () => {
                   setFilterText(JSON.parse(filterText));
                   sessionStorage.removeItem('filterText');
               }
-              if (inputManaCost) {
-                  setInputManaCost(JSON.parse(inputManaCost));
+              if (inputManaCostMin) {
+                  setInputManaCostMin(JSON.parse(inputManaCostMin));
                   sessionStorage.removeItem('inputManacostMin');
+              }
+              if (inputManaCostMax) {
+                  setInputManaCostMin(JSON.parse(inputManaCostMax));
+                  sessionStorage.removeItem('inputManaCostMax');
               }
               if(filterLegendary) {
                 setFilterLegendary(JSON.parse(filterLegendary));
@@ -371,212 +346,324 @@ const CardsDeckPage = () => {
                }
             }
 
-
-        // Filtre manaCost
-
-        const [arrowManaCostSens, setArrowManaCostSens] = React.useState(<SlArrowDown/>)
-        const [displayFilterManaCost, setDisplayFilterManaCost] = React.useState(false)
-        
-        // Affiche le filtre manaCost
-        const OpenFilterManaCost = () => {
-                  setArrowManaCostSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
-                  setDisplayFilterManaCost(!displayFilterManaCost)
-                 }
-
-        // Reset le filtre value
-        const ResetFilterManaCost = () => {
-          setInputManaCost("")
-          }
-
-        // Filtre raretés
-        const [arrowRaritiesSens, setArrowRaritiesSens] = React.useState(<SlArrowDown/>)
-        const [displayFilterRarities, setDisplayFilterRarities] = React.useState(false)
-        
-        // Affiche le filtre rarities
-        const OpenFilterRarities = () => {
-                  setArrowRaritiesSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
-                  setDisplayFilterRarities(!displayFilterRarities)
-                 }
-
-        const [rarities, setRarities] = React.useState([])
-
-        const callRarities = useRef(false);
-
-      // Récupère les rarities dans le storage si l'user vient de cardSelected
-      const recupStorageRarity = (response) => {
-      try {
-
-          if (callRarities.current) return;
-        
-          const stored = sessionStorage.getItem('filterRarities');
-
-            if (stored) {
                 
-                setFilterRarities(JSON.parse(stored));
-                sessionStorage.removeItem('filterRarities');
-                callRarities.current = true;
-            } else {
-                setFilterRarities(response);
+        
+                // Filtre manaCost
+        
+                const [arrowManaCostSens, setArrowManaCostSens] = React.useState(<SlArrowDown/>)
+                const [displayFilterManaCost, setDisplayFilterManaCost] = React.useState(false)
                 
-            }
-    } catch (error) {
-        console.error("Erreur lors de la récupération du sessionStorage :", error);
-    }
-};
-
-                    
-          const selectRarities = (newRarity) => {
-            setFilterRarities(prevRarities => {
-              const raritiesArray = Array.isArray(prevRarities) ? prevRarities : (prevRarities || '').split(',').filter(rarity => rarity.trim() !== '');
-              if (raritiesArray.includes(newRarity)) {
-                return raritiesArray.filter(rarity => rarity !== newRarity).join(',');
-              } else {
-                return [...raritiesArray, newRarity].join(',');                 
+                // Affiche le filtre manaCost
+                const OpenFilterManaCost = () => {
+                          setArrowManaCostSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
+                          setDisplayFilterManaCost(!displayFilterManaCost)
+                         }
+        
+                // Reset le filtre value
+                const ResetFilterManaCost = () => {
+                  setInputManaCostMin("")
+                  setInputManaCostMax("")
+                  }
+        
+                // Filtre raretés
+                const [arrowRaritiesSens, setArrowRaritiesSens] = React.useState(<SlArrowDown/>)
+                const [displayFilterRarities, setDisplayFilterRarities] = React.useState(false)
+                
+                // Affiche le filtre rarities
+                const OpenFilterRarities = () => {
+                          setArrowRaritiesSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
+                          setDisplayFilterRarities(!displayFilterRarities)
+                         }
+        
+                const [rarities, setRarities] = React.useState([])
+        
+                const callRarities = useRef(false);
+        
+                 // Récupère les rarities dans le storage si l'user vient de cardSelected
+                const recupStorageRarity = (response) => {
+                try {
+        
+                    if (callRarities.current) return;
+                  
+                    const stored = sessionStorage.getItem('cpFilterRarities');
+        
+                      if (stored) {
+                          
+                          setFilterRarities(JSON.parse(stored));
+                          sessionStorage.removeItem('cpFilterRarities');
+                          callRarities.current = true;
+                      } else {
+                          setFilterRarities(response);
+                          
+                      }
+              } catch (error) {
+                  console.error("Erreur lors de la récupération du sessionStorage :", error);
               }
-            });
           };
-          const removeRarities = () => {
-            setFilterRarities(rarities)
-          }  
-
-
-
-        // Affichage de couleur d'arrière-plan en fonction de la rareté
-            const getBackgroundColor = (rarity) => {
-            switch (rarity) {
-                case "mythic":
-                return "linear-gradient(135deg, #D94F4F 0%, #FF8A5C 100%)";  
-                case "rare":
-                return "linear-gradient(135deg, #D4AF37 0%, #F7C83D 100%)";  
-                case "uncommon":
-                return "linear-gradient(135deg, #5A6E7F 0%, #A1B2C1 100%)";  
-                case "common":
-                return "linear-gradient(135deg, #5C5C5C 0%, #9B9B9B 100%)";  
-                default:
-                return "grey"; 
-            }
-            };
         
-        // Filtre colors
-
-        const [arrowColorSens, setArrowColorSens] = React.useState(<SlArrowDown/>)
-        const [displayFilterColors, setDisplayFilterColors] = React.useState(false)
+                            
+                  const selectRarities = (newRarity) => {
+                    setFilterRarities((prevRarities) => {
+                      const rarityArray = Array.isArray(prevRarities)
+                        ? prevRarities
+                        : typeof prevRarities === 'string'
+                          ? prevRarities.split(',').filter(r => r.trim() !== '')
+                          : [];
         
-        // Affiche le filtre des couleurs
-        const OpenFilterColor = () => {
-              setArrowColorSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
-              setDisplayFilterColors(!displayFilterColors) 
-        } 
-           
-      
-        const selectColors = (newColor) => {
-          setFilterColors(prevColors => {
-            const colorsArray = Array.isArray(prevColors)
-              ? prevColors
-              : (prevColors || '').split(',').filter(color => color.trim() !== '');
-
-            if (colorsArray.includes(newColor)) {
-              // Si la couleur est déjà sélectionnée, on la retire
-              return colorsArray.filter(color => color !== newColor);
-            } else {
-              // Sinon, on l'ajoute au tableau
-              return [...colorsArray, newColor];
-            }
-          });
-        };
-
-
-          // Récupère l'image de chaque couleur
-          const getColorPics = (value) => {
-                      if(value === "W") {
-                          return white
+                      if (rarityArray.includes(newRarity)) {
+                        // Si la rareté est déjà sélectionnée, on la retire
+                        return rarityArray.filter(rarity => rarity !== newRarity);
+                      } else {
+                        // Sinon on l’ajoute
+                        return [...rarityArray, newRarity];
                       }
-                      if(value === "U") {
-                          return blue
-                      }
-                      if(value === "G") {
-                          return green
-                      }
-                      if(value === "R") {
-                          return red
-                      }
-                      if(value === "B") {
-                          return black
-                      }
-                     
+                    });
                   };
-          
-          // Refiltre selon toutes les couleurs du deck
-          const removeColors = () => {
-           setFilterColors(deck.colors)
-          } 
-
-
-      // Récupère tous les types pour les mapper
-
-      const [arrowTypeSens, setArrowTypeSens] = React.useState(<SlArrowDown/>)
-      const [displayFilterTypes, setDisplayFilterTypes] = React.useState(false)
-      
-      // Affiche le filtre des Types
-      const OpenFilterType = () => {
-            setArrowTypeSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
-            setDisplayFilterTypes(!displayFilterTypes)                     
-                               }
-
-
-        const [types, setTypes] = React.useState([])
-
-        const callTypes = useRef(false)
-
-
-        const recupStorageType = (response) => {
-        try {
-
-            if (callTypes.current) return;
         
-            const stored = sessionStorage.getItem('filterTypes');
+        
+                  const removeRarities = () => {
+                    setFilterRarities([])
+                  } 
 
-            
-            if (stored) {
-                setFilterTypes(JSON.parse(stored));
-                sessionStorage.removeItem('filterTypes');
-                callTypes.current = true
-            }
-            else {
-                setFilterTypes(response);
+
+              // Affichage de couleur d'arrière-plan en fonction de la rareté
+              const getBackgroundColor = (rarity) => {
+                switch (rarity) {
+                  case "mythic":
+                    return "linear-gradient(135deg, #D94F4F 0%, #FF8A5C 100%)";  
+                  case "rare":
+                    return "linear-gradient(135deg, #D4AF37 0%, #F7C83D 100%)";  
+                  case "uncommon":
+                    return "linear-gradient(135deg, #5A6E7F 0%, #A1B2C1 100%)";  
+                  case "common":
+                    return "linear-gradient(135deg, #5C5C5C 0%, #9B9B9B 100%)";  
+                  default:
+                    return "transparent"; 
+                }
+              };
+        
                 
-            }
-         
-        } catch (error) {
-            console.error("Erreur lors de la récupération du sessionStorage :", error);
-        }
-    };
+                // Filtre colors
+        
+                const [arrowColorSens, setArrowColorSens] = React.useState(<SlArrowDown/>)
+                const [displayFilterColors, setDisplayFilterColors] = React.useState(false)
+        
+                const callColors = useRef(false);
+                
+                      // Récupère les rarities dans le storage si l'user vient de cardSelected
+                      const recupStorageColor = (response) => {
+                      try {
+                
+                          if (callColors.current) return;
+                        
+                          const stored = sessionStorage.getItem('cpFilterColors');
+                
+                            if (stored) {
+                                
+                                setFilterColors(JSON.parse(stored));
+                                sessionStorage.removeItem('cpFilterColors');
+                                callColors.current = true;
+                            } else {
+                                setFilterColors(response);
+                                
+                            }
+                    } catch (error) {
+                        console.error("Erreur lors de la récupération du sessionStorage :", error);
+                    }
+                };
+                
+        
+                // Affiche le filtre des couleurs
+                const OpenFilterColor = () => {
+                      setArrowColorSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
+                      setDisplayFilterColors(!displayFilterColors)  
+                      
+                    
+                                         }
+                const selectColors = (newColor) => {
+                  setFilterColors((prevColors) => {
+                    const colorsArray = Array.isArray(prevColors)
+                      ? prevColors
+                      : typeof prevColors === 'string'
+                        ? prevColors.split(',').filter(c => c.trim() !== '')
+                        : [];
+        
+                    // Si on clique sur "colorless"
+                    if (newColor === "colorless") {
+                      if (colorsArray.includes("colorless")) {
+                        // Retirer "colorless"
+                        return colorsArray.filter(color => color !== "colorless");
+                      } else {
+                        // Ajouter "colorless" et retirer toutes les autres couleurs
+                        return ["colorless"];
+                      }
+                    }
+        
+                    // Si on clique sur une couleur normale
+                    if (colorsArray.includes(newColor)) {
+                      // La retirer
+                      return colorsArray.filter(color => color !== newColor);
+                    } else {
+                      // Ajouter la couleur, en retirant "colorless" s'il est présent
+                      return [...colorsArray.filter(color => color !== "colorless"), newColor];
+                    }
+                  });
+                };
+        
+        
+        
+                  // Récupère l'image de chaque couleur
+                  const getColorPics = (value) => {
+                              if(value === "w") {
+                                  return white
+                              }
+                              if(value === "u") {
+                                  return blue
+                              }
+                              if(value === "g") {
+                                  return green
+                              }
+                              if(value === "r") {
+                                  return red
+                              }
+                              if(value === "b") {
+                                  return black
+                              }
+                              if(value === "colorless") {
+                                  return colorless
+                              }
+                             
+                          };
+                  
+                  // Refiltre selon toutes les couleurs du deck
+                  const removeColors = () => {
+                   setFilterColors(deck.colors)
+                  } 
+        
 
-
-         // Filtre types
-         const selectTypes = (newType) => {
-            setFilterTypes(prevTypes => {
-            const typesArray = Array.isArray(prevTypes) ? prevTypes : (prevTypes || '').split(',').filter(type => type.trim() !== '');
-            if (typesArray.includes(newType)) {
-              return typesArray.filter(type => type !== newType).join(',');
+              // Récupère tous les types pour les mapper
+        
+              const [arrowTypeSens, setArrowTypeSens] = React.useState(<SlArrowDown/>)
+              const [displayFilterTypes, setDisplayFilterTypes] = React.useState(false)
+              
+              // Affiche le filtre des types
+              const OpenFilterType = () => {
+                    setArrowTypeSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
+                    setDisplayFilterTypes(!displayFilterTypes)                     
+                                       }
+        
+        
+                const [types, setTypes] = React.useState([])
+                const callTypes = useRef(false);
+                
+                // Récupère les formats dans le storage si l'user vient de cardSelected
+                const recupStorageTypes = (response) => {
+                      try {
+                
+                          if (callTypes.current) return;
+                        
+                          const stored = sessionStorage.getItem('cpFilterTypes');
+                
+                            if (stored) {
+                                
+                                setFilterTypes(JSON.parse(stored));
+                                sessionStorage.removeItem('cpFilterTypes');
+                                callTypes.current = true;
+                            } else {
+                                setFilterTypes(response);
+                                
+                            }
+                    } catch (error) {
+                        console.error("Erreur lors de la récupération du sessionStorage :", error);
+                    }
+                };
+        
+        
+        const selectTypes = (newType) => {
+          setFilterTypes((prevTypes) => {
+            const typeArray = Array.isArray(prevTypes)
+              ? prevTypes
+              : typeof prevTypes === 'string'
+                ? prevTypes.split(',').filter(t => t.trim() !== '')
+                : [];
+        
+            if (typeArray.includes(newType)) {
+              // Si le type est déjà sélectionné, on le retire
+              return typeArray.filter(type => type !== newType);
             } else {
-              return [...typesArray, newType].join(',');                 
+              // Sinon on l’ajoute
+              return [...typeArray, newType];
             }
           });
-        };
+                };
+        
         const removeTypes = () => {
-          setFilterTypes(types)
-        } 
-
-        // Filtre legendary
+          setFilterTypes([])
+        }
+        
+        
+        // Filtre légendaire
+        
         const [arrowLegendarySens, setArrowLegendarySens] = React.useState(<SlArrowDown/>)
         const [displayFilterLegendary, setDisplayFilterLegendary] = React.useState(false)
         
-      
+        
+        // Affiche le filtre des éditions
         const OpenFilterLegendary = () => {
                     setArrowLegendarySens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
                     setDisplayFilterLegendary(!displayFilterLegendary)                     
+                                       }
+        
+        // Filtre éditions
+        
+        const [arrowEditionSens, setArrowEditionSens] = React.useState(<SlArrowDown/>)
+        const [displayFilterEditions, setDisplayFilterEditions] = React.useState(false)
+        
+        
+        
+        const selectEditions = (newEdition) => {
+                setFilterEditions((prevEditions) => {
+                  const editionArray = Array.isArray(prevEditions)
+                    ? prevEditions
+                    : typeof prevEditions === 'string'
+                      ? prevEditions.split(',').filter(e => e.trim() !== '')
+                      : [];
+        
+                  if (editionArray.includes(newEdition)) {
+                    // Si l'édition est déjà sélectionnée, on la retire
+                    return editionArray.filter(edition => edition !== newEdition);
+                  } else {
+                    // Sinon on l’ajoute
+                    return [...editionArray, newEdition];
+                  }
+                });
+        };
+        
+        
+        
+        // Affiche le filtre des éditions
+        const OpenFilterEdition = () => {
+                            setArrowEditionSens((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>));    
+                            setDisplayFilterEditions(!displayFilterEditions)                     
         }
+              
+        
+               useEffect(() => {
+                    const getEditions = async () => {
+                        try {
+                            const request = await axios.get(`https://api.scryfall.com/sets`);
+        
+                            const response = request.data.data
+                
+                            setEditions(response)
+        
+                        }   
+                        catch (error) {
+                            console.log(error);
+                        }
+                    }
+                    getEditions();
+                    }, []);
 
 
         // Sélectionne des cartes pour Commander 
@@ -765,31 +852,33 @@ const CardsDeckPage = () => {
             <OpenButtonLarge  text="Afficher les filtres" icon={arrowFiltersSens} onClick={OpenFilters}/>
 
             <div className="search-line">            
-            <SearchBar value={name} onChange={(event) => (setName(event.target.value))}
-             style={{position : "relative", width: '80%'}}
-             onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
-             onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName(), position: 'absolute', marginLeft: '75%' }} />
+              <SearchBar value={name} onChange={(event) => (setName(event.target.value))}
+              style={{position : "relative", width: '80%'}}
+              onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
+              onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName(), position: 'absolute', marginLeft: '75%' }} />
 
-            <SearchBar value={text}  onChange={(event) => (setText(event.target.value))}
-              style={{position : "relative", width: '80%', marginBottom: '30px'}}
-              onClick={() => (setFilterText(text))} placeholder={" Chercher le texte d'une carte"}
-              onPush={() => (setText(""), setFilterText(""))}
-              iconStyle={{ display: displayResetText(), position: 'absolute', marginLeft: '75%'  }} />
+              <SearchBar value={text}  onChange={(event) => (setText(event.target.value))}
+                style={{position : "relative", width: '80%', marginBottom: '30px'}}
+                onClick={() => (setFilterText(text))} placeholder={" Chercher le texte d'une carte"}
+                onPush={() => (setText(""), setFilterText(""))}
+                iconStyle={{ display: displayResetText(), position: 'absolute', marginLeft: '75%'  }} />
             </div>
 
-              {/*Les filtres pour la requete de carte*/}
-              <div className="filters-line">
+            {/*Les filtres pour la requete de carte*/}
+            <div className="filters-line">
                 
                 
                 <div className="filter-manaCost-container">
-                  <OpenButton text="Filtrer par cout en mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />
-                  {displayFilterManaCost && (
-                  <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                    <InputManaCost style={{width: '150px'}}  value={inputManaCost}
-                      onChange={(event) => (setInputManaCost(event.target.value))} placeholder={"exemple : 5"}/>
-                    <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterManaCost()} />
-                  </div>
-                  )}
+                                  <OpenButton text="Filtrer par cout en mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />
+                                  {displayFilterManaCost && (
+                                  <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
+                                    <InputManaCost style={{width: '150px'}}  value={inputManaCostMin}
+                                      onChange={(event) => (setInputManaCostMin(event.target.value))} placeholder={"min"}/>
+                                    <InputManaCost style={{width: '150px'}} value={inputManaCostMax}
+                                    onChange={(event) => (setInputManaCostMax(event.target.value))} placeholder={"max"}/>
+                                    <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterManaCost()} />
+                                  </div>
+                                  )}
                 </div>
 
                 <div className="filter-colors-container">
@@ -807,19 +896,29 @@ const CardsDeckPage = () => {
                                 name={color}
                                 value={color}
                                 onChange={(event) => selectColors(event.target.value)}
-                                checked={filterColors.includes(color)}
+                                checked={filterColors.includes(color) && !filterColors.includes("colorless")}
                               />
                               <img src={getColorPics(color)} className="filter-color-img" alt={color}/>
                             </li>
                           ))}
+                          <li className="li-checkbox">
+                              <input
+                                className='component-input'
+                                type="checkbox"
+                                name="colorless"
+                                value="colorless"
+                                onChange={(event) => selectColors(event.target.value)}
+                                checked={filterColors.includes("colorless")}
+                              />
+                              <img src={getColorPics("colorless")} className="filter-color-img" alt="colorless"/>
+                            </li>
 
                         </div>
                         <TbFilterCancel className='compenant-reset' onClick={removeColors}/>
                       </div>
                     </div>
                   )}
-                </div>
-
+                </div>              
              
                 <div className="filter-rarities-container">
                 <OpenButton
@@ -836,7 +935,7 @@ const CardsDeckPage = () => {
                         {[
                           { value: "mythic", label: "MYTHIQUE" },
                           { value: "rare", label: "RARE" },
-                          { value: "uncommon", label: "UNCOMMUNE" },
+                          { value: "uncommon", label: "UNCO" },
                           { value: "common", label: "COMMUNE" }
                         ].map((rarity, index) => (
                           <li className="li-checkbox" key={index}>
@@ -864,6 +963,32 @@ const CardsDeckPage = () => {
                 )}
                 </div>
 
+                <div className="filter-editions-container" >
+                  <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
+                  { displayFilterEditions && ( 
+                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--}} >
+                      {editions.map((edition, index) => (
+                          <li className="li-checkbox" key={index}>
+                            <input
+                              className='component-input'
+                              type="checkbox"
+                              name={edition.name}
+                              value={edition.code}
+                              onChange={(event) => selectEditions(event.target.value)}
+                              checked={filterEditions.includes(edition.code)}
+                            />
+                            <p
+                              className='checkbox-type-p'
+                              style={{ margin: '0px' }}
+                            >
+                              {edition.name}
+                            </p>
+                          </li>
+                        ))}
+                    </div>
+                  )}
+                </div>
+
                     
                 <div className="filter-types-container">
                   <OpenButton text="Filtrer par type" icon={arrowTypeSens} onClick={OpenFilterType} />
@@ -882,7 +1007,10 @@ const CardsDeckPage = () => {
                               "Battle",
                               "Conspiracy",
                               "Tribal",
-                              "Vanguard"
+                              "Vanguard",
+                              "Artifact Creature",
+                              "Enchantment Creature",
+                              "Artifact Land"
                             ].map((type, index) => (
                               <li className="li-checkbox" key={index}>
                                 <input
@@ -904,7 +1032,7 @@ const CardsDeckPage = () => {
                   )}  
                 </div>
 
-                <div className="filter-subtypes-container">
+                <div className="filter-legendary-container">
                 <OpenButton
                   text="Filtrer les légendaires"
                   icon={arrowLegendarySens}
@@ -922,8 +1050,8 @@ const CardsDeckPage = () => {
                               type="checkbox"
                               name="Legendary"
                               value="Legendary"
-                              onChange={(event) => setFilterLegendary(event.target.value)}
-                              checked={filterLegendary === "Legendary"}
+                              onChange={() => setFilterLegendary(!filterLegendary)}
+                              checked={filterLegendary}
                             />
                             <p
                               className='checkbox-type-p'
@@ -941,13 +1069,12 @@ const CardsDeckPage = () => {
                 </div>
                    
 
-              </div>
+            </div>
             
+            {/*Titre d'affichage des cartes*/}
             <div className='title-cards-dispo-container'>
               <Title title='Cartes disponibles'/>
             </div>
-
-            
 
           <div className='display-objects-section'>
               {/*Mapping des cartes*/}    
@@ -958,7 +1085,7 @@ const CardsDeckPage = () => {
 
                       { deck.format === "Commander" && ( 
                       <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
+                        <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         style={{opacity: desacCardsCedh(card.id)}} />                
                         <AddButton onClick={() => selectCardCedh(card)} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }}
@@ -969,7 +1096,7 @@ const CardsDeckPage = () => {
                       { deck.format !== "Commander" && (   
                                       
                       <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
+                        <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         style={{opacity: desacCardsDeck(card.id)}} />
 
@@ -1010,7 +1137,7 @@ const CardsDeckPage = () => {
                     
 
                     {detailsCard && detailsCard.id === card.id && (
-                    <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
+                    <img className="card-img-zoom" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image"/>
                     )}  
                 </div>
                 ))}
@@ -1036,8 +1163,8 @@ const CardsDeckPage = () => {
                                                 <img className='card-add-img' src={cardImage && cardImage.startsWith('/uploads/') ? `http://localhost:8080${cardImage}` : cardImage} alt="deck-img" />
                                                 <div className='cards-deck-unit-container'> 
                                                   {cardsSelectedUnit.map(card => ( 
-                                                    <div className="land-text-details" id='land-card'  key={card.id}>
-                                                        <h5 className='land-text-name' onMouseEnter={() => setCardImage(card.image)} >{card.name}</h5>
+                                                    <div className="land-text-details" id='land-card'  key={card.id}> 
+                                                        <h5 className='land-text-name' onMouseEnter={() => setCardImage( card.image ? card.image :  defaultImg)} >{card.name}</h5>
                                                       { format !== "Commander" && (
                                                         <div className='land-text-number'>                              
                                                             <button className="addButton" style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => unselectCard(card)}
@@ -1111,11 +1238,11 @@ const CardsDeckPage = () => {
                       */}
 
                       <div className='icon-close-popup-container-desktop'>
-                        <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>(setDisplayPopup(false), setCardNumber(0))}/>
+                        <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>(setDisplayPopup(false), setCardNumber(0), setCardImage(defaultImg))}/>
                       </div>
                       
                       <div className='icon-close-popup-container-mobile'>
-                        <CgCloseO className='icon-close-popup' color='white' size={'3em'}  onClick={()=>(setDisplayPopup(false), setCardNumber(0))}/> 
+                        <CgCloseO className='icon-close-popup' color='white' size={'3em'}  onClick={()=>(setDisplayPopup(false), setCardNumber(0),  setCardImage(defaultImg))}/> 
                       </div>
               </div>
             )}

@@ -17,7 +17,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png"
+import colorless from "../assets/incolore-mtg.png"
 import { getImageUrl, getDeckImageUrl } from '../utils/imageUtils';
 import innistrad from '../assets/innistrad.png';
 import ixalan from '../assets/ixalan.png';
@@ -177,27 +177,27 @@ const CardSelectedApi = () => {
             }
             };
 
-        // Affichage d'image correspondant aux couleurs de la carte
+         // Récupère l'image de chaque couleur
         const getColor = (value) => {
-            if(value === "W") {
-                return white
-            }
-            if(value === "U") {
-                return blue
-            }
-            if(value === "G") {
-                return green
-            }
-            if(value === "R") {
-                return red
-            }
-            if(value === "B") {
-                return black
-            }
-            if(value === "INCOLORE") {
-                return incolore
-            }
-           
+                              if(value === "w") {
+                                  return white
+                              }
+                              if(value === "u") {
+                                  return blue
+                              }
+                              if(value === "g") {
+                                  return green
+                              }
+                              if(value === "r") {
+                                  return red
+                              }
+                              if(value === "b") {
+                                  return black
+                              }
+                              if(value === "colorless") {
+                                  return colorless
+                              }
+                             
         }; 
 
         // Affichage de l'image correspondant à l'édition
