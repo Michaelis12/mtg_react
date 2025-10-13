@@ -18,11 +18,7 @@ import OpenButtonLarge from '../components/openButtonLarge';
 import SearchBar from '../components/searchBar';
 import InputManaCost from '../components/inputManaCoast';
 import AddButton from '../components/addButton';
-import ButtonSelect from '../components/buttonSelect';
 import ButtonValid from '../components/buttonValid';
-import IconButtonHover from '../components/buttonIconHover';
-import { FaHeart  } from 'react-icons/fa';
-import { MdOutlinePlayArrow } from "react-icons/md";
 import Card from '../model/CardApi';
 import axios from "axios";
 import axiosInstance from "../api/axiosInstance";
@@ -59,6 +55,23 @@ const CardsDeckPage = () => {
       setDisplayFilters(!displayFilters);
     };
     const [cardImage, setCardImage] = React.useState(defaultImg)
+
+    // Filtre recherche
+    const [name, setName] = React.useState("")
+    const [filterName, setFilterName] = React.useState("")
+    const [text, setText] = React.useState("")
+    const [filterText, setFilterText] = React.useState("")
+    const [inputManaCost, setInputManaCost] = React.useState("")
+    const [filterColors, setFilterColors] = React.useState([])
+    const [filterRarities, setFilterRarities] = React.useState([])
+    const [filterEditions, setFilterEditions] = React.useState([])
+    const [filterTypes, setFilterTypes] = React.useState([])
+    const [filterLegendary, setFilterLegendary] = React.useState(null)
+    const [displayLoading, setDisplayLoading] = React.useState(false);
+    // États pour la pagination
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(100);
+    const [hasMore, setHasMore] = useState(true);
     
 /*
      const callColors = useRef(false)
@@ -90,6 +103,8 @@ const CardsDeckPage = () => {
             try {
                 setDisplayLoading(true);
 
+
+
                 const stored = sessionStorage.getItem('filterColors');
                 const request = await axiosInstance.get(`f_all/getDeckID?deckID=${id}`);
 
@@ -99,6 +114,7 @@ const CardsDeckPage = () => {
                     
                 // Sert à mapper les colors pour le filtre
                 setColors(response.colors)
+                setFilterColors(response.colors)
                 setFormat(response.format)
 
               
@@ -128,22 +144,6 @@ const CardsDeckPage = () => {
         getDeckSelected();
         }, [id]);
  
-    // Filtre recherche
-    const [name, setName] = React.useState("")
-    const [filterName, setFilterName] = React.useState("")
-    const [text, setText] = React.useState("")
-    const [filterText, setFilterText] = React.useState("")
-    const [inputManaCost, setInputManaCost] = React.useState("")
-    const [filterColors, setFilterColors] = React.useState([])
-    const [filterRarities, setFilterRarities] = React.useState([])
-    const [filterEditions, setFilterEditions] = React.useState([])
-    const [filterTypes, setFilterTypes] = React.useState([])
-    const [filterLegendary, setFilterLegendary] = React.useState(null)
-    const [displayLoading, setDisplayLoading] = React.useState(false);
-    // États pour la pagination
-    const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(50);
-    const [hasMore, setHasMore] = useState(true);
 
 
 
@@ -154,8 +154,10 @@ const CardsDeckPage = () => {
       try {
         setDisplayLoading(true);
 
-        // Contient les RequestParams de la requete
-                const params = {
+
+        console.log(filterColors)
+
+        const params = {
                     page: 1,                
                     pageSize: pageSize,  
                     name: filterName,
@@ -164,8 +166,10 @@ const CardsDeckPage = () => {
                     rarity : filterRarities,
                     types : filterTypes,
                     supertypes : filterLegendary,
-                    colors: deck.colors                
-                };
+                    colorIdentity:filterColors.length === 1
+                              ? filterColors[0]
+                              : filterColors.join(',')
+                     };
 
                 
         const response = await axios.get('https://api.magicthegathering.io/v1/cards', {
@@ -185,10 +189,17 @@ const CardsDeckPage = () => {
           return true;
         });
 
+  
+
         const colorsSet = deck.colors;
         const allowedColors = new Set(colorsSet);
+        const formatSet = deck.format;
 
-        const listCardsColorsFilter = listCardsUnit.filter(card => {
+        const listCardsColorsAndFormatFilter = listCardsUnit.filter(card => {
+          // Vérification du format : la carte doit avoir un des formats compatibles avec formatSet
+          const isFormatValid = card.formats && card.formats.includes(formatSet);
+          if (!isFormatValid) return false;
+
           // Cas 1 : carte incolore (aucune couleur définie ou tableau vide)
           if (!card.colors || card.colors.length === 0) return true;
 
@@ -196,7 +207,8 @@ const CardsDeckPage = () => {
           return card.colors.every(color => allowedColors.has(color));
         });
 
-        setCards(listCardsColorsFilter);
+
+        setCards(listCardsColorsAndFormatFilter);
         setPage(2);
 
       } catch (error) {
@@ -216,7 +228,7 @@ const CardsDeckPage = () => {
        try {
           setDisplayLoading(true);
 
-          // Contient les RequestParams de la requete
+
           // Contient les RequestParams de la requete
                 const params = {
                     page: page,                
@@ -226,7 +238,7 @@ const CardsDeckPage = () => {
                     cmc : inputManaCost,
                     rarity : filterRarities,
                     type : filterTypes,
-                    colors: deck.colors                   
+                    colorIdentity: filterColors,                   
                     
                 };
                 
@@ -253,19 +265,24 @@ const CardsDeckPage = () => {
                   }
                 });
 
-                const colorsSet = deck.colors;
-                const allowedColors = new Set(colorsSet);
+                
+        const colorsSet = deck.colors;
+        const allowedColors = new Set(colorsSet);
+        const formatSet = deck.format;
 
-                const listCardsColorsFilter = listCardsUnit.filter(card => {
-                  // Cas 1 : carte incolore (aucune couleur définie ou tableau vide)
-                  if (!card.colors || card.colors.length === 0) return true;
+        const listCardsColorsAndFormatFilter = listCardsUnit.filter(card => {
+          // Vérification du format : la carte doit avoir un des formats compatibles avec formatSet
+          const isFormatValid = card.formats && card.formats.includes(formatSet);
+          if (!isFormatValid) return false;
 
-                  // Cas 2 : toutes les couleurs de la carte sont dans allowedColors
-                  return card.colors.every(color => allowedColors.has(color));
-                }); 
+          // Cas 1 : carte incolore (aucune couleur définie ou tableau vide)
+          if (!card.colors || card.colors.length === 0) return true;
 
+          // Cas 2 : toutes les couleurs de la carte sont dans allowedColors
+          return card.colors.every(color => allowedColors.has(color));
+        });
 
-          setCards(prevCards => [...prevCards, ...listCardsColorsFilter]);
+          setCards(prevCards => [...prevCards, ...listCardsColorsAndFormatFilter]);
           setPage(page + 1)
 
       } catch (error) {
@@ -455,14 +472,20 @@ const CardsDeckPage = () => {
       
         const selectColors = (newColor) => {
           setFilterColors(prevColors => {
-              const colorsArray = Array.isArray(prevColors) ? prevColors : (prevColors || '').split(',').filter(color => color.trim() !== '');
-              if (colorsArray.includes(newColor)) {
-                return colorsArray.filter(filterColor => filterColor !== newColor).join(',');
-              } else {
-                return [...colorsArray, newColor].join(',');                 
-              }
-            });
-          };
+            const colorsArray = Array.isArray(prevColors)
+              ? prevColors
+              : (prevColors || '').split(',').filter(color => color.trim() !== '');
+
+            if (colorsArray.includes(newColor)) {
+              // Si la couleur est déjà sélectionnée, on la retire
+              return colorsArray.filter(color => color !== newColor);
+            } else {
+              // Sinon, on l'ajoute au tableau
+              return [...colorsArray, newColor];
+            }
+          });
+        };
+
 
           // Récupère l'image de chaque couleur
           const getColorPics = (value) => {
@@ -486,7 +509,7 @@ const CardsDeckPage = () => {
           
           // Refiltre selon toutes les couleurs du deck
           const removeColors = () => {
-           setFilterColors([])
+           setFilterColors(deck.colors)
           } 
 
 
@@ -644,13 +667,18 @@ const CardsDeckPage = () => {
                     cmc: card.cmc,
                     colors: card.colors,  
                     types: card.types,
+                    formats: card.formats,
                     legendary: card.legendary || false,
                     decksNumber: card.decksNumber || 0
                 }));
 
+                console.log(payload)
+
+                
                 const response = await axiosInstance.post(`f_user/addCardsOnDeck?deckId=${id}`, payload, { withCredentials: true });
                 const data = id
                 navigate(`/deckbuilding`, { state: { deckID: data }})
+                
                 
                  }   
             catch (error) {

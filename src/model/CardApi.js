@@ -6,7 +6,7 @@ class Card {
     imageUrl,
     manaCost,
     cmc,
-    colors,
+    colorIdentity,
     types,
     supertypes,
     rarity,
@@ -19,7 +19,7 @@ class Card {
     this.image = imageUrl || null;      
     this.manaCost = manaCost || null;
     this.cmc = cmc || 0;
-    this.colors = colors || [];
+    this.colors = colorIdentity || [];
     this.types = types || [];
     this.legendary = supertypes?.includes("Legendary") || false;
     this.rarity = rarity || "";
@@ -44,7 +44,7 @@ class Card {
       imageUrl: cardData.imageUrl,
       manaCost: cardData.manaCost,
       cmc: cardData.cmc, 
-      colors: cardData.colors,
+      colorIdentity: cardData.colorIdentity,
       types: cardData.types, 
       supertypes: cardData.supertypes,
       rarity: cardData.rarity,

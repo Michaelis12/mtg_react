@@ -52,21 +52,8 @@ const CardsPage = () => {
         
     // États pour la pagination
     const [page, setPage] = useState(1);
-    const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(50);
-    const [hasMore, setHasMore] = useState(true);
-    const [isLoading, setIsLoading] = useState(false);
     
-    // États pour la pagination des cartes populaires
-    const [pagePopular, setPagePopular] = useState(1);
-    const [hasMorePopular, setHasMorePopular] = useState(true);
-    const [isLoadingPopular, setIsLoadingPopular] = useState(false);
-
-    // États pour ajuster le nombre de likes des cartes
-    const [newCardLikedId, setNewCardLikedId] = React.useState([])
-    const [newCardDislikedId, setNewCardDislikedId] = React.useState([])
-
-    const [displayCards, setDisplayCards] = React.useState("id")
  
 
         // Récupère les cartes triées par id 
@@ -95,7 +82,7 @@ const CardsPage = () => {
                     rarity : filterRarities,
                     types : filterTypes,
                     supertypes : filterLegendary,
-                    colors: filterColors                
+                    colorIdentity: filterColors                
                 };
 
                 
@@ -108,7 +95,6 @@ const CardsPage = () => {
 
                 
                 const listCards = response.data.cards.map(cardData => Card.fromApi(cardData));
-                console.log(listCards)
                 
                 // Crée un Set pour stocker les noms uniques
                 const seenNames = new Set();
@@ -125,8 +111,6 @@ const CardsPage = () => {
                  
                 setCards(listCardsUnit)
                 setPage(2);
-                setNewCardLikedId([]);
-                setNewCardDislikedId([]);
                 setDisplayLoading(false);
                 
             }   
@@ -139,14 +123,14 @@ const CardsPage = () => {
         }
         React.useEffect(() => {
           getCards();
-      }, [ displayCards, filterName, filterText, inputManaCost,
+      }, [ filterName, filterText, inputManaCost,
          filterColors, filterFormats, filterRarities, filterEditions, filterTypes, filterLegendary]);
 
 
     const displayMoreCards = async () => {
  
        try {
-          setIsLoading(true);
+          setDisplayLoading(true);
 
           // Contient les RequestParams de la requete
           // Contient les RequestParams de la requete
@@ -158,7 +142,7 @@ const CardsPage = () => {
                     cmc : inputManaCost,
                     rarity : filterRarities,
                     type : filterTypes,
-                    colors: filterColors                   
+                    colorIdentity: filterColors                 
                     
                 };
                 
@@ -191,7 +175,7 @@ const CardsPage = () => {
       } catch (error) {
         console.error('Erreur de chargement des cartes :', error);
       } finally {
-        setIsLoading(false);
+        setDisplayLoading(false);
       }
     }
 
@@ -736,7 +720,7 @@ const CardsPage = () => {
               
       
       {/* Bouton pour afficher plus de cartes */}
-      <button className='next-page-button' disabled={!hasMore} onClick={()=>displayMoreCards()}>Afficher plus</button> 
+      <button className='next-page-button' onClick={()=>displayMoreCards()}>Afficher plus</button> 
 
       </div>
 
