@@ -514,19 +514,19 @@ const CardsDeckPage = () => {
         
                   // Récupère l'image de chaque couleur
                   const getColorPics = (value) => {
-                              if(value === "w") {
+                              if(value === "W") {
                                   return white
                               }
-                              if(value === "u") {
+                              if(value === "U") {
                                   return blue
                               }
-                              if(value === "g") {
+                              if(value === "G") {
                                   return green
                               }
-                              if(value === "r") {
+                              if(value === "R") {
                                   return red
                               }
-                              if(value === "b") {
+                              if(value === "B") {
                                   return black
                               }
                               if(value === "colorless") {

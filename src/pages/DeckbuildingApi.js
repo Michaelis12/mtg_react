@@ -338,19 +338,19 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         // Affichage d'image correspondant aux couleurs de la carte
 // Affichage d'image correspondant aux couleurs de la carte
         const getColors = (value) => {
-                      if(value === "w") {
+                      if(value === "W") {
                           return white
                       }
-                      if(value === "u") {
+                      if(value === "U") {
                           return blue
                       }
-                      if(value === "g") {
+                      if(value === "G") {
                           return green
                       }
-                      if(value === "r") {
+                      if(value === "R") {
                           return red
                       }
-                      if(value === "b") {
+                      if(value === "B") {
                           return black
                       }
                       if(value === "colorless") {
