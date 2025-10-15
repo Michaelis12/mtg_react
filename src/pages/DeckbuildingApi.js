@@ -316,7 +316,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
             // Calcule la somme des cmc
             const totalCmc = validCards.reduce((sum, card) => sum + card.cmc, 0);
-
+            console.log("cmc total : " + totalCmc)
+             console.log("cards : " + validCards.length)
             // Calcule la moyenne
             const averageCmc = totalCmc / validCards.length;
 
@@ -780,7 +781,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 'W': white,
                 'G': green,
                 'R': red,
-                'B': black
+                'B': black,
+                'colorless': colorless
         };
 
 

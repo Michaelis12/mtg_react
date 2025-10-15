@@ -228,6 +228,9 @@
 
 .setAttributs-card-img {
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 } 
 
 .card-selected-img {
@@ -242,7 +245,7 @@
     .card-selected-img {
         min-height: 220px;
 }
-}
+} 
 
 .setAttributs-card-checkout {
     width: 50%;

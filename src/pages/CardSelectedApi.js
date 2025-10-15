@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import "./css/CardSelected.css";
 import Deck from '../model/Deck';
 import axios from "axios";
-import axiosInstance from "../api/axiosInstance";
+import defaultImg from "../assets/mtg-card-back.jpg"
 import backgroundPage from "../assets/background_cardsPage2.jpg"
 import backgroundPopup from "../assets/background_white.png"
 import Section from '../components/section';
@@ -30,29 +30,23 @@ import bloomburrow from '../assets/bloomburrow.png';
 const CardSelectedApi = () => {  
     const [card, setCard] = React.useState([])
     const formats = [
-        "Alchemy",
-        "Brawl",
-        "Commander",
-        "Duel",
-        "Explorer",
-        "Future",
-        "Gladiator",
-        "Historic",
-        "Legacy",
-        "Modern",
-        "Oathbreaker",
-        "Pauper",
-        "Paupercommander",
-        "Penny",
-        "Pioneer",
-        "Predh",
-        "Premodern",
-        "Standard",
-        "Standardbrawl",
-        "Timeless",
-        "Vintage"
+        "standard",
+        "future",
+        "historic",
+        "gladiator", 
+        "pioneer", 
+        "modern", 
+        "legacy", 
+        "pauper", 
+        "vintage", 
+        "commander", 
+        "brawl", 
+        "alchemy", 
+        "duel", 
+        "oldschool", 
+        "premodern"
+
         ];
-    const [cardFormats, setCardFormats] = React.useState([])
     const navigate = useNavigate();
     const location = useLocation();
     const id = location.state?.cardID;
@@ -66,7 +60,7 @@ const CardSelectedApi = () => {
         useEffect(() => {
         const getCardSelected = async () => {
             try {
-
+                setDisplayLoading(true)
                 if(newID === "") {
                     setNewID(id)
                    }
@@ -75,15 +69,18 @@ const CardSelectedApi = () => {
                 return;
               }
 
-                const request = await axios.get(`https://api.magicthegathering.io/v1/cards/${newID}`);
-                const response = request.data.card   
-                setCard(response)
-                setCardFormats(request.data.card.legalities)
+                const request = await axios.get(`https://api.scryfall.com/cards/${newID}`);
+                const response = request.data   
 
+                console.log(request.data.legalities)
+                setCard(response)
 
             }   
             catch (error) {
                 console.log(error);
+            }
+            finally {
+                setDisplayLoading(false)
             }
 
     
@@ -164,13 +161,13 @@ const CardSelectedApi = () => {
          // Affichage de couleur d'arrière-plan en fonction de la rareté
             const getBackgroundColor = (rarity) => {
             switch (rarity) {
-                case "Mythic":
+                case "mythic":
                 return "linear-gradient(135deg, #D94F4F 0%, #FF8A5C 100%)";  
-                case "Rare":
+                case "rare":
                 return "linear-gradient(135deg, #D4AF37 0%, #F7C83D 100%)";  
-                case "Uncommon":
+                case "uncommon":
                 return "linear-gradient(135deg, #5A6E7F 0%, #A1B2C1 100%)";  
-                case "Common":
+                case "common":
                 return "linear-gradient(135deg, #5C5C5C 0%, #9B9B9B 100%)";  
                 default:
                 return "grey"; 
@@ -226,17 +223,16 @@ const CardSelectedApi = () => {
 
 
         // Affichage de couleur d'arrière-plan en fonction de la légalité dans les formats
-        const getBackgroundFormats = (format) => {
+        const getBackgroundFormats = (statut) => {
 
-             const formatInfo = cardFormats.find(f => f.format === format);
 
-                if (!formatInfo) {
+                if (statut === "not_legal" || statut === "not_banned" ) {
                     // Si le format n'existe pas dans l'API -> rouge/rose
                     return 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)';
                 }
 
                 // Retourne vert si Legal, jaune si autre
-                if (formatInfo.legality === "Legal") {
+                if (statut === "legal") {
                     return 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
                 } else {
                     return 'linear-gradient(135deg, #ff9800 0%, #ffb74d 100%)';
@@ -261,7 +257,8 @@ const CardSelectedApi = () => {
                         <img
                         key={index}
                         src={getColor(value.toUpperCase())}
-                        className="card-colors-img"
+                        className="card-mana-devotion-img"
+                        style={{margin: '0px'}}
                         alt={value}
                         />
                     );
@@ -276,9 +273,14 @@ const CardSelectedApi = () => {
                 });
                 };
         
+        
+        const cardTypeSize = (type) => {
+                if (!type) return '2em'; 
+                return type.length > 25 ? '1.5em' : '2em';
+            };
                          
  
-        return (
+        return ( 
             <Section>  
                 <img src={backgroundPage} className="background-image" alt="deck-background" />
                       
@@ -299,29 +301,40 @@ const CardSelectedApi = () => {
                     </div>
                                     
                     {/* Carte format desktop */}
-                    <div className="card-selected-desktop" style={{ backgroundImage: `url(${backgroundPopup})`}} >
-                            <h1 className='deck-name'>{card.name}</h1>
-    
-                            <div className="card-content">
-                                <div className="card-selected-imagelikes">
-                                    <img className="card-selected-image" src={getImageUrl(card.imageUrl)} alt="Card mtg"/>
-                                                                                                        
-                                </div>
 
-                                <div className="card-selected-attributs" >
+
+                    <div className='card-selected-desktop' style={{ backgroundImage: `url(${backgroundPopup})`, marginTop: '2%'}}>
+                                <div className='title-card-container'>
+                                  <h1  className='card-selected-name'>{card.name}</h1>
+                                </div>
+                                <div className='card-selected-content'>
+                                  <div className='setAttributs-card-img'>
+                                    {card?.image_uris?.normal ? (
+                                        <img
+                                            className="card-selected-image"
+                                            src={card.image_uris.normal}
+                                            alt={card.name}
+                                        />
+                                        ) : (
+                                        <img
+                                            className="card-selected-image"
+                                            src={defaultImg}
+                                            alt={card.name}
+                                        />
+                                    )}
+                                  </div>
+                                   <div className="card-selected-attributs" >
                                     <div className='card-line-attribut'>
                                             <h4 className='card-line-title'> Cout en mana : </h4>
-                                            <div className='card-line-manacost'>
-                                                {getManaImages(card.manaCost)}
+                                            <div className='card-line-devotion'>
+                                                {getManaImages(card.mana_cost)}
                                             </div>
                                     </div>
 
                                 <div className='card-line-attribut'>
                                         <h4 className='card-line-title'> Type : </h4>
-                                        <h3 className='card-line-type' ><strong>{card.type}
-                                        {card.legendary === "legendary"&& (
-                                            " (Légendaire)"
-                                        )}</strong>
+                                        <h3 style={{ fontSize: cardTypeSize(card.type_line), textAlign:"center" }}>
+                                           <strong>{card.type_line}</strong>
                                         </h3>
                                 </div>
 
@@ -330,23 +343,35 @@ const CardSelectedApi = () => {
                                         <h4 className='card-selected-rarity' 
                                         style={{ background: getBackgroundColor(card.rarity) }}>{card.rarity} </h4>
                                 </div>
-                                    
-                                    <div className='card-line-attribut-format'>
-                                       <h4 className='card-line-title'>Formats :</h4>
+
+                                <div className='card-line-attribut'>
+                                        <h4 className='card-line-title'> Texte : </h4>
+                                        <h6 style={{textAlign: 'center'}}><strong>{card.oracle_text}
+                                        </strong>
+                                        </h6>
+                                </div>
+
+                                
+                                <div className='card-line-attribut-format'>
+                                <h4 className='card-line-title'>Formats :</h4>
+                                    {card.legalities && typeof card.legalities === 'object' && Object.keys(card.legalities).length > 0 ? (
                                         <div className='card-selected-format-map'>
-                                            {formats.map((format, index) => (
-                                                <li
-                                                key={index}
-                                                className='card-selected-format'
-                                                style={{ background: getBackgroundFormats(format) }}
-                                                >
-                                                {format}
-                                                </li>
-                                            ))}
+                                        {Object.entries(card.legalities).map(([format, status], index) => (
+                                            <li
+                                            key={index}
+                                            className='card-selected-format'
+                                            style={{ background: getBackgroundFormats(status) }}
+                                            >
+                                            {format}
+                                            </li>
+                                        ))}
                                         </div>
-
-                                    </div> 
-
+                                    ) : (
+                                        <div className='card-selected-format-map'></div>
+                                    )}
+                                </div>
+ 
+                                
                                     <div className='card-line-attribut'>
                                         <h4 className='card-line-title' > Couleurs : </h4> 
                                         {card.colors && card.colors.length > 0 && (
@@ -357,13 +382,15 @@ const CardSelectedApi = () => {
                                         </div>
                                         )}
                                     </div>                                                             
-                                </div>  
-                            </div>        
-                    </div>  
+                                   </div>
+                                </div>
+                                
+                    </div>
 
                 </div> 
                                         
-                {/* Carte format tablette */}
+                {/*
+
                 <h2 className='card-selected-tablet-name'>{card.name}</h2>
                 <div className="card-selected-tablet" style={{ backgroundImage: `url(${backgroundPopup})`}}>
                     <div className="img-container">
@@ -421,7 +448,7 @@ const CardSelectedApi = () => {
                 </div>
 
 
-                {/* Carte format mobile */} 
+
                 <div className="card-selected-mobile"> 
                                         <div className="header-card" style={{backgroundImage:`url(${backgroundPopup})`}}>
                                             <img src={getImageUrl(card.image)}  onClick={()=> setDisplayPopup(true)}
@@ -481,6 +508,7 @@ const CardSelectedApi = () => {
                             </div>    
 
                             </div>
+                */}
 
 
                  {/* Affiche la carte zoomée */} 

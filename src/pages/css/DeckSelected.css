@@ -340,7 +340,7 @@ button:hover {
 
 
 .icon-nav {
-    font-size: 10em;
+    font-size: 8em;
 }
 
 
@@ -348,7 +348,7 @@ button:hover {
 @media (max-width: 1400px) {
 
   .icon-nav  {
-     font-size: 8em;
+     font-size: 6em;
   
   }
 }
