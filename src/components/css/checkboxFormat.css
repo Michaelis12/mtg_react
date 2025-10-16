@@ -18,9 +18,8 @@
     flex-direction: column;
     justify-content: space-between; /* Pour espacer les éléments */
     align-items: stretch; /* Étend chaque élément enfant pour que la hauteur soit la même */
-    /* La hauteur est dynamique mais tous les éléments auront la même hauteur */
     height: 260px;
-    max-width: 500px;
+    max-width: 400px;
 }
 
 .input-format-container {

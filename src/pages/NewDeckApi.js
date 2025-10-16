@@ -47,7 +47,7 @@ const NewDeck = () => {
    const [displayLoading, setDisplayLoading] = useState(false);
 
    // Récupère les couleurs pour le checkbox
-   const [existingColors, setExistingColors] = React.useState([])
+   const [existingColors, setExistingColors] = React.useState(["W", "U", "R", "G", "B", "colorless"])
       
     // Change de valeur à la sélection 
     const [selectedColors, setSelectedColors] = React.useState([])
@@ -98,28 +98,6 @@ const NewDeck = () => {
 }; 
 
 
-    // Récupère les 5 couleurs cumulables pour un 1er checkout
-    useEffect(() => {
-      const getColors = async () => {
-          try {
-              setDisplayLoading(true);
-              const request = await axiosInstance.get(`/f_all/getColors`);
-
-              const response = request.data
-  
-              setExistingColors(response)
-              recupStorageColor(response)
-              setDisplayLoading(false);
-          }   
-          catch (error) {
-              setDisplayLoading(false);
-              console.log(error);
-          }
-      }
-      getColors();
-      }, []);
-
-
     const [rarities, setRarities] = React.useState([])
 
      const callRarities = useRef(false);
@@ -146,26 +124,7 @@ const NewDeck = () => {
     }
 };
       
-    // Récupère toutes les raretés pour les mapper
-    useEffect(() => {
-                  const getRarities = async () => {
-                      try {
-                          setDisplayLoading(true);
-                          const request = await axiosInstance.get(`/f_all/getRarities`);
-      
-                          const response = request.data
-              
-                          setRarities(response)
-                          recupStorageRarity(response)
-                          setDisplayLoading(false);
-                      }   
-                      catch (error) {
-                          setDisplayLoading(false);
-                          console.log(error);
-                      }
-                  }
-                  getRarities();
-      }, []);
+
 
 
     const [editions, setEditions] = React.useState([])
@@ -224,22 +183,22 @@ const NewDeck = () => {
     
      // Récupère les images des couleurs  
     const getColorPics = (value ) => {
-                if(value === "BLANC") {
+                if(value === "W") {
                     return white
                 }
-                if(value === "BLEU") {
+                if(value === "U") {
                     return blue
                 }
-                if(value === "VERT") {
+                if(value === "G") {
                     return green
                 }
-                if(value === "ROUGE") {
+                if(value === "R") {
                     return red
                 }
-                if(value === "NOIR") {
+                if(value === "B") {
                     return black
                 }
-                if(value === "INCOLORE") {
+                if(value === "colorless") {
                     return incolore
                 }
                
@@ -247,18 +206,20 @@ const NewDeck = () => {
 
     // Choix colors
     const selectColors = (newColor) => {
-      if(newColor !== 'INCOLORE') {
-              setSelectedColors(prevColors => {
-              // Si la couleur existe déjà dans le tableau, on la retire
-              if (prevColors.includes(newColor)) {
-                  return prevColors.filter(color => color !== newColor);  // Retire la couleur
-              } else {
-                  return [...prevColors.filter(color => color !== 'INCOLORE'), newColor];  // Ajoute la couleur au tableau et retire INCOLORE
-              }
-              });
-          }
-      else {setSelectedColors([newColor])} // Retire toutes les autres couleurs et les remplace par INCOLORE
-      };
+      console.log("newColor : " + newColor)
+      setSelectedColors(prev => {
+        if (newColor === 'colorless') {
+          return ['colorless'];
+        }
+
+        const updated = prev.includes(newColor)
+          ? prev.filter(c => c !== newColor)
+          : [...prev.filter(c => c !== 'colorless'), newColor];
+
+        return updated;
+      });
+    };
+
      
 
       // Validation colors
@@ -346,41 +307,41 @@ const NewDeck = () => {
               colors
             }
 
-            const cardsId = []; 
+            
+/*
+            const cardsId = [];
 
-           if (colors.includes("BLANC")) {
-              cardsId.push(1);  
-            }
+            if (colors.includes("w")) {
+                          cardsId.push(1);  
+                        }
 
-            if (colors.includes("BLEU")) {
+            if (colors.includes("u")) {
               cardsId.push(2);  
             }
 
-            if (colors.includes("NOIR")) {
+            if (colors.includes("b")) {
               cardsId.push(3); 
             }
 
-            if (colors.includes("ROUGE")) {
+            if (colors.includes("r")) {
               cardsId.push(4);  
             }
 
-            if (colors.includes("VERT")) {
+            if (colors.includes("g")) {
               cardsId.push(5);  
             }
-
-            cardsId.push(6);
-
+*/
             const response = await axiosInstance.post('/f_user/addDeck', deckRegister, { withCredentials: true}); 
             const responseData = response.data
 
-            const request = await axiosInstance.post(`f_user/addCardsOnDeck?cardId=${cardsId}&deckId=${responseData}`, null, { withCredentials: true });
+            //const request = await axiosInstance.post(`f_user/addCardsOnDeck?cardId=${cardsId}&deckId=${responseData}`, null, { withCredentials: true });
 
 
             navigate(`/deckbuilding`, { state: { deckID: responseData }}) 
             setDisplayLoading(false);
+
         } catch (e) {
             setDisplayLoading(false);
-            //navigate('/sign')
         }     
     }
 
@@ -519,159 +480,8 @@ const NewDeck = () => {
     }
     }
 
-      // Récupère les cartes triées par popularité 
-        const getCardsWithLikes = async () => {
-            try { 
-                setDisplayLoading(true);
-                // On utilise ça pour contourner le bug qui appelle la méthode sans paramètre
-              if (filterEditions.length <1 || filterRarities.length <1 || filterColors.length <1) {
-                setDisplayLoading(false);
-                return;
-              }
-
-                // Contient les RequestParams de la requete
-                const params = {
-                    page: 0,
-                    size: pageSize,
-                    order: 'like',
-                    name: filterName,
-                    text: filterText,
-                    formats: format,
-                    colors: filterColors,
-                    rarities : filterRarities,
-                    valueMin : inputValueMin,
-                    valueMax : inputValueMax,
-                    manaCostMin : inputManaCostMin,
-                    manaCostMax : inputManaCostMax,
-                    editions : filterEditions,
-                    types : "CREATURE",
-                    legendary : "legendary"
-                    
-                };
+     
                 
-                const response = await axiosInstance.get('/f_all/getCardsPaged', {
-                  params,
-                  paramsSerializer: {
-                    indexes: null // Cela désactive l'ajout des crochets
-                }
-                });
-                
-                const listCards = response.data.content.map(
-                        card => new Card (card.id, card.name, card.text, card.image, card.manaCost, card.value, card.formats,
-                                card.colors, card.type, card.legendary, card.rarity, card.edition,
-                                card.deckBuilders, card.decks, card.decksCommander, card.likeNumber,
-                                card.deckNumber, card.commanderNumber
-                ) )                
-                 
-                setTopCards(listCards)
-                setDisplayLoading(false);
-                setHasMore(!response.data.isLast);
-                setPage(1)
-            }   
-            catch (error) {
-                setDisplayLoading(false);
-                console.log(error);
-            }
-
-    
-        }
-        React.useEffect(() => {
-          getCardsWithLikes();
-      }, [displayCards, filterName, filterText, filterColors, inputValueMin, inputValueMax, inputManaCostMin, inputManaCostMax,
-      filterRarities, filterEditions]);
-
-    const displayMoreCardsWithLikes = async () => {
-          try {
-          setIsLoading(true);
-
-          const params = {
-              page: page,
-              size: pageSize,
-              order: 'like',
-              name: filterName,
-              text: filterText,
-              colors: filterColors,
-              formats: format,
-              rarities: filterRarities,
-              valueMin: inputValueMin,
-              valueMax: inputValueMax,
-              manaCostMin: inputManaCostMin,
-              manaCostMax: inputManaCostMax,
-              editions: filterEditions,
-              types : "CREATURE",
-              legendary : "legendary"
-          };
-
-          const response = await axiosInstance.get('/f_all/getCardsPaged', {
-            params,
-            paramsSerializer: { indexes: null }
-          });
-
-          const newCards = response.data.content.map(card => new Card(
-            card.id, card.name, card.text, card.image, card.manaCost, card.value,
-            card.formats, card.colors, card.type, card.legendary, card.rarity,
-            card.edition, card.deckBuilders, card.decks, card.decksCommander,
-            card.likeNumber, card.deckNumber, card.commanderNumber
-          ));
-
-          setTopCards(prevCards => [...prevCards, ...newCards]);
-
-          setHasMore(!response.data.isLast);
-          setPage(page + 1)
-        } catch (error) {
-          console.error('Erreur de chargement des cartes :', error);
-        } finally {
-          setIsLoading(false);
-        }
-        }
-
-    
-     // Afficher les cartes dans l'ordre des plus likées
-    const displayTopCards = () => {
-                   setDisplayCards("popularity")
-    }
-         
-    // Afficher les cartes dans l'ordre des plus récentes
-    const displayIdCards = () => {
-                   setDisplayCards("id")
-    }
-         
-         
-    const getBgDate= () => {
-                     if(displayCards==="id") {
-                       return '#5D3B8C'
-                     } 
-                     else {
-                       return '#D3D3D3'
-                     }
-    }
-         
-    const getBgTop= () => {
-                     if(displayCards==="popularity") {
-                       return '#5D3B8C'
-                     }
-                     else {
-                       return '#D3D3D3'
-                     }
-    }
-         
-    const getColorDate= () => {
-                     if(displayCards==="id") {
-                       return 'white'
-                     } 
-                     else {
-                       return 'black'
-                     }
-    }
-         
-    const getColorTop= () => {
-                     if(displayCards==="popularity") {
-                       return 'white'
-                     }
-                     else {
-                       return 'black'
-                     }
-    }        
       
     const hoveredCard = (id) => {
                setDetailsCard({ id });
@@ -838,25 +648,6 @@ const NewDeck = () => {
           navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds}})
     };
 
-    // Naviguer vers une carte depuis top
-    const navTopCard = (id) => {
-
-          sessionStorage.setItem('ndCedhSelected', JSON.stringify(cedhSelected));
-          sessionStorage.setItem('ndFormat', JSON.stringify(format));
-          sessionStorage.setItem('ndFilterName', JSON.stringify(filterName));
-          sessionStorage.setItem('ndFilterText', JSON.stringify(filterText));
-          sessionStorage.setItem('ndInputValueMin', JSON.stringify(inputValueMin));
-          sessionStorage.setItem('ndInputValueMax', JSON.stringify(inputValueMax));
-          sessionStorage.setItem('ndInputManacostMin', JSON.stringify(inputManaCostMin));
-          sessionStorage.setItem('ndInputManacostMax', JSON.stringify(inputManaCostMax));
-          sessionStorage.setItem('ndFilterColors', JSON.stringify(filterColors));
-          sessionStorage.setItem('ndFilterRarities', JSON.stringify(filterRarities));
-          sessionStorage.setItem('ndFilterEditions', JSON.stringify(filterEditions));
-
-          const cardsIds = topCards.map(card => card.id);
-          navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
-    };
-      
                       
               
     const [cedhSelected, setCedhSelected] = React.useState([])
@@ -1086,7 +877,7 @@ const NewDeck = () => {
               )} 
 
         {/*Le choix du commandant*/}
-        {format === "Commander" && cedhID === "" && (
+        {format === "commander" && cedhID === "" && (
             <div className='cedh-add-container'>
 
 
@@ -1238,12 +1029,6 @@ const NewDeck = () => {
               <Title title='Commandants'/>
             </div>
             
-            <div className='cards-buttons-order-container'>
-              <ButtonSelect className={"button-date"} onClick={() => displayIdCards()} text={"Dernières parutions"}
-                                      backgroundColor={getBgDate()} color={getColorDate()}/>
-              <ButtonSelect className={"button-top"} onClick={() => displayTopCards()} text={"Les plus populaires"} 
-                                     backgroundColor={getBgTop()} color={getColorTop()}/>
-            </div>
 
             <div className='icon-return-container'>
                     <IoIosArrowDropleft className='icon-return'  size={'7em'} onClick={()=>returnFormat()} /> 
@@ -1251,8 +1036,7 @@ const NewDeck = () => {
 
              <div className='display-objects-section'>
 
-              { displayCards === "id" && (
-                <div className='map-cards-section'>
+              <div className='map-cards-section'>
                   <div className='icon-return-container-mobile'>
                       <IoIosArrowDropleft className='icon-return'  size={'5em'} onClick={()=>returnFormat()} /> 
                     </div>
@@ -1280,46 +1064,11 @@ const NewDeck = () => {
                 
               
               </div>
-              )}
 
-              { displayCards === "id" && hasMore && (
+              { hasMore && (
                 <button className='next-page-button' disabled={!hasMore} onClick={()=>displayMoreCardsWithID()}>Afficher plus</button> 
               )} 
 
-              { displayCards === "popularity" && (
-                <div className='map-cards-section'>
-                  <div className='icon-return-container-mobile'>
-                      <IoIosArrowDropleft className='icon-return'  size={'7em'} onClick={()=>returnFormat()} /> 
-                    </div>
-                  {topCards.map(card => ( 
-                      <div className="cards-details" key={card.id}>
-                          <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" 
-                          onClick={() => navTopCard(card.id)}
-                          onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
-                          />
-                                            
-                          <AddButton style={{ backgroundColor: 'white', paddingTop : '2%' }} onClick={()=> selectCedh(card)}
-                          icon={changeIcon(card.id)}/>
-
-                          <p className='card-page-likenumber' style={{position: 'relative', marginTop: '10px'}}>
-                            {card.likeNumber} <FaHeart style={{position:'relative', marginBottom: '3px'}}
-                           size={'0.9em'}  color='red' /></p>
-
-
-                      {detailsCard && detailsCard.id === card.id && (
-                      <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
-                      )}  
-                  </div>
-                  ))}
-                  <ButtonValid style={{position: 'fixed'}} onClick={()=> addCedh()} disabled={cedhSelected.length < 1}
-                  text={'Ajouter'}/>
-                  
-              </div>
-              )}  
-
-              { displayCards === "popularity" && hasMore && (
-                <button className='next-page-button' disabled={!hasMore} onClick={()=>displayMoreCardsWithLikes()}>Afficher plus</button> 
-              )} 
 
           </div>
             
@@ -1328,7 +1077,7 @@ const NewDeck = () => {
         )} 
 
         {/*Le choix de la couleur*/}
-        {format !== "" && format !== "Commander" && colors.length === 0 && ( 
+        {format !== "" && format !== "commander" && colors.length === 0 && ( 
           <div className='color-group'>
                 <div className='pipeline-container'>
                     <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '0', fontFamily: 'MedievalSharp, cursive'  }}  text={"Format"}/>
@@ -1342,17 +1091,12 @@ const NewDeck = () => {
             
             <div className='deck-colors-container'>
             {existingColors.map((color, index) =>  
-                <div key={index}>
+                <div style={{display:'flex', gap:'10%'}} key={index}>
                   <input className="newDeck-checkbox-colors" type="checkbox" name={"nom"+ color} value={color} 
                   onChange={(event) => selectColors(event.target.value)} 
                   checked={selectedColors.includes(color)} style={{display:(displayColor(color))}}/>
                   <img src={getColorPics(color)} className="deck-colors-img" alt={color} style={{display:(displayColor(color))}}/>
                 </div>
-                )}
-                
-                {existingColors.includes("INCOLORE") && (
-                <div><input className="newDeck-checkbox-colors" type="checkbox" name={"nom incolore"} value={'INCOLORE'} onChange={(event) => selectColors(event.target.value)} 
-                checked={selectedColors.includes("INCOLORE")}/><img src={incolore} className="deck-colors-img" alt={"Incolore"}/></div>
                 )}
                 
             </div>
@@ -1383,7 +1127,7 @@ const NewDeck = () => {
                   <Title style={{marginTop : '2%', marginBottom : '2%'}} title={"Attributs du deck"}/>
               </div>
 
-                  <div className='attributs-container' style={{ backgroundImage: `url(${backgroundPopup})`}}>
+                  <div className='attribut-container' style={{ backgroundImage: `url(${backgroundPopup})`}}>
                     <div className='input-img-container'>
                         <input
                           className='input-deck-img'
@@ -1416,7 +1160,7 @@ const NewDeck = () => {
           )} 
 
         {/*La carte finale pour les decks non commander*/}
-        {colors.length !== 0 && format !== "" && format !== "Commander" && name !== "" && image !== "" && (
+        {colors.length !== 0 && format !== "" && format !== "commander" && name !== "" && image !== "" && (
           <div className="final-card-group">
               <div className='pipeline-container'>
                   <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: 'rgba(176, 176, 176, 1)', color: 'white', zIndex: '0' }} text={"Format"}/> 
@@ -1540,7 +1284,7 @@ const NewDeck = () => {
         )}
 
         {/*La carte finale pour les decks commander*/}
-        {colors.length !== 0 && format === "Commander" && cedhID !== "" && name !== "" && image !== "" && (
+        {colors.length !== 0 && format === "commander" && cedhID !== "" && name !== "" && image !== "" && (
           <div className="final-card-group">
 
               <div className='pipeline-container'>

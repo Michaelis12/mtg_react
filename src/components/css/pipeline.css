@@ -1,13 +1,13 @@
 .pipeline-forme {
     width: 30%;
     padding: 0.5%;
-    height: 80px;
+    height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     border: 1px solid #000000;
-    font-size: 3em;
+    font-size: 2.5em;
 }
 
 

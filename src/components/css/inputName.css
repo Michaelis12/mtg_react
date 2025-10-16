@@ -3,10 +3,10 @@
 
 .input-name {
     width: 80%;
-    height: 70px;  /* Augmente la hauteur du champ de recherche */
+    height: 50px;  /* Augmente la hauteur du champ de recherche */
     padding: 10px;  /* Ajoute de l'espace intérieur pour améliorer l'apparence */
     border: 1px solid #ccc;
-    font-size: 1.5em;
+    font-size: 1.2em;
     text-align: center;
     font-weight: bold;
      border-radius: 5px;
@@ -18,8 +18,8 @@
 
 @media (max-width: 1000px) {
     .input-name {
-        height: 70px;
-        font-size: 1.5em;
+        height: 50px;
+        font-size: 1.2em;
     }
  }
 

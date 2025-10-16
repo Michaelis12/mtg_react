@@ -20,7 +20,7 @@ import UserSelected from './pages/UserSelected';
 import UserSelectedAdmin from './pages/UserSelectedAdmin';
 import Deckbuilding from './pages/DeckbuildingApi';
 import CardsDeckPage from './pages/CardsDeckPageApi';
-import NewDeck from './pages/NewDeck';
+import NewDeck from './pages/NewDeckApi';
 // Pages légales
 import Mentions from './pages/Mentions';
 import RGPD from './pages/RGPD';

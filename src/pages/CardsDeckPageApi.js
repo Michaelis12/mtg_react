@@ -64,7 +64,7 @@ const CardsDeckPage = () => {
     const [filterText, setFilterText] = React.useState("")
     const [inputManaCostMin, setInputManaCostMin] = React.useState("")
     const [inputManaCostMax, setInputManaCostMax] = React.useState("")
-    const [filterColors, setFilterColors] = React.useState([])
+    const [filterColors, setFilterColors] = React.useState(["none"])
     const [filterRarities, setFilterRarities] = React.useState([])
     const [filterEditions, setFilterEditions] = React.useState([])
     const [filterTypes, setFilterTypes] = React.useState([])
