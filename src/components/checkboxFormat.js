@@ -80,9 +80,7 @@ const CheckboxFormat = function (props) {
 
     return (
         <div className="checkbox-deck-format">
-            {displayLoading ? (
-                <p>Chargement des formats...</p>
-            ) : (
+            {(
                 formats.map((format, index) => (
                     <div className="checkbox-input-format-container" key={index}>
                         <div className="input-format-container">
