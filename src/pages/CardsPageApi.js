@@ -99,6 +99,8 @@ const CardsPage = () => {
                 
             }   
             catch (error) {
+                setCards([])
+                setHasMore(false)
                 setDisplayLoading(false);
                 console.log(error);
             }
@@ -761,7 +763,6 @@ const CardsPage = () => {
                     </div>
                   )}
                 </div>
-
 
              
                 <div className="filter-rarities-container">

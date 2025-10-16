@@ -325,8 +325,8 @@
   }
 
   .deck-selected-img {
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
     border-radius: 50%; 
     object-fit: cover;
     margin-top: 3%;
@@ -478,8 +478,9 @@
 @media (max-width: 1650px) {
 
     .new-deck-body {
-      width: 60%;
+      width: 70%;
     }
+
 
 }
 
@@ -489,6 +490,11 @@
     .new-deck-body {
       width: 70%;
     }
+
+    .deck-selected-img {
+      width: 250px;
+      height: 250px;
+     }
 
 }
 
@@ -712,7 +718,9 @@
   }
 }
   
+  @media (max-width: 1500px) {
 
+  }
 
 
 

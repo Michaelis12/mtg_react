@@ -104,6 +104,7 @@ const AccountPage = () => {
                     }           
                 } 
 
+
                 const [arrowSens, setArrowSens] = useState(<SlArrowUp/>)
                 const [arrowUp, setArrowUp] = useState(true)
                 const [navDecks, setNavDecks] = useState(true)
@@ -426,6 +427,7 @@ const AccountPage = () => {
         }
         getDeckBuilder();
         }, [decks, cardsLiked, decksLiked, updateProfil]);
+        
 
 
         // Afficher le total de likes obtenus par les decks de l'user

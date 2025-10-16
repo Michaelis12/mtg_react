@@ -17,9 +17,9 @@ export const buildQuery = (
   }
 
   if (textFilter && textFilter.trim() !== '') {
-    queryParts.push(`oracle:${textFilter.trim()}`);
-  }
-
+  const cleanedText = textFilter.trim().replace(/"/g, '');
+  queryParts.push(`oracle:"${cleanedText}"`);
+}
 
   // Filtre CMC min
   if (manaCostMin && manaCostMin.trim() !== '') {
@@ -35,7 +35,6 @@ export const buildQuery = (
   if (colorsFilter && colorsFilter.length > 0) {
     const colorStr = colorsFilter.join(''); 
     queryParts.push(`ci=${colorStr}`);
-    console.log(colorStr)
   }
 
   // Filtre format

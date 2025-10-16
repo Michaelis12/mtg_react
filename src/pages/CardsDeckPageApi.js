@@ -128,30 +128,7 @@ const CardsDeckPage = () => {
                   setFilterColors(colorsArray);
                 }
 
-                // Mapping sécurisé du format (le mettre dans un tableau)
-                if (response.format) {
-                  const formatArray = typeof response.format === 'string'
-                    ? [response.format.toLowerCase()]
-                    : Array.isArray(response.format)
-                      ? response.format.map(f => f.toLowerCase())
-                      : [];
-
-                  setFormat(formatArray);
-                }
-
-              
-        
-              
-              
-              /*
-              if (!stored) {
-                setFilterColors(response.colors)
-              }
-              
-
-                recupStorageColors(response.colors)
-                */    
-
+                setFormat(response.format);
 
             }   
             catch (error) {
@@ -169,7 +146,7 @@ const CardsDeckPage = () => {
 
 
 
-  // Récupère les cartes triées par id 
+  // Récupère les cartes 
   const getCards = async () => {
               try {
                   setDisplayLoading(true); 
@@ -185,13 +162,12 @@ const CardsDeckPage = () => {
                   // Contient les RequestParams de la requete
                   
                   const params = {
-                    q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, format,
+                    q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, [format],
                                   filterRarities, filterTypes, filterLegendary, filterEditions
                     ),
                     page: 1
                   };
-  
-  
+                  
                   
                   const response = await axios.get('https://api.scryfall.com/cards/search', {
                     params,
@@ -199,7 +175,7 @@ const CardsDeckPage = () => {
                       indexes: null 
                   }
                   });
-                  
+                                    
                   
                   const listCards = response.data.data.map(cardData => Card.fromApi(cardData));
                   setCards(listCards)
@@ -211,6 +187,8 @@ const CardsDeckPage = () => {
                   
               }   
               catch (error) {
+                  setCards([])
+                  setHasMore(false)
                   setDisplayLoading(false);
                   console.log(error);
               }
@@ -1083,7 +1061,8 @@ const CardsDeckPage = () => {
                 {cards.map(card => ( 
                     <div className="cards-details" key={card.id}>                       
 
-                      { deck.format === "Commander" && ( 
+                      {/*Si le format est commander les cartes sont à l'unité*/} 
+                      { deck.format === "commander" && ( 
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
@@ -1093,7 +1072,29 @@ const CardsDeckPage = () => {
                       </div>
                       )}
 
-                      { deck.format !== "Commander" && (   
+                      {/*Si la carte est légendaire elle est à l'unité également */} 
+                      { deck.format !== "commander" && card.legendary && ( 
+                      <div className='classic-formats-deck-details'>
+                        <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image" onClick={() => navCard(card.id)}
+                        onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
+                        style={{opacity: desacCardsCedh(card.id)}} /> 
+
+                        {/*La présence de cartes dans le deck*/}
+                       <div className="deck-presence-container">
+                         <p className="p-cards-deck-length">présence dans le deck : {deckCards.filter(cardDeck => cardDeck === card.id).length}</p>
+                         {cardsSelected.filter(cardDeck => cardDeck === card).length > 0 && (
+                          <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === card).length}</p>
+                        )}                      
+                       </div> 
+                        
+                                      
+                        <AddButton onClick={() => selectCardCedh(card)} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }}
+                            icon={changeIcon(card.id)}  disabled={deckCards.includes(card.id)}/>
+                      </div>
+                      )}
+
+                       {/*Sinon la carte peut etre ajoutée en jusqu'à 4 exemplaires */}
+                      { deck.format !== "commander" && !card.legendary && (   
                                       
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image" onClick={() => navCard(card.id)}
@@ -1101,15 +1102,14 @@ const CardsDeckPage = () => {
                         style={{opacity: desacCardsDeck(card.id)}} />
 
                         
-                        {/*La présence de cartes dans le deck*/}
+                      {/*La présence de cartes dans le deck*/}
                        <div className="deck-presence-container">
                          <p className="p-cards-deck-length">présence dans le deck : {deckCards.filter(cardDeck => cardDeck === card.id).length}</p>
                          {cardsSelected.filter(cardDeck => cardDeck === card).length > 0 && (
                           <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === card).length}</p>
-                        )}
-
-                        
+                        )}                      
                        </div>
+
                         {/*Le bouton + si la carte n'est pas encore dans le deck*/}
                        { !deckCards.includes(card.id) && !cardsSelected.includes(card) && (
                         <AddButton onClick={() => selectCard(card)} style={{ backgroundColor: 'white', margin : '2%', marginBottom: '7%', border: 'none' }}
@@ -1150,7 +1150,9 @@ const CardsDeckPage = () => {
               </div>
              
               {/*Bouton + de cartes*/} 
+              { hasMore && (
               <button className='next-page-button' disabled={!hasMore} onClick={()=>displayMoreCards()}>Afficher plus</button> 
+              )}
 
             {/*Popup ajout de cartes*/} 
             { displayPopup && (
@@ -1165,7 +1167,7 @@ const CardsDeckPage = () => {
                                                   {cardsSelectedUnit.map(card => ( 
                                                     <div className="land-text-details" id='land-card'  key={card.id}> 
                                                         <h5 className='land-text-name' onMouseEnter={() => setCardImage( card.image ? card.image :  defaultImg)} >{card.name}</h5>
-                                                      { format !== "Commander" && (
+                                                      { format !== "commander" && !card.legendary && (
                                                         <div className='land-text-number'>                              
                                                             <button className="addButton" style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => unselectCard(card)}
                                                             disabled={lessCard(card)} >

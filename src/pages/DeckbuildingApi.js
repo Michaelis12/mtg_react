@@ -282,7 +282,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             const getCedh = async () => { 
                 try {
                     
-                    if( deck.format === "COMMANDER") {
+                    if( deck.format === "commander") {
 
                         setDisplayLoading(true);
                             
@@ -316,8 +316,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
             // Calcule la somme des cmc
             const totalCmc = validCards.reduce((sum, card) => sum + card.cmc, 0);
-            console.log("cmc total : " + totalCmc)
-             console.log("cards : " + validCards.length)
+
             // Calcule la moyenne
             const averageCmc = totalCmc / validCards.length;
 
@@ -337,7 +336,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
           }
 
         // Affichage d'image correspondant aux couleurs de la carte
-// Affichage d'image correspondant aux couleurs de la carte
+        // Affichage d'image correspondant aux couleurs de la carte
         const getColors = (value) => {
                       if(value === "W") {
                           return white
@@ -364,14 +363,14 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         // Consultez les cartes (en masquant les cartes qui seront deja dans le deck si le format est CEDH)
         const navigateCards = () => {
             const data = id
-            const deckCardsID = [...deckCards.map(card => card.apiID), deckCedh.id];
+            const deckCardsID = [...deckCards.map(card => card.apiID), deckCedh.apiID];
             navigate(`/cardsDeck`, { state: { deckID: data, cardsDesac: deckCardsID }})
         }
 
 
         // Nombre de cartes requises
         const cardsNumber = () => {
-            if(deck.format === "COMMANDER") {
+            if(deck.format === "commander") {
                 return 100
             }
             else {
@@ -384,7 +383,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
         // Desactiver le bouton de publication si le nb de cartes suffisant n'est pas encore atteint
         const disabledPublication = () => {
-            if(deck.format === "COMMANDER") {
+            if(deck.format === "commander") {
                 return deckCardsLength !== 99 
             }
             else {
@@ -502,14 +501,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             setDisplayLoading(true);
                             setHand([])
                             
-                            const response = await axiosInstance.get(`/f_all/get7CardsDeckID?deckID=${id}`);
+                            const request = await axiosInstance.get(`/f_all/get7CardsDeckID?deckID=${id}`);
                             
-                            const listCards = response.data.map(
-                                    card => new Card (card.id, card.name, card.text, card.image, card.manaCost, card.value, card.formats,
-                                            card.colors, card.type, card.legendary, card.rarity, card.edition,
-                                            card.deckBuilders, card.decks, card.decksCommander, card.likeNumber,
-                                            card.deckNumber, card.commanderNumber 
-                            ) )                
+                            const listCards = request.data.map(cardData => Card.fromApi(cardData));               
                              
                                 setHand(listCards)
                                 setDisplayLoading(false);
@@ -544,7 +538,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
                     setCardImage(cardOrIndex.image);
                     setCardID(cardOrIndex.id);
-                    if(deck.format === "COMMANDER") {
+                    if(deck.format === "commander") {
                         if(cardOrIndex.id === deckCedh.id) {
                         setNavigateListID([cardOrIndex.id]);
                         setListImage(cardOrIndex.image);
@@ -876,9 +870,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         };
 
 
-
-
-
         // Donne le nombre d'exemplaire d'une carte
         const count = (cardID) => {
             const deckCardsid = deckCards.map(card => card.id);
@@ -1182,11 +1173,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             </div>
                 
 
-            { format === "COMMANDER" && (
+            { format === "commander" && (
                 <Title title={`Cartes du deck (${deckCards.length + 1} / ${cardsNumber()})`}/>
             )}
 
-            { format !== "COMMANDER" && (
+            { format !== "commander" && (
                 <Title title={`Cartes du deck (${deckCards.length})`}/>
             )}
                         
@@ -1195,7 +1186,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         
 
         {/*Affichage du commandant*/}
-        { format === "COMMANDER" && ( 
+        { format === "commander" && ( 
         <div style={{width: '100%', display : 'flex', flexDirection: 'column', alignItems: 'center'}}>               
             <div style={{width: '30%'}}>
             <TitleType title={"Commandant"}/>
@@ -1204,7 +1195,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
              <div className="cedh-details">
                 
                 <div className='card-link-desktop'>
-                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8080${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>navCedh(deckCedh.id)}
+                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8080${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>navCedh(deckCedh.apiID)}
                                                 onMouseEnter={() => hoveredCard(deckCedh.id) } onMouseOut={() => hoveredCard()}/>
                 </div>
 
@@ -1267,7 +1258,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 </button>
                                             </div>
                                         )} 
-                                        {format !== "COMMANDER" && land.id > 6 && (
+                                        {format !== "commander" && land.id > 6 && (
                                         <div className='deckbuilding-text-number'>                              
                                             <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
                                                 <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
@@ -1313,7 +1304,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                         </div>
                                     
                                     <div className='deckbuilding-number-container'>
-                                        { format !== "COMMANDER" && ( 
+                                        { format !== "commander" && !creature.legendary && ( 
                                         <div className='deckbuilding-text-number'>  
                                             { cardsSelected.filter(cardDeck => cardDeck === creature.id).length > 0  && (
                                                     <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === creature.id).length}</p>
@@ -1363,7 +1354,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     </div>
 
                                     <div className='deckbuilding-number-container'>
-                                        { format !== "COMMANDER" && ( 
+                                        { format !== "commander" && ( 
                                         <div className='deckbuilding-text-number'>                              
                                         <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(enchant)} >
                                                                     <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
@@ -1413,7 +1404,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                         </div>
                                     
                                      <div className='deckbuilding-text-number'>
-                                        { format !== "COMMANDER" && (
+                                        { format !== "commander" && (
                                         <div className='deckbuilding-text-number'>   
                                         { cardsSelected.filter(cardDeck => cardDeck === spell.id).length > 0  && (
                                                 <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === spell.id).length}</p>
@@ -1459,7 +1450,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                        </div>
 
                                      <div className='deckbuilding-number-container'>
-                                        { format !== "COMMANDER" && (
+                                        { format !== "commander" && (
                                         <div className='deckbuilding-text-number'>   
 
                                         { cardsSelected.filter(cardDeck => cardDeck === artefact.id).length > 0  && (
@@ -1510,7 +1501,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                         <h5 className='land-text-name' onClick={()=> openZoomPopup(planeswalker)} >{planeswalker.name}</h5>
                                     </div>
                                     <div className='deckbuilding-number-container'>
-                                    { format !== "COMMANDER" && (
+                                    { format !== "commander" && (
                                     <div className='deckbuilding-text-number'>
 
                                         { cardsSelected.filter(cardDeck => cardDeck === planeswalker.id).length > 0  && (

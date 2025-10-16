@@ -9,11 +9,11 @@ class Card {
     cmc,
     colors,
     types,
-    supertypes,
+    legendary,
     rarity,
     set,
     legalities
-  }) {
+  }) { 
     this.id = id;
     this.apiID = apiID;
     this.name = name;
@@ -23,7 +23,7 @@ class Card {
     this.cmc = cmc || 0;
     this.colors = colors || [];
     this.types = types || [];
-    this.legendary = supertypes?.includes("Legendary") || false;
+    this.legendary = legendary;
     this.rarity = rarity || "";
     this.edition = set || "";             // set de l'API
     this.formats = this.extractFormats(legalities); // formats légaux
@@ -49,7 +49,7 @@ class Card {
       cmc: cardData.cmc, 
       colors: cardData.colors,
       types: cardData.types, 
-      supertypes: cardData.supertypes,
+      legendary: cardData.legendary,
       rarity: cardData.rarity,
       set: cardData.set,
       legalities: cardData.legalities

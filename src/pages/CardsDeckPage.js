@@ -1333,7 +1333,7 @@ const CardsDeckPage = () => {
                 {cards.map(card => ( 
                     <div className="cards-details" key={card.id} style={{display:(maskBaseLand(card.id))}}>                       
 
-                      { deck.format === "COMMANDER" && ( 
+                      { deck.format === "commander" && ( 
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
@@ -1343,7 +1343,7 @@ const CardsDeckPage = () => {
                       </div>
                       )}
 
-                      { deck.format !== "COMMANDER" && (   
+                      { deck.format !== "commander" && (   
                                       
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
@@ -1411,7 +1411,7 @@ const CardsDeckPage = () => {
                     {topCards.map(card => ( 
                     <div className="cards-details" key={card.id} style={{display:(maskBaseLand(card.id))}}>                       
 
-                      { deck.format === "Commander" && ( 
+                      { deck.format === "commander" && ( 
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navTopCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
@@ -1421,7 +1421,7 @@ const CardsDeckPage = () => {
                       </div>
                       )}
 
-                      { deck.format !== "Commander" && (                 
+                      { deck.format !== "commander" && (                 
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navTopCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
@@ -1485,7 +1485,7 @@ const CardsDeckPage = () => {
                 {cardsLiked.map(card => ( 
                     <div className="cards-details" key={card.id} style={{display:(maskBaseLand(card.id))}}>                       
 
-                      { deck.format === "COMMANDER" && ( 
+                      { deck.format === "commander" && ( 
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
@@ -1495,7 +1495,7 @@ const CardsDeckPage = () => {
                       </div>
                       )}
 
-                      { deck.format !== "COMMANDER" && (                 
+                      { deck.format !== "commander" && (                 
                       <div className='classic-formats-deck-details'>
                         <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
@@ -1568,7 +1568,7 @@ const CardsDeckPage = () => {
                                                   {cardsSelectedUnit.map(card => ( 
                                                     <div className="land-text-details" id='land-card'  key={card.id}>
                                                         <h5 className='land-text-name' onMouseEnter={() => setCardImage(card.image)} >{card.name}</h5>
-                                                      { format !== "COMMANDER" && (
+                                                      { format !== "commander" && (
                                                         <div className='land-text-number'>                              
                                                             <button className="addButton" style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => unselectCard(card)}
                                                             disabled={lessCard(card)} >
@@ -1614,7 +1614,7 @@ const CardsDeckPage = () => {
                               <div className='cards-deck-unit-container'> 
                                 {cardsSelectedUnit.length > 0 && (
                                   <div className="land-text-details" id='land-card' key={cardsSelectedUnit[cardNumber].id}>
-                                    { format !== "COMMANDER" && (
+                                    { format !== "commander" && (
                                     <div className='land-text-number'>                              
                                       <button className="add-button-deckbuilding" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={() => unselectCard(cardsSelectedUnit[cardNumber])}
                                       disabled={lessCard(cardsSelectedUnit[cardNumber])} >
