@@ -8,7 +8,8 @@ export const buildQuery = (
   raritiesFilter,
   typesFilter,
   legendaryFilter,
-  editionsFilter
+  editionsFilter,
+  deckColors = []
 ) => {
   let queryParts = [];
 
@@ -33,8 +34,11 @@ export const buildQuery = (
 
   // Filtre couleur exact (ci=ub)
   if (colorsFilter && colorsFilter.length > 0) {
-    const colorStr = colorsFilter.join(''); 
-    queryParts.push(`ci=${colorStr}`);
+    const colorStr = colorsFilter.join('');
+    queryParts.push(`ci=${colorStr}`); // couleur exacte
+  } else if (deckColors && deckColors.length > 0) {
+    const colorStr = deckColors.join('');
+    queryParts.push(`identity<=${colorStr}`); // sous-ensemble des couleurs du deck
   }
 
   // Filtre format

@@ -54,9 +54,9 @@
     display: flex;            /* active Flexbox */
     align-items: center;      /* centre verticalement */
     justify-content: center;
-    width: 100px;
-    font-size: 1.5em;
-    height: 50px;
+    width: 70px;
+    font-size: 1.2em;
+    height: 30px;
     font-weight: 600;
     transition: border-color 0.3s ease;
     background-color: white;

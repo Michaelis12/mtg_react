@@ -28,11 +28,11 @@
 
 .icon-add-card {
   font-size: 1em;
+  transition: transform 0.1s ease;
 }
 
 .icon-add-card:hover {
     transform: scale(0.9);
-    pointer-events: none;
 }
 
 

@@ -951,15 +951,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             {/*La carte format desktop*/}
                             <div className='card-selected-container'> 
                                 <div className="deck-card-desktop" style={{ backgroundImage: `url(${backgroundPopup})`, marginTop: '1%'}}>
-                                                          <h1 className='deck-name'>{deck.name} 
-                                                                   {!deck.isPublic && (
-                                                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
-                                                                    )} 
-                                                                    {deck.isPublic && (
-                                                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
-                                                                    )} 
-                                                            </h1> 
-                                  
+                                                          <h1 className='deck-name'>{deck.name}</h1>            
                                                           <div className="deck-content">
                                                                <img className="deckbuilding-pp" style={{marginTop: '-5%'}}
                                                                src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8080${deck.image}` : deck.image} alt="Deck mtg"/> 
@@ -983,14 +975,20 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                         </div>
                                                                       )}                                                      
                                                                   </div> 
-                
-                                                                  <div className='card-line-attribut'>              
-                                                                    <h4 className='deck-selected-line-title'> Valeur totale : </h4> 
-                                                                    <h3><strong>{deck.value} €</strong></h3>
-                                                                </div>
+
                                                                 <div className='card-line-attribut'>              
                                                                     <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
                                                                     <h3><strong>{cmc}</strong></h3>
+                                                                </div>
+
+                                                                <div className='card-line-attribut'>              
+                                                                    <h4 className='deck-selected-line-title'> Statut : </h4> 
+                                                                    {!deck.isPublic && (
+                                                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
+                                                                    )} 
+                                                                    {deck.isPublic && (
+                                                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
+                                                                    )} 
                                                                 </div>
                 
                                                               </div>
@@ -1238,7 +1236,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                             <img className="card-img-zoom"  src={land.image && land.image.startsWith('/uploads/') ? `http://localhost:8080${land.image}` : land.image} alt="Card-image" />
                                         )}
                                     <div className='deckbuilding-number-container'>
-                                        {land.id < 7 && (
+                                        {/*land.id < 7 && (
                                             <div className='deckbuilding-text-number'>
 
                                                 { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
@@ -1257,11 +1255,11 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                                 </button>
                                             </div>
-                                        )} 
-                                        {format !== "commander" && land.id > 6 && (
+                                        )*/} 
+                                        {format !== "commander" && !land.legendary && (
                                         <div className='deckbuilding-text-number'>                              
                                             <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
-                                                <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
+                                                <AiOutlineMinusCircle  disabled={count(land.id) < 1} size={'2em'} color={'black'} className="icon-add-card" />
                                             </button>
                                             
                                             <p className='p-card-length'>{count(land.id)}</p>
@@ -1314,16 +1312,17 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === creature.id).length}</p>
                                              )}
 
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(creature)} >
+                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(creature)}
+                                             disabled={count(creature.id) < 1} >
                                                                         <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                             </button>
+                                           
+                                            <p className='p-card-length'>{count(creature.id)}</p> 
 
-                        
-                                            
-                                            <p className='p-card-length'>{count(creature.id)}</p>                                  
                                             <button className="add-button-deckbuilding" disabled={count(creature.id) > 3}
                                             style={{ margin : '2%', border: 'none' }} 
-                                            onClick={() => selectCard(creature)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
+                                            onClick={() => selectCard(creature)} >
+                                                <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                             </button> 
                                         </div>
                                         )}
@@ -1354,9 +1353,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     </div>
 
                                     <div className='deckbuilding-number-container'>
-                                        { format !== "commander" && ( 
+                                        { format !== "commander" && !enchant.legendary && ( 
                                         <div className='deckbuilding-text-number'>                              
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(enchant)} >
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(enchant)}
+                                            disabled={count(enchant.id) < 1}  >
                                                                     <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                                         
@@ -1368,7 +1368,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === enchant.id).length}</p>
                                         )}
                                         
-                                        <p className='p-card-length'>{count(enchant.id)}</p>                                  
+                                        <p className='p-card-length'>{count(enchant.id)}</p>  
+
+
                                         <button className="add-button-deckbuilding" disabled={count(enchant.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(enchant)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button> 
                                         </div>
@@ -1389,7 +1391,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             { deckSpells.length > 0 && (
                 <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
                     <TitleType title={"Sorts (" + deckCards.filter(card =>
-                            card.type === "EPHEMERE" || card.type === "RITUEL" || card.type === "BATAILLE"
+                            card.type === "instant" || card.type === "sorcery" || card.type === "battle"
                             ).length
                             + ")"}/>
                     <div className='deck-text-map'>
@@ -1404,7 +1406,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                         </div>
                                     
                                      <div className='deckbuilding-text-number'>
-                                        { format !== "commander" && (
+                                        { format !== "commander" && spell.legendary && (
                                         <div className='deckbuilding-text-number'>   
                                         { cardsSelected.filter(cardDeck => cardDeck === spell.id).length > 0  && (
                                                 <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === spell.id).length}</p>
@@ -1414,7 +1416,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === spell.id).length}</p>
                                         )}
 
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(spell)} >
+                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} 
+                                          onClick={() => unselectCard(spell)}  >
                                                                     <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
                                         </button>
                                         

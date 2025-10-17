@@ -44,7 +44,7 @@ const CardsDeckPage = () => {
     const id = location.state?.deckID;
     const  deckCards = location.state.cardsDesac
     const [deck, setDeck] = React.useState([])
-    const [colors, setColors] = React.useState([])
+    const [deckColors, setDeckColors] = React.useState([])
     const [format, setFormat] = React.useState([])
     const [editions, setEditions] = React.useState([])
 
@@ -64,7 +64,7 @@ const CardsDeckPage = () => {
     const [filterText, setFilterText] = React.useState("")
     const [inputManaCostMin, setInputManaCostMin] = React.useState("")
     const [inputManaCostMax, setInputManaCostMax] = React.useState("")
-    const [filterColors, setFilterColors] = React.useState(["none"])
+    const [filterColors, setFilterColors] = React.useState([])
     const [filterRarities, setFilterRarities] = React.useState([])
     const [filterEditions, setFilterEditions] = React.useState([])
     const [filterTypes, setFilterTypes] = React.useState([])
@@ -115,18 +115,8 @@ const CardsDeckPage = () => {
                     
                 // Sert à mapper les colors pour le filtre
                 
-                setColors(response.colors)
+                setDeckColors(response.colors)
                 
-                // Mapping sécurisé des couleurs
-                if (response.colors) {
-                  const colorsArray = Array.isArray(response.colors)
-                    ? response.colors
-                    : typeof response.colors === 'string'
-                      ? response.colors.split(',').map(c => c.trim().toUpperCase()).filter(Boolean)
-                      : [];
-
-                  setFilterColors(colorsArray);
-                }
 
                 setFormat(response.format);
 
@@ -160,28 +150,26 @@ const CardsDeckPage = () => {
                   */
   
                   // Contient les RequestParams de la requete
-                  
-                  const params = {
+
+
+                   const params = {
                     q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, [format],
-                                  filterRarities, filterTypes, filterLegendary, filterEditions
+                                  filterRarities, filterTypes, filterLegendary, filterEditions, deckColors
                     ),
                     page: 1
                   };
-                  
+
                   
                   const response = await axios.get('https://api.scryfall.com/cards/search', {
                     params,
                     paramsSerializer: {
                       indexes: null 
-                  }
+                    }
                   });
-                                    
-                  
+
                   const listCards = response.data.data.map(cardData => Card.fromApi(cardData));
                   setCards(listCards)
                   setHasMore(response.data.has_more);
-                              
-                   
                   setPage(2);
                   setDisplayLoading(false);
                   
@@ -515,7 +503,7 @@ const CardsDeckPage = () => {
                   
                   // Refiltre selon toutes les couleurs du deck
                   const removeColors = () => {
-                   setFilterColors(deck.colors)
+                   setFilterColors([])
                   } 
         
 
@@ -736,7 +724,6 @@ const CardsDeckPage = () => {
                     decksNumber: card.decksNumber || 0
                 }));
 
-                console.log(payload)
 
                 
                 const response = await axiosInstance.post(`f_user/addCardsOnDeck?deckId=${id}`, payload, { withCredentials: true });
@@ -866,7 +853,7 @@ const CardsDeckPage = () => {
                       <div className="compenant-checkbox">
                         <div className="compenant-checkbox-map-large">
 
-                          {colors.map((color, index) => (
+                          {deckColors.map((color, index) => (
                             <li className="li-checkbox" key={index}>
                               <input
                                 className='component-input'

@@ -53,13 +53,13 @@
 
 .deck-card-public {
   color: white;
-  border-radius: 30px;
-  padding-top: 1%;
-  padding-bottom: 1%;
-  padding-left: 2%;
-  padding-right: 2%;
+  border-radius: 10px;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  padding-left: 5%;
+  padding-right: 5%;
   text-align: center;
-  font-size: 0.6em;
+  font-size: 1.5em;
 }
 
 
@@ -705,6 +705,7 @@
 
 
 .delete-card-button {
+    font-size: 0.9em;
     cursor: pointer;
     transition: transform 0.3s ease, color 0.3s ease;
 }
@@ -885,7 +886,7 @@
     color: #2c3e50;
     transition: color 0.3s ease;
     flex: 1;
-    font-size: 1.3em;
+    font-size: 1.1em;
     line-height: 1.1;
     margin: 4px 0;
     text-align: left; /* Garde le texte aligné à gauche */
@@ -1203,8 +1204,8 @@
 
 .add-button-deckbuilding {
     border-radius: 50%; 
-    width: 40px;               
-    height: 40px;   
+    width: 25px;               
+    height: 25px;   
     padding: 0;
     border: 'none';  
     background-color: #f8f9fa;
@@ -1214,9 +1215,11 @@
 }
 
 .add-button-deckbuilding:hover {
-    cursor: pointer;
-    border: 'none';
     background-color: #f8f9fa;
+    border: none;
+    color: inherit;
+    box-shadow: none;
+    transform: none;
 }
 
 .add-button-deckbuilding:disabled {
@@ -1233,10 +1236,7 @@
 }
 
 @media (max-width: 750px) {
-    .add-button-deckbuilding {
-    width: 20px;               
-    height: 20px;   
-}
+  
     .deckbuilding-text-number {
         gap: 0px;
     }
