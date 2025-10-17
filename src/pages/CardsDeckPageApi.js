@@ -845,7 +845,8 @@ const CardsDeckPage = () => {
                                   </div>
                                   )}
                 </div>
-
+              
+              {!deckColors.includes("colorless") &&(
                 <div className="filter-colors-container">
                 <OpenButton text="Filtrer par couleur" icon={arrowColorSens} onClick={OpenFilterColor} />
                   {displayFilterColors && (
@@ -883,7 +884,8 @@ const CardsDeckPage = () => {
                       </div>
                     </div>
                   )}
-                </div>              
+                </div>
+              )}              
              
                 <div className="filter-rarities-container">
                 <OpenButton

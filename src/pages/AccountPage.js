@@ -24,10 +24,11 @@ import { FaHeart, FaRegHeart, FaPlus  } from 'react-icons/fa';
 import { IoSettingsOutline } from "react-icons/io5";
 import { CgCloseO  } from "react-icons/cg";
 import { MdOutlinePlayArrow } from "react-icons/md";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import BackgroundPage from "../assets/background_cardsPage3.jpg"
 import BackgroundWhite from "../assets/background_white.png"
 import BackgroundGif from "../assets/background-forest.gif"
+import BackgroundDeck from "../assets/background_deck_scelled.png"
+import BackgroundDeckAttributs from "../assets/old-paper.jpg"
 import "./css/AccountPage.css" 
 import loading from "../assets/loading.gif"
 import { getImageUrl } from '../utils/imageUtils';
@@ -37,9 +38,8 @@ import { getImageUrl } from '../utils/imageUtils';
  
 
 const AccountPage = () => {
-    const location = useLocation();
     const navigate = useNavigate();
-    const { getCookie, isAuthenticated } = useContext(AuthContext);
+    const { getCookie, isAuthenticated } = useContext(AuthContext); 
     const [deckBuilder, setDeckBuilder] = useState([]);
     const [updateProfil, setUpdateProfil] = useState(false);
     const [activeProfil, setActiveProfil] = useState(false);
@@ -333,22 +333,22 @@ const AccountPage = () => {
 
         // Récupère l'image de chaque couleur
         const getColorPics = (value) => {
-                                        if(value === "BLANC") {
+                                        if(value === "W") {
                                             return white
                                         }
-                                        if(value === "BLEU") {
+                                        if(value === "U") {
                                             return blue
                                         }
-                                        if(value === "VERT") {
+                                        if(value === "G") {
                                             return green
                                         }
-                                        if(value === "ROUGE") {
+                                        if(value === "R") {
                                             return red
                                         }
-                                        if(value === "NOIR") {
+                                        if(value === "B") {
                                             return black
                                         }
-                                        if(value === "INCOLORE") {
+                                        if(value === "colorless") {
                                             return incolore
                                         }
                                        
@@ -791,54 +791,58 @@ const AccountPage = () => {
                             <div className='deck-created-section'>
                             {decks.map(deck => (  
 
-                                <div className="deck-details" id='decks-user'  key={deck.id}>
-                                    <img className="deck-pp" src={getImageUrl(deck.image)} alt="Deck avatar" onClick={() => newDeck(deck.id)}
-                                    onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } onMouseOut={() => hoveredDeck()}/>
-                                    
-                                    <strong className="decks-name" style={{padding:'2%'}}> {deck.name} </strong>
+                                <div className="deck-details" id='decks-user'  key={deck.id} style={{ backgroundImage: `url(${BackgroundDeck})`,backgroundSize: 'cover',      // L'image couvre tout le div
+                                    backgroundPosition: 'center', // Centre l'image
+                                    backgroundRepeat: 'no-repeat'}}>
+                                    <div className='deck-attributs' style={{ backgroundImage: `url(${BackgroundDeckAttributs})`}}>
+                                        <img className="deck-pp" src={getImageUrl(deck.image)} alt="Deck avatar" onClick={() => newDeck(deck.id)}
+                                        onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } onMouseOut={() => hoveredDeck()}/>
+                                        
+                                        <h3 className="decks-name" style={{padding:'2%'}}><strong> {deck.name} </strong></h3>
 
-                                    {!deck.isPublic && (
-                                        <h6 className='deck-public' style={{backgroundColor: 'red'}}>privé</h6>
-                                    )}
-                                    {deck.isPublic && (
-                                        <h6 className='deck-public' style={{backgroundColor: 'green'}}>public</h6>
-                                    )} 
+                                        {!deck.isPublic && (
+                                            <h6 className='deck-public' style={{backgroundColor: 'red'}}>privé</h6>
+                                        )}
+                                        {deck.isPublic && (
+                                            <h6 className='deck-public' style={{backgroundColor: 'green'}}>public</h6>
+                                        )} 
 
-                                    {detailsDeck && detailsDeck.id === deck.id && (
-                                            <div className="hover-deck-card" style={{zIndex: '1'}}>
-                                            <div className="img-container">
-                                                <img className="hover-deck-card-img" src={getImageUrl(deck.image)} alt="Deck mtg"/>
-                                            </div>
-                                                    <div className="deck-hover-body" >
-                                                        <div className='name-line'>
-                                                        <h1 className="hover-deck-name"> {deck.name}</h1>
-                                                        </div>
-                                                        <div className='color-line'>                        
-                                                            <h4 className='color'> Couleurs : </h4> 
-                                                            {deck.colors && deck.colors.length > 0 && (
-                                                                <div className='mapping-color'>
-                                                                {deck.colors.map((color, index)  => (
-                                                                <img src={getColorPics(color)} key={index}
-                                                                style={{display:(displayColor(deck.colors, color))}}
-                                                                className="color-img-select" alt={color}/>                                
-                                                            ))}
-                                                                </div>
-                                                            )} 
-                                                        </div>
-                                                        <div className='format-line'>               
-                                                            <h4 className='format'> Format : </h4> 
-                                                            <h4 className='card-format' style={{ backgroundColor: 'green' }}>{deck.format}</h4>
-                                                        </div>
-                                                        
-                                                    </div>                                                
+                                        {detailsDeck && detailsDeck.id === deck.id && (
+                                                <div className="hover-deck-card" style={{ backgroundImage: `url(${BackgroundDeckAttributs})`, zIndex: '1'}}>
+                                                <div className="img-container">
+                                                    <img className="hover-deck-card-img" src={getImageUrl(deck.image)} alt="Deck mtg"/>
                                                 </div>
-                                            )}
-                                    <p className='card-page-likenumber'>{deck.likeNumber} <FaHeart style={{position:'relative', marginBottom: '3px'}}
-                                                    size={'0.9em'}  color='red' /></p>
+                                                        <div className="deck-hover-body" >
+                                                            <div className='name-line'>
+                                                            <h1 className="hover-deck-name"> {deck.name}</h1>
+                                                            </div>
+                                                            <div className='color-line'>                        
+                                                                <h4 className='color'> Couleurs : </h4> 
+                                                                {deck.colors && deck.colors.length > 0 && (
+                                                                    <div className='mapping-color'>
+                                                                    {deck.colors.map((color, index)  => (
+                                                                    <img src={getColorPics(color)} key={index}
+                                                                    style={{display:(displayColor(deck.colors, color))}}
+                                                                    className="color-img-select" alt={color}/>                                
+                                                                ))}
+                                                                    </div>
+                                                                )} 
+                                                            </div>
+                                                            <div className='format-line'>               
+                                                                <h4 className='format'> Format : </h4> 
+                                                                <h4 className='card-format' style={{ backgroundColor: 'green' }}>{deck.format}</h4>
+                                                            </div>
+                                                            
+                                                        </div>                                                
+                                                    </div>
+                                                )}
+                                        <p className='card-page-likenumber'>{deck.likeNumber} <FaHeart style={{position:'relative', marginBottom: '3px'}}
+                                                        size={'0.9em'}  color='red' /></p>
+                                    </div>
                                 </div> 
                         
                             ))} 
-                                <div className="deck-details">
+                                <div className="deck-details" >
                                     <div className='new-user-deck-contenair'>
                                         <div className='new-deck-button-desktop'>
                                             <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 

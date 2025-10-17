@@ -78,6 +78,8 @@
     padding: 2%;
     border: 1px solid black;
     border-radius: 30px;
+    margin: 0%;
+    background-color: white;
 }
 
 /* Pop-up update card*/

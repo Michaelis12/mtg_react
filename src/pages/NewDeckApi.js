@@ -1162,92 +1162,24 @@ const NewDeck = () => {
               </div>
             
             <div className='deck-colors-container'>
-                <div style={{ display: 'flex', gap: '10%' }}>
-                  {/* Couleur U (Bleu) */}
+              {existingColors.map((color, index) => ((
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10%' }} key={index}>
                   <input
                     className="newDeck-checkbox-colors"
                     type="checkbox"
-                    name="blue"
-                    value="U"
+                    name={color}
+                    value={color}
                     onChange={(event) => selectColors(event.target.value)}
-                    checked={selectedColors.includes("U")}
+                    checked={selectedColors.includes(color)}
                   />
                   <img
-                    src={getColorPics("U")}
+                    src={getColorPics(color)}
                     className="deck-colors-img"
-                    alt="u"
+                    alt={color}
                   />
-                </div>
-
-                  {/* Couleur B (Noir) */}
-                <div style={{ display: 'flex', gap: '10%' }}>
-                  <input
-                    className="newDeck-checkbox-colors"
-                    type="checkbox"
-                    name="black"
-                    value="B"
-                    onChange={(event) => selectColors(event.target.value)}
-                    checked={selectedColors.includes("B")}
-                  />
-                  <img
-                    src={getColorPics("B")}
-                    className="deck-colors-img"
-                    alt="b"
-                  />
-                </div>
-
-                  {/* Couleur R (Rouge) */}
-                <div style={{ display: 'flex', gap: '10%' }}>
-                  <input
-                    className="newDeck-checkbox-colors"
-                    type="checkbox"
-                    name="red"
-                    value="R"
-                    onChange={(event) => selectColors(event.target.value)}
-                    checked={selectedColors.includes("R")}
-                  />
-                  <img
-                    src={getColorPics("R")}
-                    className="deck-colors-img"
-                    alt="r"
-                  />
-                </div>
-
-                  {/* Couleur G (Vert) */}
-                <div style={{ display: 'flex', gap: '10%' }}>
-                  <input
-                    className="newDeck-checkbox-colors"
-                    type="checkbox"
-                    name="vert"
-                    value="G"
-                    onChange={(event) => selectColors(event.target.value)}
-                    checked={selectedColors.includes("G")}
-                  />
-                  <img
-                    src={getColorPics("G")}
-                    className="deck-colors-img"
-                    alt="g"
-                  />
-                </div>
-
-                  {/* Couleur C (Incolore / Colorless) */}
-                <div style={{ display: 'flex', gap: '10%' }}>
-                  <input
-                    className="newDeck-checkbox-colors"
-                    type="checkbox"
-                    name="colorless"
-                    value="colorless"
-                    onChange={(event) => selectColors(event.target.value)}
-                    checked={selectedColors.includes("colorless")}
-                  />
-                  <img
-                    src={getColorPics("colorless")}
-                    className="deck-colors-img"
-                    alt="c"
-                  />
-                </div>
-                
-                            
+                </div>  
+              ))    
+              )}                                    
             </div>
             
 

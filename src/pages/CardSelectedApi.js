@@ -323,53 +323,56 @@ const CardSelectedApi = () => {
                                         />
                                     )}
                                   </div>
-                                   <div className="card-selected-attributs" >
-                                    <div className='card-line-attribut'>
-                                            <h4 className='card-line-title'> Cout en mana : </h4>
-                                            <div className='card-line-devotion'>
-                                                {getManaImages(card.mana_cost)}
-                                            </div>
-                                    </div>
-
-                                <div className='card-line-attribut'>
-                                        <h4 className='card-line-title'> Type : </h4>
-                                        <h3 style={{ fontSize: cardTypeSize(card.type_line), textAlign:"center" }}>
-                                           <strong>{card.type_line}</strong>
-                                        </h3>
-                                </div>
-
-                                <div className='card-line-attribut'>
-                                        <h4 className='card-line-title'> Rareté : </h4>
-                                        <h4 className='card-selected-rarity' 
-                                        style={{ background: getBackgroundColor(card.rarity) }}>{card.rarity} </h4>
-                                </div>
-
-                                <div className='card-line-attribut'>
-                                        <h4 className='card-line-title'> Texte : </h4>
-                                        <h6 style={{textAlign: 'center'}}><strong>{card.oracle_text}
-                                        </strong>
-                                        </h6>
-                                </div>
 
                                 
-                                <div className='card-line-attribut-format'>
-                                <h4 className='card-line-title'>Formats :</h4>
-                                    {card.legalities && typeof card.legalities === 'object' && Object.keys(card.legalities).length > 0 ? (
-                                        <div className='card-selected-format-map'>
-                                        {Object.entries(card.legalities).map(([format, status], index) => (
-                                            <li
-                                            key={index}
-                                            className='card-selected-format'
-                                            style={{ background: getBackgroundFormats(status) }}
-                                            >
-                                            {format}
-                                            </li>
-                                        ))}
-                                        </div>
-                                    ) : (
-                                        <div className='card-selected-format-map'></div>
-                                    )}
-                                </div>
+                                <div className="card-selected-attributs" >
+                                        
+                                    <div className='card-line-attribut'>
+                                                <h4 className='card-line-title'> Cout en mana : </h4>
+                                                <div className='card-line-devotion'>
+                                                    {getManaImages(card.mana_cost)}
+                                                </div>
+                                    </div>
+
+                                    <div className='card-line-attribut'>
+                                            <h4 className='card-line-title'> Type : </h4>
+                                            <h3 style={{ fontSize: cardTypeSize(card.type_line), textAlign:"center" }}>
+                                            <strong>{card.type_line}</strong>
+                                            </h3>
+                                    </div>
+
+                                    <div className='card-line-attribut'>
+                                            <h4 className='card-line-title'> Rareté : </h4>
+                                            <h4 className='card-selected-rarity' 
+                                            style={{ background: getBackgroundColor(card.rarity) }}>{card.rarity} </h4>
+                                    </div>
+
+                                    <div className='card-line-attribut'>
+                                            <h4 className='card-line-title'> Texte : </h4>
+                                            <h6 style={{textAlign: 'center'}}><strong>{card.oracle_text}
+                                            </strong>
+                                            </h6>
+                                    </div>
+
+                                    
+                                    <div className='card-line-attribut-format'>
+                                    <h4 className='card-line-title'>Formats :</h4>
+                                        {card.legalities && typeof card.legalities === 'object' && Object.keys(card.legalities).length > 0 ? (
+                                            <div className='card-selected-format-map'>
+                                            {Object.entries(card.legalities).map(([format, status], index) => (
+                                                <li
+                                                key={index}
+                                                className='card-selected-format'
+                                                style={{ background: getBackgroundFormats(status) }}
+                                                >
+                                                {format}
+                                                </li>
+                                            ))}
+                                            </div>
+                                        ) : (
+                                            <div className='card-selected-format-map'></div>
+                                        )}
+                                    </div>
  
                                 
                                     <div className='card-line-attribut'>
