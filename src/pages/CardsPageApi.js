@@ -638,16 +638,16 @@ const CardsPage = () => {
             <OpenButtonLarge  text="Afficher les filtres" icon={arrowFiltersSens} onClick={OpenFilters}/>
 
             <div className="search-line">            
-            <SearchBar value={name} onChange={(event) => (setName(event.target.value))}
-             style={{position : "relative", width: '80%'}}
-             onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
-             onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName(), position: 'absolute', marginLeft: '75%' }} />
+              <SearchBar value={name} onChange={(event) => (setName(event.target.value))}
+              style={{position : "relative"}}
+              onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
+              onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName() }} />
 
-            <SearchBar value={text}  onChange={(event) => (setText(event.target.value))}
-              style={{position : "relative", width: '80%', marginBottom: '30px'}}
-              onClick={() => (setFilterText(text))} placeholder={" Chercher le texte d'une carte"}
-              onPush={() => (setText(""), setFilterText(""))}
-              iconStyle={{ display: displayResetText(), position: 'absolute', marginLeft: '75%'  }} />
+              <SearchBar value={text}  onChange={(event) => (setText(event.target.value))}
+                style={{position : "relative", marginBottom: '30px'}}
+                onClick={() => (setFilterText(text))} placeholder={" Chercher le texte d'une carte"}
+                onPush={() => (setText(""), setFilterText(""))}
+                iconStyle={{ display: displayResetText()}} />
             </div>
 
               {/*Les filtres pour la requete de carte*/}
@@ -665,7 +665,7 @@ const CardsPage = () => {
                                     <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterManaCost()} />
                                   </div>
                                   )}
-                                </div>
+                </div>
 
                 <div className="filter-colors-container">
                 <OpenButton text="Filtrer par couleur" icon={arrowColorSens} onClick={OpenFilterColor} />

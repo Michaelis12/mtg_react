@@ -214,13 +214,13 @@
   @media (max-width: 600px) {
 
    .deck-details {
-     width: 180px;
-     height: 270px;
+     width: 160px;
+     height: 240px;
     }
 
     .decks-name {
         margin-top: 5px;
-        font-size: 1em;
+        font-size: 0.9em;
     }
 
 
@@ -250,8 +250,8 @@
     }
 
     .deck-pp { 
-        min-height: 100px;
-        width: 100px;
+        height: 80px;
+        width: 80px;
         border: 2px solid black;
     }
 
@@ -273,8 +273,15 @@
 
   }
 
+  @media (max-width: 500px) {
+
+    
+
+  }
+
 
   @media (max-width: 480px) {
+
 
     .map-decks-section {
          padding-top: 5%;

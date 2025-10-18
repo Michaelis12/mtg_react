@@ -1,4 +1,4 @@
-import BackgroundMTG from "../assets/background_zombie.jpg"
+import BackgroundMTG from "../assets/background_cardsPage2.jpg"
 import defaultImg from "../assets/default_avatar.jpg"
 import loading from "../assets/loading.gif"
 import React from 'react';
@@ -9,7 +9,6 @@ import { AuthContext } from "../context/authContext"
 import axiosInstance, { setCsrfToken, setJwtToken } from "../api/axiosInstance"; 
 import backgroundForm from "../assets/background_white.png"
 import Section from "../components/section";
-import validator from "validator";
 import { IoIosArrowDropleft } from "react-icons/io";
 
 
@@ -342,50 +341,52 @@ const SignPage = function () {
     return ( 
     <Section> 
         <div className="sign-container">
-        <img src={BackgroundMTG} className="background-sign" alt="Image 1" />
+        <img src={BackgroundMTG} className="background-image" alt="Image 1" />
         { displayLoading && (
         <img src={loading} className="loading-img" alt="Image 1" />
         )}
         
         {/* Form d'inscription */}
         {!activeAccount && !existingAccount && (
-            <div className="login-container" style={{marginTop: '2%', marginBottom: '1%', backgroundImage: `url(${backgroundForm})`}}>
+            <div className="login-container" style={{backgroundImage: `url(${backgroundForm})`}}>
             <h1 className="title-log">Inscription</h1>
 
             <div className="alert-send-error-container">
                     <h6 className="alert-send-error-auth">{errorContent}</h6>
                 </div>
             
-            <form className="sign-form" onSubmit={signUp} style={{marginTop: '2%'}}> 
-                <div className="input-group">
-                    <label>Pseudo :</label>
+            <form className="login-form" onSubmit={signUp}> 
+
+                <div className="input-groups-container">
+                    <div className="input-group">
+                        <label className="sign-label">Pseudo :</label>                    
+                        <input className="sign-input" type="pseudo" id="pseudo" name="pseudo" placeholder="ex : MagicPlayer1"
+                        onChange={(e) => setPseudo(e.target.value)} style={{borderColor: pseudoStyle()}}/>
+                        <p className="instruction-para">  doit faire entre 5 et 15 caractères</p>
+                    </div>
+
+                    <div className="input-group">
+                        <label className="sign-label" >E-mail :</label>
+                        <input className="sign-input" type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)}
+                        style={{borderColor: emailStyle()}}  required/>
+                    </div>
                     
-                    <input type="pseudo" id="pseudo" name="pseudo" placeholder="ex : MagicPlayer1"
-                    onChange={(e) => setPseudo(e.target.value)} style={{borderColor: pseudoStyle()}}/>
-                    <p className="instruction-para">  doit faire entre 5 et 15 caractères</p>
+                    <div className="input-group">
+                        <label className="sign-label" >Mot de passe :</label>
+                        <input className="sign-input" type="password" id="password" onChange={(e) => setPassword(e.target.value)}
+                        placeholder="entre 8 et 20 caractères avec au moins une majuscule et un caractère spécial"
+                        style={{borderColor: passwordStyle()}} required/>
+                        <p className="instruction-para">  doit contenir entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial  </p>
+                    </div>
+                    <div className="input-group">
+                        <label className="sign-label">Confirmation du mot de passe :</label>
+                        <input className="sign-input" type="password" id="password" onChange={(e) => setConfirmPassword(e.target.value)}
+                        style={{borderColor: passwordStyle()}} required/>
+                    </div> 
                 </div>
-                <div className="input-group">
-                    <label >E-mail :</label>
-                    <input type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)}
-                    style={{borderColor: emailStyle()}}  required/>
-                </div>
-                <div className="input-group">
-                    <label>Mot de passe :</label>
-                    <input type="password" id="password" onChange={(e) => setPassword(e.target.value)}
-                    placeholder="entre 8 et 20 caractères avec au moins une majuscule et un caractère spécial"
-                    style={{borderColor: passwordStyle()}} required/>
-                    <p className="instruction-para">  doit contenir entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial  </p>
-                </div>
-                <div className="input-group">
-                    <label>Confirmation du mot de passe :</label>
-                    <input type="password" id="password" onChange={(e) => setConfirmPassword(e.target.value)}
-                    style={{borderColor: passwordStyle()}} required/>
-                </div> 
                 <div className="link-group">
-                    <button className="valid-form" type="submit" disabled={displayLoading || !completeState}
+                    <button className="valid-popup" type="submit" disabled={displayLoading || !completeState}
                     ><h4>S'inscrire</h4></button>
-                </div>
-                <div className="nav-form-container">
                     <button className="nav-form" onClick={()=>switchForm()}><p>Se connecter</p></button>
                 </div>
                 
@@ -430,31 +431,31 @@ const SignPage = function () {
         {/* Form de connexion */}
         {activeAccount && !forgotPassword && ( 
             <div className="login-container" style={{ backgroundImage: `url(${backgroundForm})`}}>
-            <h1 className="title-log">Connexion</h1>
-            <div className="alert-send-error-container">
-                    <h6 className="alert-send-error-auth">{errorContent}</h6>
-                </div>
-            <form className="login-form" onSubmit={logIn} style={{width : `100%`}}> 
-                
-                <div className="input-group">
-                    <label className="sign-label" >E-mail :</label>
-                    <input className="sign-input" type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)}
-                    style={{borderColor: logStyle()}} required/>
-                </div>
-                <div className="input-group">
-                    <label className="sign-label">Mot de passe :</label>
-                    <input className="sign-input" type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)}
-                    style={{borderColor: logStyle()}} required/>
-                </div>
-                <div className="link-group">
-                    <button className="valid-form" type="submit" disabled={displayLoading || email === "" || password === ""} >
-                        <h4>Se connecter</h4></button>
-                    <button className="nav-form" onClick={()=>switchForm()}>S'inscrire</button>
-                     <button className="nav-form" onClick={()=>(setForgotPassword(true), 
-                    setErrorContent(null), setEmail(""))}>Mot de passe oublié</button>
-                                      
-                </div>               
-            </form>
+                <h1 className="title-log">Connexion</h1>
+                <div className="alert-send-error-container">
+                        <h6 className="alert-send-error-auth">{errorContent}</h6>
+                    </div>
+                <form className="login-form" onSubmit={logIn} style={{width : `100%`}}> 
+                    
+                    <div className="input-group">
+                        <label className="sign-label" >E-mail :</label>
+                        <input className="sign-input" type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)}
+                        style={{borderColor: logStyle()}} required/>
+                    </div>
+                    <div className="input-group">
+                        <label className="sign-label">Mot de passe :</label>
+                        <input className="sign-input" type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)}
+                        style={{borderColor: logStyle()}} required/>
+                    </div>
+                    <div className="link-group">
+                        <button className="valid-popup" type="submit" disabled={displayLoading || email === "" || password === ""} >
+                            <h4>Se connecter</h4></button>
+                        <button className="nav-form" style={{padding:'1%'}} onClick={()=>switchForm()}>S'inscrire</button>
+                        <button className="nav-form" onClick={()=>(setForgotPassword(true), 
+                        setErrorContent(null), setEmail(""))}>Mot de passe oublié</button>
+                                        
+                    </div>               
+                </form>
             </div>       
         )}
 

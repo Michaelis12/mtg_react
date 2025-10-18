@@ -206,6 +206,14 @@
   text-align: center;
 }
 
+@media (max-width: 500px) {
+  .deck-public {
+    font-size : 0.8em;
+     width: 50px;
+    padding: 3%;
+  }
+}
+
 /* Bordure des cartes mappées*/
 .cards-liked-user {
     display: flex;

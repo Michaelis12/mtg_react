@@ -10,7 +10,7 @@ const SearchBar = function (props) {
             aria-describedby="search-addon" onChange={props.onChange} value={props.value}/>
             <button className="searchbar-button" onClick={props.onClick} style={props.buttonStyle}
             ><GrSearch className="searchbar-icon" /></button>
-            <TbFilterCancel className='compenant-reset' style={props.iconStyle} onClick={props.onPush}/>
+            <TbFilterCancel className='compenant-reset-searchbar' style={props.iconStyle} onClick={props.onPush}/>
         </div> ) 
 } 
 

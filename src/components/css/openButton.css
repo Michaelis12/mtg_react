@@ -21,6 +21,21 @@
   }
 
 
+  @media (max-width: 800px) {
+
+     .open-button {
+      height: 55px;
+      width: 60%;
+    }
+
+     .button-text {
+      font-size: 1em;
+     }
+
+
+  }
+
+
   @media (max-width: 500px) {
 
 

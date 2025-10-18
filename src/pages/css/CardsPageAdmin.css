@@ -74,12 +74,7 @@
 
 .card-page-likenumber {
     font-weight: bold;
-    font-size:larger;
-    padding: 2%;
-    border: 1px solid black;
-    border-radius: 30px;
-    margin: 0%;
-    background-color: white;
+    font-size: 1.5em;
 }
 
 /* Pop-up update card*/
@@ -286,6 +281,11 @@
 @media screen and (max-width: 500px) {
     .set-colors-img {
         height: 25px;
+    }
+
+    .card-page-likenumber {
+        font-size: 1.2em;
+        margin-bottom: 0%;
     }
 }
 

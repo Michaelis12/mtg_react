@@ -20,33 +20,13 @@
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-@media (max-width: 1250px) {
+@media (max-width: 1200px) {
     .title {
-    color : white;
-    background-color:  #5D3B8C;
-    width: 40%;
-    border-radius: 30px;
-    padding: 0.5%;
-    margin-left: auto; 
-    margin-right: auto;
-    text-align: center;
-    margin-top: 5%;
-    margin-bottom: 5%;
-    font-family: 'MedievalSharp', cursive;
-    font-size: 2.2em;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-}
-
-@media (max-width: 1250px) {
-    .title {
-
         width: 50%;
-        padding-top: 1%;
-        padding-bottom: 1%;
     }
 
 }
+
 
 
 /* Lorsque l'écran est plus petit que 768px (tablettes et petits écrans) */
@@ -79,7 +59,7 @@
         padding-top: 2%;
         padding-bottom: 2%;
         font-family: 'MedievalSharp', cursive;
-        font-size: 1.5em;
+        font-size: 1.8em;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
 

@@ -792,7 +792,7 @@ const AccountPage = () => {
                             {decks.map(deck => (  
 
                                 <div className="deck-details" id='decks-user'  key={deck.id} style={{ backgroundImage: `url(${BackgroundDeck})`,backgroundSize: 'cover',      // L'image couvre tout le div
-                                    backgroundPosition: 'center', // Centre l'image
+                                    backgroundPosition: 'center', 
                                     backgroundRepeat: 'no-repeat'}}>
                                     <div className='deck-attributs' style={{ backgroundImage: `url(${BackgroundDeckAttributs})`}}>
                                         <img className="deck-pp" src={getImageUrl(deck.image)} alt="Deck avatar" onClick={() => newDeck(deck.id)}
@@ -870,6 +870,7 @@ const AccountPage = () => {
                             } 
 
                         {/*Mapping des cartes likées*/}
+                        {/*
                         <TitleArrow onClick={()=>(setArrowSens2((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>)),
                             setArrowUp2(!arrowUp2))} 
                                     title={ `Mes cartes likées (${deckBuilder?.cardsLikedNumber || 0})`}
@@ -911,6 +912,7 @@ const AccountPage = () => {
                                 <ParagraphBlank text={"Aucune carte likée"}/>
                             </div>
                                                                     )}
+                        */}
 
                     
                     {/*Mapping des decks likés*/}
