@@ -479,12 +479,11 @@ button:hover {
 }
 
 .color-img-select {
-    width: 30px;
-    height: 30px;
-    aspect-ratio: 1/1;
+    width: 25px;
+    height: 25px;
     border-radius: 50%; 
     object-fit: cover;
-    margin: 0;
+    margin-top: 2px;
   }
 
 

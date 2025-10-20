@@ -3,6 +3,7 @@ import { useNavigate, useLocation} from 'react-router-dom';
 import { AuthContext } from "../context/authContext"
 import axiosInstance, { setCsrfToken } from '../api/axiosInstance';
 import Section from '../components/section';
+import DeckMap from '../components/deck';
 import TitleArrow from '../components/titleArrow';
 import IconButton from '../components/buttonIcon'
 import ButtonModif from '../components/iconModif';
@@ -354,15 +355,6 @@ const AccountPage = () => {
                                        
         };
 
-        // N'affiche pas INCOLORE 
-        const displayColor = (values, value) => {
-            if(values.length < 2) {
-                return
-            }
-            if(value === "INCOLORE") {
-                return "none";
-        }
-        }
 
         // Naviguer vers un user
         const chooseUser = async (deckID) => { 
@@ -562,6 +554,24 @@ const AccountPage = () => {
                 }
             }
         }
+
+        const isDeckPublic = (deck) => {
+            if(deck.isPublic) {
+                return "public"
+            }
+            else {
+                return "privé"
+            }
+         }
+
+         const deckPublicStyle = (deck) => {
+            if(deck.isPublic) {
+                return {background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)'}
+            }
+            else {
+                return {background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)'}
+            }
+         }
         
            
  
@@ -787,87 +797,39 @@ const AccountPage = () => {
 
                             {arrowUp === true && 
                             <div className='attributs-map-container'
-                            style={{ backgroundImage: `url(${BackgroundWhite})`, display: 'flex', flexDirection: 'column'}}>
-                            <div className='deck-created-section'>
-                            {decks.map(deck => (  
-
-                                <div className="deck-details" id='decks-user'  key={deck.id} style={{ backgroundImage: `url(${BackgroundDeck})`,backgroundSize: 'cover',      // L'image couvre tout le div
-                                    backgroundPosition: 'center', 
-                                    backgroundRepeat: 'no-repeat'}}>
-                                    <div className='deck-attributs' style={{ backgroundImage: `url(${BackgroundDeckAttributs})`}}>
-                                        <img className="deck-pp" src={getImageUrl(deck.image)} alt="Deck avatar" onClick={() => newDeck(deck.id)}
-                                        onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } onMouseOut={() => hoveredDeck()}/>
-                                        
-                                        <h3 className="decks-name" style={{padding:'2%'}}><strong> {deck.name} </strong></h3>
-
-                                        {!deck.isPublic && (
-                                            <h6 className='deck-public' style={{backgroundColor: 'red'}}>privé</h6>
-                                        )}
-                                        {deck.isPublic && (
-                                            <h6 className='deck-public' style={{backgroundColor: 'green'}}>public</h6>
-                                        )} 
-
-                                        {detailsDeck && detailsDeck.id === deck.id && (
-                                                <div className="hover-deck-card" style={{ backgroundImage: `url(${BackgroundDeckAttributs})`, zIndex: '1'}}>
-                                                <div className="img-container">
-                                                    <img className="hover-deck-card-img" src={getImageUrl(deck.image)} alt="Deck mtg"/>
-                                                </div>
-                                                        <div className="deck-hover-body" >
-                                                            <div className='name-line'>
-                                                            <h1 className="hover-deck-name"> {deck.name}</h1>
-                                                            </div>
-                                                            <div className='color-line'>                        
-                                                                <h4 className='color'> Couleurs : </h4> 
-                                                                {deck.colors && deck.colors.length > 0 && (
-                                                                    <div className='mapping-color'>
-                                                                    {deck.colors.map((color, index)  => (
-                                                                    <img src={getColorPics(color)} key={index}
-                                                                    style={{display:(displayColor(deck.colors, color))}}
-                                                                    className="color-img-select" alt={color}/>                                
-                                                                ))}
-                                                                    </div>
-                                                                )} 
-                                                            </div>
-                                                            <div className='format-line'>               
-                                                                <h4 className='format'> Format : </h4> 
-                                                                <h4 className='card-format' style={{ backgroundColor: 'green' }}>{deck.format}</h4>
-                                                            </div>
-                                                            
-                                                        </div>                                                
-                                                    </div>
-                                                )}
-                                        <p className='card-page-likenumber'>{deck.likeNumber} <FaHeart style={{position:'relative', marginBottom: '3px'}}
-                                                        size={'0.9em'}  color='red' /></p>
-                                    </div>
-                                </div> 
-                        
-                            ))} 
-                                <div className="deck-details" >
-                                    <div className='new-user-deck-contenair'>
-                                        <div className='new-deck-button-desktop'>
-                                            <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
-                                            style={{ width: '150px', height: '150px', backgroundColor: '#5D3B8C', marginBottom: '5%'
-                                                    }}/>
+                                style={{ backgroundImage: `url(${BackgroundWhite})`, display: 'flex', flexDirection: 'column'}}>
+                                <div className='deck-created-section'>
+                                {decks.map(deck => (  
+                                    <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
+                                    format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
+                                     onClick={() => newDeck(deck.id)}
+                                     onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } 
+                                     onMouseOut={() => hoveredDeck()}
+                                     className="deck-public"                                 
+                                     para={isDeckPublic(deck)}
+                                     style={deckPublicStyle(deck)}
+                                     detailsDeck={detailsDeck} />
+                                ))} 
+                                    <div className="deck-details" >
+                                        <div className='new-user-deck-contenair'>
+                                            <div className='new-deck-button-desktop'>
+                                                <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
+                                                style={{ width: '150px', height: '150px', backgroundColor: '#5D3B8C', marginBottom: '5%'
+                                                        }}/>
+                                            </div>
+                                            <div className='new-deck-button-mobile'>
+                                                <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
+                                                style={{ width: '100px', height: '100px', backgroundColor: '#5D3B8C', marginBottom: '5%'
+                                                        }}/>
+                                            </div>
+                                            <h5 style={{padding:'5%'}} ><strong className="deck-named">Nouveau deck</strong></h5>                              
                                         </div>
-                                        <div className='new-deck-button-mobile'>
-                                            <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
-                                            style={{ width: '100px', height: '100px', backgroundColor: '#5D3B8C', marginBottom: '5%'
-                                                    }}/>
-                                        </div>
-                                        <h5 style={{padding:'5%'}} ><strong className="deck-named">Nouveau deck</strong></h5>                              
-                                    </div>
-                                <h6 className='deck-public' style={{visibility: 'hidden'}}>privé</h6>
-                                <ButtonModif style={{visibility: 'hidden'}} />
-                                </div>
-                                
+                                    <h6 className='deck-public' style={{visibility: 'hidden'}}>privé</h6>
+                                    <ButtonModif style={{visibility: 'hidden'}} />
+                                    </div>  
+                                </div>                           
                             </div>
-                            { decks.length > 0 && (
-                                <button className='next-page-button' style={{marginBottom: '3%'}} 
-                                    onClick={()=>navigate('/decksCreate')}>Afficher en détails</button>
-                            )}
-                            </div>
-                            
-                            } 
+                            }
 
                         {/*Mapping des cartes likées*/}
                         {/*
@@ -926,56 +888,15 @@ const AccountPage = () => {
                                     <div className="attributs-map-container" style={{ backgroundImage: `url(${BackgroundWhite})`, display: 'flex', flexDirection: 'column'}}>
                                         <div className='deck-liked-section'>
                                             {decksLiked.map(deck => ( 
-                                                    <div className="deck-details" id='decks-liked-user'  key={deck.id}>
-                                                            <img className="deck-pp" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8080${deck.image}` : deck.image} alt="Deck avatar" onClick={() => navDeckLiked(deck.id)}
-                                                            onMouseEnter={() => hoveredDeckLiked(deck.id, deck.name, deck.format)} onMouseOut={() => hoveredDeckLiked()}/>
-                                                            <strong className="deck-named" style={{paddingTop:'5%'}}> {deck.name} </strong>
-                                                            <button style={{marginBottom: '5%'}}><strong className="deck-db" onClick={() => chooseUser(deck.id)} 
-                                                            > by {deck.deckBuilderName} </strong></button>
-                                                            <IconButton 
-                                                            onClick={()=> dislikeDeck(deck.id)} 
-                                                            onMouseEnter={() => mouseEnterDeck(deck.id)}
-                                                            onMouseLeave={() => mouseLeaveDeck(deck.id)}
-                                                            style={{ 
-                                                                    background: 'none', 
-                                                                    boxShadow: 'none', 
-                                                                    padding: 0, 
-                                                                    border: 'none',
-                                                            }} 
-                                                            icon={hearthIconDeck(deck.id)} 
-                                                            />
-                                                            <ParagraphLikeNumber text={deck.likeNumber} style={{marginTop:'3%'}}
-                                                            iconStyle={{position:'relative', marginBottom: '3px'}}/>
-                                                            
-                                                            {detailsDeckLiked && detailsDeckLiked.id === deck.id && (
-                                                                            <div className="hover-deck-card">
-                                                                                        <div className="img-container">
-                                                                                                <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8080${deck.image}` : deck.image} alt="Deck mtg"/>
-                                                                                        </div>
-                                                                                                        <div className="deck-hover-body" >
-                                                                                                            <div className='name-line'>
-                                                                                                                <h1 className="hover-deck-name"> {deck.name}</h1>
-                                                                                                            </div>
-                                                                                                            <div className='color-line'>                        
-                                                                                                                    <h4 className='color'> Couleurs : </h4> 
-                                                                                                                    {deck.colors && deck.colors.length > 0 && (
-                                                                                                                            <div className='mapping-color'>
-                                                                                                                                {deck.colors.map((color, index)  => (
-                                                                                                                            <img src={getColorPics(color)} key={index} style={{display:(displayColor(deck.colors, color))}}
-                                                                                                                            className="color-img-select" alt={color}/>                                
-                                                                                                                    ))}
-                                                                                                                            </div>
-                                                                                                                    )} 
-                                                                                                            </div>
-                                                                                                            <div className='format-line'>              
-                                                                                                                    <h4 className='format'> Format : </h4> 
-                                                                                                                    <h4 className='card-format' style={{ backgroundColor: 'green' }}>{deck.format}</h4>
-                                                                                                            </div>
-                                                                                                    </div>                                                
-                                                                                                </div>
-                                                                            )}
-                                                            
-                                                    </div>
+                                                <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
+                                                format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
+                                                onClick={() => newDeck(deck.id)}
+                                                onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } 
+                                                onMouseOut={() => hoveredDeck()}
+                                                paraOnClick={()=>chooseUser(deck.id)}
+                                                className="deck-db"                                 
+                                                para={deck.deckBuilderName}
+                                                detailsDeck={detailsDeck} />
                                             ))}
                                         </div>
                                         <button className='next-page-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/decksLiked')}>Afficher en détails</button>

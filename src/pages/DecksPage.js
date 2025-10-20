@@ -15,11 +15,14 @@ import IconButton from '../components/buttonIcon';
 import OpenButton from '../components/openButton';
 import ButtonSelect from '../components/buttonSelect';
 import ParagraphLikeNumber from '../components/paragraphLikeNumber';
+import DeckMap from '../components/deck';
 import FooterSection from '../components/footerSection';
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { TbFilterCancel } from "react-icons/tb";
 import { FaHeart, FaRegHeart  } from 'react-icons/fa';
 import backgroundCardsPage from "../assets/background_cardsPage3.jpg"
+import BackgroundDeck from "../assets/background_deck_scelled.png"
+import BackgroundDeckAttributs from "../assets/old-paper.jpg"
 import backgroundWhite from "../assets/background_white.png"
 import white from "../assets/white-mtg.png"
 import blue from "../assets/blue-mtg.png"
@@ -75,28 +78,26 @@ const DecksPage = () => {
             try {
                 setDisplayLoading(true);
                 // Contient les RequestParams de la requete
-
+                /*
                 if (filterColors.length <1 || filterFormats.length <1
                 ) {
                     setDisplayLoading(false);
                     return;
                 }
-
+                */
                 const params = {
                     page: 0,
                     size: pageSize,
                     order: "date",
                     name: filterName,
-                    colors: filterColors,
-                    formats: filterFormats,
-                    valueMin : inputValueMin,
-                    valueMax : inputValueMax,
                     manaCostMin : inputManaCostMin,
-                    manaCostMax : inputManaCostMax
+                    manaCostMax : inputManaCostMax,
+                    colors: filterColors,
+                    formats: filterFormats
 
-                };
+                }; 
 
-                const response = await axiosInstance.get('f_all/getDecksPaged', {
+                const response = await axiosInstance.get('f_all/getDecks', {
                   params,
                   paramsSerializer: {
                     indexes: null // Cela désactive l'ajout des crochets
@@ -107,6 +108,8 @@ const DecksPage = () => {
                             deck.colors, deck.manaCost, deck.value, deck.isPublic, deck.deckBuilder,
                             deck.deckBuilderName, deck.likeNumber, deck.cards, deck.commander
                 ) )
+
+                console.log(listDecks)
                         
                 setDecks(listDecks)
                 setPage(1) // Quand la méthode initiale est appelé on reinitialise la page à 1
@@ -573,26 +576,6 @@ const DecksPage = () => {
                     }
         };
 
-        // Récupère toutes les couleurs
-                 useEffect(() => {
-                     const getColors = async () => {
-                         try {
-                             setDisplayLoading(true);
-                             const request = await axiosInstance.get(`f_all/getColors`);
-         
-                             const response = request.data
-                 
-                             setColors(response)
-                             recupStorageColor(response)
-                             setDisplayLoading(false);
-                         }   
-                         catch (error) {
-                             setDisplayLoading(false);
-                             console.log(error);
-                         }
-                     }
-                     getColors();
-                     }, []);
 
          // Ouvrir le filtre colors 
          const OpenFilterColor = () => {
@@ -674,28 +657,7 @@ const DecksPage = () => {
                         console.error("Erreur lors de la récupération du sessionStorage :", error);
                     }
         };
-        
-        // Récupère tous les formats
-        useEffect(() => {
-            const getFormats = async () => {
-                try {
-                    setDisplayLoading(true);
-                    const request = await axiosInstance.get(`f_all/getFormats`);
 
-                    const response = request.data.map(format => format.name);
-        
-                    setFormats(response)
-                    recupStorageFormat(response)
-                    setDisplayLoading(false);
-
-                }   
-                catch (error) {
-                    setDisplayLoading(false);
-                    console.log(error);
-                }
-            }
-            getFormats();
-            }, []);
 
         // Affiche le filtre des formats
          const OpenFilterFormat = () => {
@@ -867,55 +829,15 @@ const DecksPage = () => {
               {displayDecks === "date" && (  
                 <div className='display-decks-section'>
                             {decks.map(deck => ( 
-                                <div className="deck-details"  key={deck.id}>
-                                    <img className="deck-pp" src={getDeckImageUrl(deck.image)} alt="Deck avatar" onClick={() => chooseDeck(deck.id)}
-                                    onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } onMouseOut={() => hoveredDeck()} />
-                                    <strong className="decks-name"> {deck.name} </strong>
-                                  <button className="deck-db-button" onClick={() => chooseUser(deck.id)}><strong className="deck-db"> de {deck.deckBuilderName}</strong></button>
-
-                                    <IconButton   
-                                        onClick={()=> likeDislike(deck.id)} 
-                                        
-                                        style={{ 
-                                            background: 'none', 
-                                            boxShadow: 'none', 
-                                            paddingTop: '5%', 
-                                            border: 'none',                                       
-                                          }} 
-                                                      
-                                        icon={hearthIcon(deck.id)} 
-                                    />
-
-                                    <ParagraphLikeNumber text={getAdjustedLikeNumber(deck)} iconStyle={{position:'relative', marginBottom: '3px'}}/>
-
-                                    {detailsDeck && detailsDeck.id === deck.id && (
-                                    <div className="hover-deck-card">
-                                          <div className="img-container">
-                                              <img className="hover-deck-card-img" src={getDeckImageUrl(deck.image)} alt="Deck mtg"/>
-                                          </div>
-                                                  <div className="deck-hover-body" >
-                                                    <div className='name-line'>
-                                                      <h1 className="hover-deck-name"> {deck.name}</h1>
-                                                    </div>
-                                                    <div className='color-line'>                        
-                                                        <h4 className='color'> Couleurs : </h4> 
-                                                        {deck.colors && deck.colors.length > 0 && Array.isArray(colors) && (
-                                                            <div className='mapping-color'>
-                                                              {deck.colors.map((color)  => (
-                                                            <img src={getColorPics(color)} className="color-img-select" style={{display:(displayColor(color))}} alt={color}/>                                
-                                                        ))}
-                                                            </div>
-                                                        )} 
-                                                    </div>
-                                                    <div className='format-line'>              
-                                                        <h4 className='format'> Format : </h4> 
-                                                        <h4 className='card-format' style={{ backgroundColor: 'green' }}>{deck.format}</h4>
-                                                    </div>
-                                                    
-                                                </div>                                                
-                                              </div>
-                                    )}
-                                </div>                         
+                              <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
+                                                format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
+                                                onClick={() => chooseDeck(deck.id)}
+                                                onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } 
+                                                onMouseOut={() => hoveredDeck()}
+                                                paraOnClick={()=>chooseUser(deck.id)}
+                                                className="deck-db"                                 
+                                                para={deck.deckBuilderName}
+                                                detailsDeck={detailsDeck} />                        
                             ))}
                                    
                     </div>   
@@ -929,56 +851,15 @@ const DecksPage = () => {
               {displayDecks === "popularity" && (  
                 <div className='display-decks-section'>
                             {topDecks.map(deck => ( 
-                                <div className="deck-details"  key={deck.id}>
-                                    <img className="deck-pp" src={getDeckImageUrl(deck.image)} alt="Deck avatar" onClick={() => chooseDeck(deck.id)}
-                                    onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } onMouseOut={() => hoveredDeck()} />
-                                    <strong className="decks-name"> {deck.name} </strong>
-                                  <button className="deck-db-button"  onClick={() => chooseUser(deck.id)}><strong className="deck-db"> de {deck.deckBuilderName}</strong></button>
-
-                                    <IconButton   
-                                        onClick={()=> likeDislike(deck.id)} 
-                                        
-                                        style={{ 
-                                            background: 'none', 
-                                            boxShadow: 'none', 
-                                            paddingTop: '5%', 
-                                            border: 'none',                                       
-                                          }} 
-                                                      
-                                        icon={hearthIcon(deck.id)} 
-                                    />
-
-                                    <ParagraphLikeNumber text={getAdjustedLikeNumber(deck)} iconStyle={{position:'relative', marginBottom: '3px'}}/>
-
-                                    {detailsDeck && detailsDeck.id === deck.id && (
-                                    <div className="hover-deck-card">
-                                          <div className="img-container">
-                                              <img className="hover-deck-card-img" src={getDeckImageUrl(deck.image)} alt="Deck mtg"/>
-                                          </div>
-                                                  <div className="deck-hover-body" >
-                                                    <div className='name-line'>
-                                                      <h1 className="hover-deck-name"> {deck.name}</h1>
-                                                    </div>
-                                                    <div className='color-line'>                        
-                                                        <h4 className='color'> Couleurs : </h4> 
-                                                        {deck.colors && deck.colors.length > 0 && Array.isArray(colors) && (
-                                                            <div className='mapping-color'>
-                                                              {deck.colors.map((color)  => (
-                                                            <img src={getColorPics(color)} className="color-img-select" style={{display:(displayColor(color))}} alt={color}/>                                
-                                                        ))}
-                                                            </div>
-                                                        )} 
-                                                    </div>
-                                                    <div className='format-line'>              
-                                                        <h4 className='format'> Format : </h4> 
-                                                        <h4 className='card-format' style={{ backgroundColor: 'green' }}>{deck.format}</h4>
-                                                    </div>
-                                                    
-                                                </div>                                                
-                                              </div>
-                                    )}
-                </div>
-                          
+                              <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
+                                                format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
+                                                onClick={() => chooseDeck(deck.id)}
+                                                onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } 
+                                                onMouseOut={() => hoveredDeck()}
+                                                paraOnClick={()=>chooseUser(deck.id)}
+                                                className="deck-db"                                 
+                                                para={deck.deckBuilderName}
+                                                detailsDeck={detailsDeck} />   
                             ))}
                     </div>   
               )}  

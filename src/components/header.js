@@ -15,6 +15,4 @@ const Header = function (props) {
     )
 }
 
-// Des variables TS inscritent dans Node exigent d'intégrer les fichiers png de cette manière 
-
 export default Header
