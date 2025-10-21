@@ -566,10 +566,10 @@ const AccountPage = () => {
 
          const deckPublicStyle = (deck) => {
             if(deck.isPublic) {
-                return {background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)'}
+               return {background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)'}
             }
             else {
-                return {background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)'}
+                return {background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)'}
             }
          }
         
@@ -814,7 +814,7 @@ const AccountPage = () => {
                                         <div className='new-user-deck-contenair'>
                                             <div className='new-deck-button-desktop'>
                                                 <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
-                                                style={{ width: '150px', height: '150px', backgroundColor: '#5D3B8C', marginBottom: '5%'
+                                                style={{ width: '120px', height: '120px', backgroundColor: '#5D3B8C', marginBottom: '5%'
                                                         }}/>
                                             </div>
                                             <div className='new-deck-button-mobile'>

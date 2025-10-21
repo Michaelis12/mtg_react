@@ -103,12 +103,10 @@
 
 
 .deckbuilding-pp {
-    min-width: 300px ;
-    width: 300px ;
-    height: 300px;
+    width: 250px ;
+    height: 250px;
     border-radius: 50%; 
     object-fit: cover;
-    margin-top: 3%;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
     border: 5px solid #667eea;
     background-color: white;

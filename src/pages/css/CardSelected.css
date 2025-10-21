@@ -464,12 +464,12 @@
 
 @media (max-width: 725px) {
     .card-line-attribut {
-    display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 0px;
     } 
 
     .deck-medium-line-title {

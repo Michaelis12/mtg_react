@@ -12,7 +12,9 @@ class Card {
     legendary,
     rarity,
     set,
-    legalities
+    legalities,
+    decksNumber,
+    cedhNumber
   }) { 
     this.id = id;
     this.apiID = apiID;
@@ -27,6 +29,8 @@ class Card {
     this.rarity = rarity || "";
     this.edition = set || "";             // set de l'API
     this.formats = this.extractFormats(legalities); // formats légaux
+    this.decksNumber = decksNumber;
+    this.cedhNumber = cedhNumber;
   }
 
   // Méthode pour extraire les formats légaux
@@ -52,7 +56,9 @@ class Card {
       legendary: cardData.legendary,
       rarity: cardData.rarity,
       set: cardData.set,
-      legalities: cardData.legalities
+      legalities: cardData.legalities,
+      decksNumber : cardData.decksNumber,
+      cedhNumber : cardData.cedhNumber
     });
   }
 }

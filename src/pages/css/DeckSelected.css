@@ -80,6 +80,7 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 1%; 
+    gap: 0px;
 }
 
 .deck-content {
@@ -180,7 +181,7 @@
 
   .deck-selected-line-title {
       font-style: italic;
-      font-size: 1.5rem;
+      font-size: 1.3em;
       color: grey;
     }
 
@@ -621,7 +622,12 @@ button:hover {
   
 }
 
-
+    .card-link-desktop {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 15px;
+    }
 
 /*Card du deck pour les formats mobiles*/
 

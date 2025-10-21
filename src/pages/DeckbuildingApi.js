@@ -49,6 +49,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
        const [deck, setDeck] = React.useState([])
        const [updateDeck, setUpdateDeck] = React.useState(false)
        const [deckCards, setDeckCards] = React.useState([])
+       const [deckCardsUnit, setDeckCardsUnit] = React.useState([])
        const [deckCardsLength, setDeckCardsLength] = React.useState([])
        const [deckCardsGraphic, setDeckCardsGraphic] = React.useState([])
        const [colors, setColors] = React.useState([])
@@ -56,20 +57,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
        const [cmc, setCmc]= React.useState()
 
        // Contient toutes les cartes du deck d'un type
-       const [deckLands, setDeckLands] = useState([])
-       const [deckCreatures, setDeckCreatures] = useState([])
-       const [deckEnchants, setDeckEnchants] = useState([])
-       const [deckSpells, setDeckSpells] = useState([])
-       const [deckArtefacts, setDeckArtefacts] = useState([])
-       const [deckPlaneswalkers, setDeckPlaneswalkers] = useState([])
+       const [cardsTypes, setCardsTypes] = React.useState(["Land", "Creature", "Artifact", "Enchantment", "Instant", "Planeswalker", 
+                                                    "Sorcery", "Battle", "Conspiracy", "Tribal"])
 
-       // Contient toutes les cartes du deck UNIQUES d'un type
-       const [deckLandsUnit, setDeckLandsUnit] = useState([])
-       const [deckCreaturesUnit, setDeckCreaturesUnit] = useState([])
-       const [deckEnchantsUnit, setDeckEnchantsUnit] = useState([])
-       const [deckSpellsUnit, setDeckSpellsUnit] = useState([])
-       const [deckArtefactsUnit, setDeckArtefactsUnit] = useState([])
-       const [deckPlaneswalkersUnit, setDeckPlaneswalkersUnit] = useState([])
        
        // Se déclenche à chaque fois qu'une carte est ajoutée ou retirée 
        const [deckSignal, setDeckSignal] = useState(false)
@@ -222,43 +212,19 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     const request = await axiosInstance.get(`/f_all/getCardDeckID?deckID=${id}`);
 
                     const listCards = request.data.map(cardData => Card.fromApi(cardData));
+
                     setDeckCards(listCards)
+                     const uniqueCards = Array.from(
+                        new Map(listCards.map(card => [card.id, card])).values()
+                    );
+                    setDeckCardsUnit(uniqueCards);
+                   
                     setDeckCardsLength(listCards.length)
+
                     setDeckCardsGraphic(listCards)
 
                 
-                const landCards = listCards.filter(card => card.types.includes("Land"));
-                if (landCards.length > 0) {
-                    setDeckLands(landCards);
-
-                    const uniqueCards = Array.from(
-                        new Map(landCards.map(card => [card.id, card])).values()
-                    );
-                    setDeckLandsUnit(uniqueCards);
-                }
-
-                const creatureCards = listCards.filter(card => card.types.includes("Creature"));
-                if (creatureCards.length > 0) {
-                    setDeckCreatures(creatureCards)
-                    
-                    const uniqueCards = Array.from(
-                    new Map(creatureCards.map(card => [card.id, card])).values()
-                    );
-                    setDeckCreaturesUnit(uniqueCards);
-                }
-
-
-                const artefactCards = listCards.filter(card => card.types.includes("Artifact") && !card.types.includes("Creature"));
-                if (artefactCards.length > 0) {
-                    setDeckArtefacts(artefactCards)
-
-                    const uniqueCards = Array.from(
-                    new Map(artefactCards.map(card => [card.id, card])).values()
-                    );
-                    setDeckArtefactsUnit(uniqueCards);
-                }
-
-
+                
                 }   
                 catch (error) {
                     setDisplayLoading(false);
@@ -470,16 +436,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 sessionStorage.setItem('cardsSelected', JSON.stringify(cardsSelected));
                 sessionStorage.setItem('cardsUnselected', JSON.stringify(cardsUnselected));
 
-                if (card.types.includes("Land")) {
-                    cardsIds = deckLandsUnit.map(card => card.apiID);
-                } else if (card.types.includes("Creature")) {
-                    cardsIds = deckCreatures.map(card => card.apiID);
-                } else if (card.types.includes("Artifact")) {
-                    cardsIds = deckArtefacts.map(card => card.apiID);
-                } else {
-                    cardsIds = [];
-                }
-
 
                 navigate(`/cardSelected`, { state: { cardID: cardID, ListCard: cardsIds }})
                     };
@@ -546,37 +502,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                         return
                         }
                     }
-                    switch(cardOrIndex.type) {
-                        case "TERRAIN":
-                            setNavigateListID(deckLandsUnit.map(card => card.id));
-                            setListImage(deckLandsUnit.map(card => card.image));
-                            break;
-                        case "CREATURE":
-                            setNavigateListID(deckCreaturesUnit.map(card => card.id));
-                            setListImage(deckCreaturesUnit.map(card => card.image));
-                            break;
-                        case "ENCHANTEMENT":
-                            setNavigateListID(deckEnchantsUnit.map(card => card.id));
-                            setListImage(deckEnchantsUnit.map(card => card.image));
-                            break;
-                        case "EPHEMERE":
-                        case "RITUEL":
-                        case "BATAILLE":
-                            setNavigateListID(deckSpellsUnit.map(card => card.id));
-                            setListImage(deckSpellsUnit.map(card => card.image));
-                            break;
-                        case "ARTEFACT":
-                            setNavigateListID(deckArtefactsUnit.map(card => card.id));
-                            setListImage(deckArtefactsUnit.map(card => card.image));
-                            break;
-                        case "PLANESWALKER":
-                            setNavigateListID(deckPlaneswalkersUnit.map(card => card.id));
-                            setListImage(deckPlaneswalkersUnit.map(card => card.image));
-                            break;
-                        default:
-                            setNavigateListID([]);
-                            setListImage([])
-                    }
                 } else {
                     setCardImage(null);
                     setCardID(null);
@@ -584,6 +509,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 }
                 setDisplayZoomPopup(true);
             };
+    
 
         // Zoom pour afficher les cartes dans la partie mobile
 
@@ -833,20 +759,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         // Retire tous les exemplaires d'une carte
         const unselectCards = (cardToRemove) => {
 
-            if(cardToRemove.types.includes("Land")) {
-                setDeckLands(prevCards => prevCards.filter(card => card.id !== cardToRemove.id));
-                setDeckLandsUnit(prevCards => prevCards.filter(card => card.id !== cardToRemove.id));
-            }
-
-            if(cardToRemove.types.includes("Creature")) {
-                setDeckCreatures(prevCards => prevCards.filter(card => card.id !== cardToRemove.id));
-                setDeckCreaturesUnit(prevCards => prevCards.filter(card => card.id !== cardToRemove.id));
-            }
-
-            if(cardToRemove.types.includes("Artifact")) {
-                setDeckArtefacts(prevCards => prevCards.filter(card => card.id !== cardToRemove.id));
-                setDeckArtefactsUnit(prevCards => prevCards.filter(card => card.id !== cardToRemove.id));
-            }
 
             setDeckCards((prevCards) => {
                 // Sépare les cartes à garder et celles à retirer
@@ -927,7 +839,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         const maskCard = (id) => {
             const deckCardsid = deckCards.map(card => card.id);
             if(!deckCardsid.includes(id)) {
-                return 'flex'
+                return 'none'
             }
         }
 
@@ -953,7 +865,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 <div className="deck-card-desktop" style={{ backgroundImage: `url(${backgroundPopup})`, marginTop: '1%'}}>
                                                           <h1 className='deck-name'>{deck.name}</h1>            
                                                           <div className="deck-content">
-                                                               <img className="deckbuilding-pp" style={{marginTop: '-5%'}}
+                                                               <img className="deckbuilding-pp" 
                                                                src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8080${deck.image}` : deck.image} alt="Deck mtg"/> 
                                 
                                                               <div className="deck-selected-attributs" >
@@ -980,7 +892,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                     <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
                                                                     <h3><strong>{cmc}</strong></h3>
                                                                 </div>
-
+                                                            {/*
                                                                 <div className='card-line-attribut'>              
                                                                     <h4 className='deck-selected-line-title'> Statut : </h4> 
                                                                     {!deck.isPublic && (
@@ -990,6 +902,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                         <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
                                                                     )} 
                                                                 </div>
+                                                            */}
                 
                                                               </div>
                                                                   
@@ -1212,333 +1125,143 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         )} 
 
 
-        {/*Affichage des cartes par types*/}
-        <div className='decks-types-map'> 
-          
-            { deckLands.length > 0 && (
-                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Terrains ("+ deckLands.length + ")"}/>
+        {/*Affichage des cartes par types*/}        
+        <div className='decks-types-map'>
+            {(() => {
+                // 1️⃣ Créer un mapping { type -> cartes } basé sur cardsTypes order
+                const cardsByMappedType = {};
+                const cardsByMappedTypeUnit = {};
+
+                // --- Mapping principal ---
+                deckCards.forEach(card => {
+                const firstMappedType = cardsTypes.find(type => card.types.includes(type));
+                if (firstMappedType) {
+                    if (!cardsByMappedType[firstMappedType]) cardsByMappedType[firstMappedType] = [];
+                    cardsByMappedType[firstMappedType].push(card);
+                }
+                });
+
+                // --- Mapping pour deckCardsUnit ---
+                deckCardsUnit.forEach(card => {
+                const firstMappedType = cardsTypes.find(type => card.types.includes(type));
+                if (firstMappedType) {
+                    if (!cardsByMappedTypeUnit[firstMappedType]) cardsByMappedTypeUnit[firstMappedType] = [];
+                    cardsByMappedTypeUnit[firstMappedType].push(card);
+                }
+                });
+
+                // 2️⃣ Itérer sur cardsTypes pour le rendu
+                return cardsTypes.map(type => {
+                const cardsOfType = cardsByMappedType[type] || [];
+                const cardsOfTypeUnit = cardsByMappedTypeUnit[type] || [];
+
+                // 🚫 Sauter les types sans cartes
+                if (cardsOfType.length === 0 && cardsOfTypeUnit.length === 0) return null;
+
+                // ✅ Rendu uniquement pour les types ayant des cartes
+                return (
+                    <div 
+                    key={type} 
+                    className='decks-type-map' 
+                    style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top' }}
+                    >
+                    <TitleType title={`${type} (${cardsOfType.length})`} />
+
                     <div className='deck-text-map'>
-                        {deckLandsUnit.map(land => {
-                            return (
-                                <div className="land-text-details" id='land-card'  style={{display: maskCard(land.id)}} key={land.id}>
-                                    
-                                    <div className='card-link-desktop'>
-                                        <h5 className='land-text-name' onMouseEnter={() => hoveredCard(land.id) } onMouseOut={() => hoveredCard()} onClick={()=>navCard(land)}>{land.name}</h5>
-                                    </div>
+                        {cardsOfTypeUnit.map(card => (
+                        <div
+                            className="land-text-details"
+                            id='land-card'
+                            style={{ display: maskCard(card.id) }}
+                            key={card.id}
+                        >
+                            <div className='card-link-desktop'>
+                            <h5
+                                className='land-text-name'
+                                onMouseEnter={() => hoveredCard(card.id)}
+                                onMouseOut={() => hoveredCard()}
+                                onClick={() => navCard(card)}
+                            >
+                                {card.name}
+                            </h5>
+                            {card.types.includes("Basic") && (
+                                <p className="p-cards-deck-length">basic land</p>
+                            )}
+                            </div>
 
-                                    <div className='card-link-mobile'>
-                                        <h5 className='land-text-name'  onClick={()=> openZoomPopup(land)} >{land.name}</h5>
-                                    </div>
+                            <div className='card-link-mobile'>
+                            <h5 className='land-text-name' onClick={() => openZoomPopup(card)}>
+                                {card.name}
+                            </h5>
+                            </div>
 
+                            <div className='deckbuilding-number-container'>
+                            {format !== "commander" && !card.legendary && (
+                                <div className='deckbuilding-text-number'>
+                                <button
+                                    className="add-button-deckbuilding"
+                                    style={{ margin: '2%', border: 'none' }}
+                                    onClick={() => unselectCard(card)}
+                                    disabled={count(card.id) < 1}
+                                >
+                                    <AiOutlineMinusCircle size={'2em'} color={'black'} className="icon-add-card" />
+                                </button>
 
-                                    {detailsCard && detailsCard.id === land.id && (
-                                            <img className="card-img-zoom"  src={land.image && land.image.startsWith('/uploads/') ? `http://localhost:8080${land.image}` : land.image} alt="Card-image" />
-                                        )}
-                                    <div className='deckbuilding-number-container'>
-                                        {/*land.id < 7 && (
-                                            <div className='deckbuilding-text-number'>
+                                {cardsSelected.filter(cardDeck => cardDeck === card.id).length > 0 && (
+                                    <p className='p-card-add-length-deckbuilding'>
+                                    + {cardsSelected.filter(cardDeck => cardDeck === card.id).length}
+                                    </p>
+                                )}
 
-                                                { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
-                                                    <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
-                                                )}
+                                {cardsUnselected.filter(cardDeck => cardDeck === card.id).length > 0 && (
+                                    <p className='p-card-add-length-deckbuilding' style={{ color: 'red' }}>
+                                    - {cardsUnselected.filter(cardDeck => cardDeck === card.id).length}
+                                    </p>
+                                )}
 
-                                                { cardsUnselected.filter(cardDeck => cardDeck === land.id).length > 0  && (
-                                                    <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === land.id).length}</p>
-                                                )}
+                                <p className='p-card-length'>{count(card.id)}</p>
 
-                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
-                                                <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card" />
-                                                </button>
-                                                <p className='p-card-length'>{count(land.id)}</p>
-                                                <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(land)} >
-                                                <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
-                                                </button>
-                                            </div>
-                                        )*/} 
-                                        {format !== "commander" && !land.legendary && (
-                                        <div className='deckbuilding-text-number'>                              
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(land)} >
-                                                <AiOutlineMinusCircle  disabled={count(land.id) < 1} size={'2em'} color={'black'} className="icon-add-card" />
-                                            </button>
-                                            
-                                            <p className='p-card-length'>{count(land.id)}</p>
-
-                                            { cardsSelected.filter(cardDeck => cardDeck === land.id).length > 0  && (
-                                                    <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === land.id).length}</p>
-                                                )}
-
-                                                { cardsUnselected.filter(cardDeck => cardDeck === land.id).length > 0  && (
-                                                    <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === land.id).length}</p>
-                                                )}
-
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} disabled={count(land.id) > 3} onClick={() => selectCard(land)} >
-                                                <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
-                                            </button>
-                                        </div>
-                                        )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={() => unselectCards(land)} />
-                                        
-                                    </div>
+                                <button
+                                    className="add-button-deckbuilding"
+                                    disabled={count(card.id) > 3 && !card.types.includes("Basic")}
+                                    style={{ margin: '2%', border: 'none' }}
+                                    onClick={() => selectCard(card)}
+                                >
+                                    <CgAdd size={'2em'} color={'black'} className="icon-add-card" />
+                                </button>
                                 </div>
-                            );
-                        })}
+                            )}
+
+                            <TiDeleteOutline
+                                className='delete-card-button'
+                                color='red'
+                                size={'3em'}
+                                onClick={() => unselectCards(card)}
+                            />
+                            </div>
+
+                            {detailsCard && detailsCard.id === card.id && (
+                            <img
+                                className="card-img-zoom"
+                                src={
+                                card.image && card.image.startsWith('/uploads/')
+                                    ? `http://localhost:8080${card.image}`
+                                    : card.image
+                                }
+                                alt="Card-image"
+                            />
+                            )}
+                        </div>
+                        ))}
                     </div>
-                </div>
-            )}
-
-            { deckCreatures.length > 0 && (    
-                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Créatures (" + deckCreatures.length + ")"}/>
-                    <div className='deck-text-map'>
-                            {deckCreaturesUnit.map(creature => ( 
-                                <div className="land-text-details" id='land-card' style={{display: maskCard(creature.id)}} key={creature.id}>
-                                    
-                                    <div className='card-link-desktop'>
-                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(creature.id) } onMouseOut={() => hoveredCard()} onClick={()=>navCard(creature)}>{creature.name}</h5>
-                                        </div>
-                                        <div className='card-link-mobile'>
-                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(creature)} >{creature.name}</h5>
-                                        </div>
-                                    
-                                    <div className='deckbuilding-number-container'>
-                                        { format !== "commander" && !creature.legendary && ( 
-                                        <div className='deckbuilding-text-number'>  
-                                            { cardsSelected.filter(cardDeck => cardDeck === creature.id).length > 0  && (
-                                                    <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === creature.id).length}</p>
-                                                )}
-
-                                            { cardsUnselected.filter(cardDeck => cardDeck === creature.id).length > 0  && (
-                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === creature.id).length}</p>
-                                             )}
-
-                                            <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(creature)}
-                                             disabled={count(creature.id) < 1} >
-                                                                        <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
-                                            </button>
-                                           
-                                            <p className='p-card-length'>{count(creature.id)}</p> 
-
-                                            <button className="add-button-deckbuilding" disabled={count(creature.id) > 3}
-                                            style={{ margin : '2%', border: 'none' }} 
-                                            onClick={() => selectCard(creature)} >
-                                                <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
-                                            </button> 
-                                        </div>
-                                        )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(creature)}/>
-                                </div>  
-                                    {detailsCard && detailsCard.id === creature.id && (
-                                    <img className="card-img-zoom" src={creature.image && creature.image.startsWith('/uploads/') ? `http://localhost:8080${creature.image}` : creature.image} alt="Card-image"/>
-                                    )} 
-                                </div>
-                        
-                            ))}
                     </div>
-                </div>
-            )}
-
-            { deckEnchants.length > 0 && (
-                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Enchantements (" + deckCards.filter(card => card.type === "ENCHANTEMENT").length + ")"}/>
-                    <div className='deck-text-map'>
-                            {deckEnchantsUnit.map(enchant => ( 
-                                <div className="land-text-details" id='land-card' style={{display: maskCard(enchant.id)}} key={enchant.id}>
-                                    
-                                    <div className='card-link-desktop'>
-                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(enchant.id) } onMouseOut={() => hoveredCard()} onClick={()=>navCard(enchant)}>{enchant.name}</h5>
-                                        </div>
-                                    <div className='card-link-mobile'>
-                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(enchant)} >{enchant.name}</h5>
-                                    </div>
-
-                                    <div className='deckbuilding-number-container'>
-                                        { format !== "commander" && !enchant.legendary && ( 
-                                        <div className='deckbuilding-text-number'>                              
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(enchant)}
-                                            disabled={count(enchant.id) < 1}  >
-                                                                    <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
-                                        </button>
-                                        
-                                        { cardsSelected.filter(cardDeck => cardDeck === enchant.id).length > 0  && (
-                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === enchant.id).length}</p>
-                                        )}
-
-                                        { cardsUnselected.filter(cardDeck => cardDeck === enchant.id).length > 0  && (
-                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === enchant.id).length}</p>
-                                        )}
-                                        
-                                        <p className='p-card-length'>{count(enchant.id)}</p>  
+                );
+                });
+            })()}
+        </div>
 
 
-                                        <button className="add-button-deckbuilding" disabled={count(enchant.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(enchant)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
-                                        </button> 
-                                        </div>
-                                        )}
 
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(enchant)}/>
-                                    </div>
-                                    {detailsCard && detailsCard.id === enchant.id && (
-                                    <img className="card-img-zoom" src={enchant.image && enchant.image.startsWith('/uploads/') ? `http://localhost:8080${enchant.image}` : enchant.image} alt="Card-image"/>
-                                    )} 
-                                </div>
-                        
-                            ))}
-                    </div>
-                </div>
-            )}
-                
-            { deckSpells.length > 0 && (
-                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Sorts (" + deckCards.filter(card =>
-                            card.type === "instant" || card.type === "sorcery" || card.type === "battle"
-                            ).length
-                            + ")"}/>
-                    <div className='deck-text-map'>
-                            {deckSpellsUnit.map(spell => ( 
-                                <div className="land-text-details" id='land-card' style={{display: maskCard(spell.id)}}  key={spell.id}>
-                                    
-                                    <div className='card-link-desktop'>
-                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(spell.id) } onMouseOut={() => hoveredCard()} onClick={()=>navCard(spell)}>{spell.name}</h5>
-                                        </div>
-                                        <div className='card-link-mobile'>
-                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(spell)} >{spell.name}</h5>
-                                        </div>
-                                    
-                                     <div className='deckbuilding-text-number'>
-                                        { format !== "commander" && spell.legendary && (
-                                        <div className='deckbuilding-text-number'>   
-                                        { cardsSelected.filter(cardDeck => cardDeck === spell.id).length > 0  && (
-                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === spell.id).length}</p>
-                                        )}
-
-                                        { cardsUnselected.filter(cardDeck => cardDeck === spell.id).length > 0  && (
-                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === spell.id).length}</p>
-                                        )}
-
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} 
-                                          onClick={() => unselectCard(spell)}  >
-                                                                    <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
-                                        </button>
-                                        
-                                        <p className='p-card-length'>{count(spell.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={count(spell.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(spell)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
-                                        </button> 
-                                        </div>
-                                        )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(spell)}/>
-                                    </div>
-                                    {detailsCard && detailsCard.id === spell.id && (
-                                    <img className="card-img-zoom" src={spell.image && spell.image.startsWith('/uploads/') ? `http://localhost:8080${spell.image}` : spell.image} alt="Card-image"/>
-                                    )} 
-                                </div>
-                        
-                            ))}
-                    </div>
-                </div>
-            )}
-
-            { deckArtefacts.length > 0 && (
-                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>    
-                    <TitleType title={"Artefacts (" + deckArtefacts.length + ")"}/>
-                    <div className='deck-text-map'>
-                            {deckArtefactsUnit.map(artefact => ( 
-                                <div className="land-text-details" id='land-card' style={{display: maskCard(artefact.id)}}  key={artefact.id}>
-
-                                        <div className='card-link-desktop'>
-                                            <h5 className='land-text-name' onMouseEnter={() => hoveredCard(artefact.id) } onMouseOut={() => hoveredCard()} onClick={()=>navCard(artefact)}>{artefact.name}</h5>
-                                        </div>
-                                       <div className='card-link-mobile'>
-                                            <h5 className='land-text-name' onClick={()=> openZoomPopup(artefact)} >{artefact.name}</h5>
-                                       </div>
-
-                                     <div className='deckbuilding-number-container'>
-                                        { format !== "commander" && (
-                                        <div className='deckbuilding-text-number'>   
-
-                                        { cardsSelected.filter(cardDeck => cardDeck === artefact.id).length > 0  && (
-                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === artefact.id).length}</p>
-                                        )}
-
-                                        { cardsUnselected.filter(cardDeck => cardDeck === artefact.id).length > 0  && (
-                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === artefact.id).length}</p>
-                                        )}
-
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(artefact)} >
-                                                                    <AiOutlineMinusCircle  size={'2em'} color={'black'} className="icon-add-card"/>
-                                        </button>
-                                        
-                                        <p className='p-card-length'>{count(artefact.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={count(artefact.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(artefact)} ><CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
-                                        </button> 
-                                        </div>
-                                        )}
-                                        <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(artefact)}/>
-                                    </div>
-                                    {detailsCard && detailsCard.id === artefact.id && (
-                                    <img className="card-img-zoom" src={artefact.image && artefact.image.startsWith('/uploads/') ? `http://localhost:8080${artefact.image}` : artefact.image} alt="Card-image"/>
-                                    )} 
-                                </div>
-                        
-                            ))}
-                    </div>
-                </div>
-            )}
-            
-            { deckPlaneswalkers.length > 0 && (
-                <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top'}}>
-                    <TitleType title={"Planeswalkers (" + deckPlaneswalkers.length + ")"}/>
-                    <div className='deck-text-map'>
-                            {deckPlaneswalkersUnit.map(planeswalker => ( 
-                                <div className="land-text-details" id='land-card' key={planeswalker.id}
-                                style={{display: maskCard(planeswalker.id)}}>
-                                    <div className='card-link-desktop'>
-                                        <h5 className='land-text-name' 
-                                        onMouseEnter={() => hoveredCard(planeswalker.id)} 
-                                        onMouseOut={() => hoveredCard()} 
-                                        onClick={() => navCard(planeswalker)}>
-                                        {planeswalker.name}
-                                        </h5>
-                                    </div>
-                                    <div className='card-link-mobile'>
-                                        <h5 className='land-text-name' onClick={()=> openZoomPopup(planeswalker)} >{planeswalker.name}</h5>
-                                    </div>
-                                    <div className='deckbuilding-number-container'>
-                                    { format !== "commander" && (
-                                    <div className='deckbuilding-text-number'>
-
-                                        { cardsSelected.filter(cardDeck => cardDeck === planeswalker.id).length > 0  && (
-                                                <p className='p-card-add-length-deckbuilding'>+ {cardsSelected.filter(cardDeck => cardDeck === planeswalker.id).length}</p>
-                                        )}
-
-                                        { cardsUnselected.filter(cardDeck => cardDeck === planeswalker.id).length > 0  && (
-                                                <p className='p-card-add-length-deckbuilding' style={{color: 'red'}}>- {cardsUnselected.filter(cardDeck => cardDeck === planeswalker.id).length}</p>
-                                        )}
-                                                                      
-                                        <button className="add-button-deckbuilding" style={{ margin : '2%', border: 'none' }} onClick={() => unselectCard(planeswalker)} >
-                                            <AiOutlineMinusCircle size={'2em'} color={'black'} className="icon-add-card"/>
-                                        </button>
-                            
-                                        <p className='p-card-length'>{count(planeswalker.id)}</p>                                  
-                                        <button className="add-button-deckbuilding" disabled={count(planeswalker.id) > 3} style={{ margin : '2%', border: 'none' }} onClick={() => selectCard(planeswalker)} >
-                                            <CgAdd size={'2em'} color={'black'} className="icon-add-card"/>
-                                        </button> 
-                                    </div>
-                                    )}
-                                    <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={() => unselectCards(planeswalker)}/>
-                                    </div>
-                                    {detailsCard && detailsCard.id === planeswalker.id && (
-                                        <img className="card-img-zoom" 
-                                            src={planeswalker.image && planeswalker.image.startsWith('/uploads/') ? `http://localhost:8080${planeswalker.image}` : planeswalker.image} 
-                                            alt="Card-image"/>
-                                    )} 
-                                </div>
-                            ))} 
-
-                    </div>
-                </div>
-            )}
-        </div> 
         
         {/*Graphiques*/}
         <div className='stats-conatainer' >

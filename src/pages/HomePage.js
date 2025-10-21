@@ -8,7 +8,7 @@ import BanniereMTG from "../assets/banniere.jpeg"
 import LogoMTG from "../assets/LogoMTG.png"
 import BackgroundTopCards from "../assets/mtg_wallpaper.jpg"
 import { FaHeart  } from 'react-icons/fa';
-import Card from '../model/Card';
+import Card from '../model/CardApiSave';
 import Deck from '../model/Deck';
 import Title from "../components/title";
 import Section from "../components/section";
@@ -26,9 +26,11 @@ import black from "../assets/black-mtg.png"
  
 
 const HomePage = function () {
+
   const [cards, setCards] = React.useState([])
+  const [cedh, setCedh] = React.useState([])
   const [decks, setDecks] = React.useState([])
-  const { fetchRoles, isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const [detailsCard, setDetailsCard] = React.useState(null)
   const [detailsDeck, setDetailsDeck] = React.useState(null);  
 
@@ -71,18 +73,13 @@ const HomePage = function () {
   };
 
 // Récupérer le top 3 cartes 
-  const getTopCards = async () => { 
+const getTopCards = async () => { 
     try {
         setDisplayLoading(true);
         const response = await axiosInstance.get('/f_all/getTop3Cards' );
         
-        const listCards = response.data.map(
-                card => new Card (card.id, card.name, card.text, card.image, card.manaCost, card.value, card.formats,
-                                card.colors, card.type, card.legendary, card.rarity, card.edition,
-                                card.deckBuilders, card.decks, card.decksCommander, card.likeNumber,
-                                card.deckNumber, card.commanderNumber
-        ) )          
-
+         const listCards = response.data.map(cardData => Card.fromApi(cardData));
+         
         setCards(listCards)
         setDisplayLoading(false);
     }   
@@ -97,15 +94,43 @@ React.useEffect(() => {
   getTopCards();
 }, []);
 
+
+const getTopCedh = async () => { 
+    try {
+        setDisplayLoading(true);
+        const response = await axiosInstance.get('/f_all/getTop3Commandants' );
+        
+         const listCards = response.data.map(cardData => Card.fromApi(cardData));         
+
+        setCedh(listCards)
+        setDisplayLoading(false);
+    }   
+    catch (error) {
+        setDisplayLoading(false);
+        console.log(error);
+    }
+
+
+}
+React.useEffect(() => {
+  getTopCedh();
+}, []);
+
 // Zoom sur une carte
-        const hoveredCard = (id) => {
+const hoveredCard = (id) => {
          setDetailsCard({ id });
 
-          }
+}
 
 // Naviguer vers une carte
 const chooseCard = (id) => {
-    const cardsIds = cards.map(card => card.id);
+    const cardsIds = cards.map(card => card.apiID);
+    navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
+    };
+
+// Naviguer vers une carte
+const chooseCedh = (id) => {
+    const cardsIds = cedh.map(cedh => cedh.apiID);
     navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
     };
 
@@ -221,6 +246,7 @@ const navNewDeck = () => {
         </div>
       </div> 
       
+      {/*Mapping des top cartes*/}
       <div style={{width:'100%'}}>
         <Title title={"Top Cartes"}/> 
         <div className="top-cards" style={{
@@ -234,10 +260,9 @@ const navNewDeck = () => {
               <div className="top3-card-details" key={card.id}>
                     <img className="top3_cards-img" src={getImageUrl(card.image)} alt="Card-image" 
                     onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard()} 
-                    onClick={() => chooseCard(card.id)}/>
+                    onClick={() => chooseCard(card.apiID)}/>
                     <br/>
-                    <h2 className="top-card-likeNumber" >{card.likeNumber} 
-                      <FaHeart color="red" style={{position:'relative'}}/></h2>
+                    <h2 className="top-card-likeNumber" >dans {card.decksNumber} decks</h2>
                       {detailsCard && detailsCard.id === card.id && (
                                           <img className="top-card-img-zoom" src={getImageUrl(card.image)} alt="Card-image"/>
                                           )} 
@@ -247,7 +272,35 @@ const navNewDeck = () => {
             }
         </div>
       </div>  
- 
+
+      {/*Mapping des top commandants*/}
+      <div style={{width:'100%'}}>
+        <Title title={"Top Commandants"}/> 
+        <div className="top-cards" style={{
+              backgroundImage: `url(${BackgroundTopCards})`, 
+              backgroundSize: 'cover',
+              backgroundPosition: 'top',
+              borderRadius: '10px',
+              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
+            }}>
+            {cedh.map(card => (
+              <div className="top3-card-details" key={card.id}>
+                    <img className="top3_cards-img" src={getImageUrl(card.image)} alt="Card-image" 
+                    onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard()} 
+                    onClick={() => chooseCedh(card.apiID)}/>
+                    <br/>
+                    <h2 className="top-card-likeNumber" >dans {card.cedhNumber} decks</h2>
+                      {detailsCard && detailsCard.id === card.id && (
+                                          <img className="top-card-img-zoom" src={getImageUrl(card.image)} alt="Card-image"/>
+                                          )} 
+              </div>
+                )
+              )
+            }
+        </div>
+      </div>  
+      
+      {/*Mapping des top decks*/}
       <div style={{width:'100%'}}>
         <Title title={"Top Decks"}/>
         <div className="top-decks" style={{

@@ -397,9 +397,10 @@
     background-color: white;
     color: black;
     border: 2px solid black;
-    border-radius: 50%;
-    aspect-ratio: 1 / 1;
-    padding: 5%;
+    border-radius: 5px;
+    padding: 2%;
+    font-size: 1.8em;
+    text-align: center;
     display: flex;
     flex-direction: row;
     justify-content: center;
