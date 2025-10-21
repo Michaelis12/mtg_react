@@ -1048,87 +1048,87 @@ const CardsDeckPage = () => {
               <div className='map-cards-section'>
               
                 {cards.map(card => ( 
-                    <div className="cards-details" key={card.id}>                       
+                  <div className="cards-details" key={card.id}>                       
 
-                      {/*Si le format est commander les cartes sont à l'unité*/} 
-                      { deck.format === "commander" && ( 
-                      <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image" onClick={() => navCard(card.id)}
-                        onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
-                        style={{opacity: desacCardsCedh(card.id)}} />                
-                        <AddButton onClick={() => selectCardCedh(card)} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }}
-                            icon={changeIcon(card.id)}  disabled={deckCards.includes(card.id)}/>
-                      </div>
-                      )}
-
-                      {/*Si la carte est légendaire elle est à l'unité également */} 
-                      { deck.format !== "commander" && card.legendary && ( 
-                      <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image" onClick={() => navCard(card.id)}
-                        onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
-                        style={{opacity: desacCardsCedh(card.id)}} /> 
-
-                        {/*La présence de cartes dans le deck*/}
-                       <div className="deck-presence-container">
-                         <p className="p-cards-deck-length">présence dans le deck : {deckCards.filter(cardDeck => cardDeck === card.id).length}</p>
-                         {cardsSelected.filter(cardDeck => cardDeck === card).length > 0 && (
-                          <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === card).length}</p>
-                        )}                      
-                       </div> 
-                        
-                                      
-                        <AddButton onClick={() => selectCardCedh(card)} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }}
-                            icon={changeIcon(card.id)}  disabled={deckCards.includes(card.id)}/>
-                      </div>
-                      )}
-
-                       {/*Sinon la carte peut etre ajoutée en jusqu'à 4 exemplaires */}
-                      { deck.format !== "commander" && !card.legendary && (   
-                                      
-                      <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image" onClick={() => navCard(card.id)}
-                        onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
-                        style={{opacity: desacCardsDeck(card.id)}} />
-
-                        
-                      {/*La présence de cartes dans le deck*/}
-                       <div className="deck-presence-container">
-                         <p className="p-cards-deck-length">présence dans le deck : {deckCards.filter(cardDeck => cardDeck === card.id).length}</p>
-                         {cardsSelected.filter(cardDeck => cardDeck === card).length > 0 && (
-                          <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === card).length}</p>
-                        )}                      
-                       </div>
-
-                        {/*Le bouton + si la carte n'est pas encore dans le deck*/}
-                       { !deckCards.includes(card.id) && !cardsSelected.includes(card) && (
-                        <AddButton onClick={() => selectCard(card)} style={{ backgroundColor: 'white', margin : '2%', marginBottom: '7%', border: 'none' }}
-                              icon={<CgAdd size={'2.5em'} color={'black'} />} />
-                        )}
- 
-                       
-                  
-                       { count(card) > 0 && (
-                        <div className='card-deck-count' style={{marginBottom: '2%'}}>
-                          <button className="add-button-deckbuilding" style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => unselectCard(card)}
-                           disabled={lessCard(card)} >
-                            <AiOutlineMinusCircle  className="icon-add-card" size={'3em'} color={'black'} />
-                          </button>
-                          <p className='p-card-length' style={{ fontWeight: 'bold', marginTop: '1%' }}>{count(card)}</p>
-                          <button className="add-button-deckbuilding" disabled={count(card) > 3} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => selectCard(card)} >
-                            <CgAdd className="icon-add-card" size={'3em'} color={'black'} />
-                          </button> 
-                        
-  
+                        {/*Si le format est commander les cartes sont à l'unité*/} 
+                        { deck.format === "commander" && ( 
+                        <div className='classic-formats-deck-details'>
+                          <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image" onClick={() => navCard(card.id)}
+                          onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
+                          style={{opacity: desacCardsCedh(card.id)}} />                
+                          <AddButton onClick={() => selectCardCedh(card)} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }}
+                              icon={changeIcon(card.id)}  disabled={deckCards.includes(card.id)}/>
                         </div>
-                       )}
-                      </div>                    
-                      )} 
-                    
+                        )}
 
-                    {detailsCard && detailsCard.id === card.id && (
-                    <img className="card-img-zoom" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image"/>
-                    )}  
-                </div>
+                        {/*Si la carte est légendaire elle est à l'unité également */} 
+                        { deck.format !== "commander" && card.legendary && ( 
+                        <div className='classic-formats-deck-details'>
+                          <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image" onClick={() => navCard(card.id)}
+                          onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
+                          style={{opacity: desacCardsCedh(card.id)}} /> 
+
+                          {/*La présence de cartes dans le deck*/}
+                        <div className="deck-presence-container">
+                          <p className="p-cards-deck-length">présence dans le deck : {deckCards.filter(cardDeck => cardDeck === card.id).length}</p>
+                          {cardsSelected.filter(cardDeck => cardDeck === card).length > 0 && (
+                            <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === card).length}</p>
+                          )}                      
+                        </div> 
+                          
+                                        
+                          <AddButton onClick={() => selectCardCedh(card)} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }}
+                              icon={changeIcon(card.id)}  disabled={deckCards.includes(card.id)}/>
+                        </div>
+                        )}
+
+                        {/*Sinon la carte peut etre ajoutée en jusqu'à 4 exemplaires */}
+                        { deck.format !== "commander" && !card.legendary && (   
+                                        
+                        <div className='classic-formats-deck-details'>
+                          <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image" onClick={() => navCard(card.id)}
+                          onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
+                          style={{opacity: desacCardsDeck(card.id)}} />
+
+                          
+                        {/*La présence de cartes dans le deck*/}
+                        <div className="deck-presence-container">
+                          <p className="p-cards-deck-length">présence dans le deck : {deckCards.filter(cardDeck => cardDeck === card.id).length}</p>
+                          {cardsSelected.filter(cardDeck => cardDeck === card).length > 0 && (
+                            <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === card).length}</p>
+                          )}                      
+                        </div>
+
+                          {/*Le bouton + si la carte n'est pas encore dans le deck*/}
+                        { !deckCards.includes(card.id) && !cardsSelected.includes(card) && (
+                          <AddButton onClick={() => selectCard(card)} style={{ backgroundColor: 'white', margin : '2%', marginBottom: '7%', border: 'none' }}
+                                icon={<CgAdd size={'2.5em'} color={'black'} />} />
+                          )}
+  
+                        
+                    
+                        { count(card) > 0 && (
+                          <div className='card-deck-count' style={{marginBottom: '2%'}}>
+                            <button className="add-button-deckbuilding" style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => unselectCard(card)}
+                            disabled={lessCard(card)} >
+                              <AiOutlineMinusCircle  className="icon-add-card" size={'3em'} color={'black'} />
+                            </button>
+                            <p className='p-card-length' style={{ fontWeight: 'bold', marginTop: '1%' }}>{count(card)}</p>
+                            <button className="add-button-deckbuilding" disabled={count(card) > 3} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => selectCard(card)} >
+                              <CgAdd className="icon-add-card" size={'3em'} color={'black'} />
+                            </button> 
+                          
+    
+                          </div>
+                        )}
+                        </div>                    
+                        )} 
+                      
+
+                      {detailsCard && detailsCard.id === card.id && (
+                      <img className="card-img-zoom" src={card.image ? getImageUrl(card.image) : defaultImg} alt="Card-image"/>
+                      )}  
+                  </div>
                 ))}
               
                 <ButtonValid style={{position: 'fixed', bottom: '15px', right: '50px'}}

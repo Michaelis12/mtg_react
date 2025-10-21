@@ -28,6 +28,7 @@ import { MdSend } from "react-icons/md";
 import { AiOutlineMinusCircle } from "react-icons/ai";
 import { FaPencilAlt } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import DeckMap from '../components/deck';
 import Section from '../components/section';
 import IconButtonHover from '../components/buttonIconHover';
 import ButtonValidPopup from "../components/buttonValidPopup";
@@ -38,6 +39,7 @@ import TitleType from '../components/titleType';
 import FooterSection from '../components/footerSection';
 import { getImageUrl } from '../utils/imageUtils';
 import axiosInstance from '../api/axiosInstance';
+import defaultImg from "../assets/mtg-card-back.jpg"
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
  BarChart, Bar, XAxis, YAxis, CartesianGrid, LabelList  } from 'recharts';
 
@@ -278,7 +280,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         const calculateAverageCmc = () => {
             if (deckCards.length > 0) {
 
-            const validCards = deckCards.filter(card => typeof !card.types.includes("Land"));
+            const validCards = deckCards.filter(card => !card.types.includes("Land"));
+
+            console.log("validCards : " + validCards.length)
 
             // Calcule la somme des cmc
             const totalCmc = validCards.reduce((sum, card) => sum + card.cmc, 0);
@@ -631,19 +635,32 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         const [displayLoading, setDisplayLoading] = useState(false);
         
         // Graphique de répartition des cartes par types
+        // Graphique de répartition des cartes par types
         const getCardsByType = () => {
-            const typeCount = deckCardsGraphic.reduce((acc, card) => {
-            if (card.type) {
-                acc[card.type] = acc[card.type] ? acc[card.type] + 1 : 1;
-            }
-            return acc;
-            }, {});
+            // Définir l’ordre de priorité des types
+            const cardsTypes = [
+                "Land", "Creature", "Artifact", "Enchantment", "Instant", "Planeswalker",
+                "Sorcery", "Battle", "Conspiracy", "Tribal"
+            ];
 
-            return Object.entries(typeCount).map(([type, count]) => ({
-            name: type,
-            value: count,
-            }));
-        };
+            const typeCount = deckCardsGraphic.reduce((acc, card) => {
+                // Trouver le premier type de la carte correspondant à cardsTypes
+                const firstMappedType = cardsTypes.find(type => card.types?.includes(type));
+
+                if (firstMappedType) {
+                acc[firstMappedType] = (acc[firstMappedType] || 0) + 1;
+                }
+
+                return acc;
+        }, {});
+
+  // Transformer l’objet en tableau exploitable pour le graphique
+  return Object.entries(typeCount).map(([type, count]) => ({
+    name: type,
+    value: count,
+  }));
+}; 
+
 
         // Données pour les graphiques
         const typeData = getCardsByType();
@@ -707,79 +724,118 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
 
         const [cardsSelected, setCardsSelected] = useState([])
+        const [cardsSelectedUnit, setCardsSelectedUnit] = useState([])
         const [cardsUnselected, setCardsUnselected] = useState([])
+        const [cardsUnselectedUnit, setCardsUnselectedUnit] = useState([])
 
 
         // Sélectionne des cartes un format =/= commander
+        // Sélectionne des cartes un format =/= commander
         const selectCard = (newCard) => {
-            setDeckCards(prevCards => [...prevCards, newCard])
+            setDeckCards(prevCards => [...prevCards, newCard]);
 
-            if (cardsUnselected.filter(id => id === newCard.id).length > 0) {
-                setCardsUnselected(prevCards => {
-                      const index = prevCards.findIndex(card => card === newCard.id);
-                      const newCards = [...prevCards];
-                      newCards.splice(index, 1);
-                      return newCards;
-                    });
+            // Si la carte est déjà dans cardsUnselected, on la retire
+            if (cardsUnselected.some(card => card.id === newCard.id)) {
+                setCardsUnselected(prevCards => prevCards.filter(card => card.id !== newCard.id));
+            } else {
+                // Sinon on l'ajoute à cardsSelected
+                setCardsSelected(prevCards => [...prevCards, newCard]);
             }
-            else {
-              setCardsSelected(prevCards => [...prevCards, newCard.id])
-            }
-
-
         };
-        
-        // Retire des cartes pour un format =/= commander 
-        const unselectCard = (cardToRemove) => {
-         setDeckCards(prevCards => {
-            const index = prevCards.findIndex(card => card.id === cardToRemove.id);
 
-            if (index === -1) return prevCards; // aucune carte trouvée → rien à changer
+        // Réupère les cartes sélectionnées par l'utilisateur sans doublons d'ID
+        useEffect(() => {
+            const getCardsSelectedUnit = () => {
+                try {
+                    const unitsCardsMap = new Map();
 
-            // copie immuable du tableau
-            const newCards = [...prevCards];
-            newCards.splice(index, 1); // supprime UNE seule occurrence
-            return newCards;
-        });
-
-                if (cardsSelected.filter(id => id === cardToRemove.id).length > 0)
-                    setCardsSelected(prevCards => {
-                      const index = prevCards.findIndex(card => card === cardToRemove.id);
-                      const newCards = [...prevCards];
-                      newCards.splice(index, 1);
-                      return newCards;
+                    // On parcourt les cartes sélectionnées et on ne garde qu'une seule par ID
+                    cardsSelected.forEach(card => {
+                        if (!unitsCardsMap.has(card.id)) {
+                            unitsCardsMap.set(card.id, card);
+                        }
                     });
-                else {
-                     setCardsUnselected(prevCards => [...prevCards, cardToRemove.id])
+
+                    // On récupère uniquement les valeurs uniques (les cartes)
+                    const listUnitCards = Array.from(unitsCardsMap.values());
+
+                    setCardsSelectedUnit(listUnitCards);
+
+                } catch (error) {
+                    console.log(error);
                 }
+            };
+            getCardsSelectedUnit();
+        }, [cardsSelected]);
 
-                
+        // Retire des cartes pour un format =/= commander
+        const unselectCard = (cardToRemove) => {
+            setDeckCards(prevCards => {
+                const index = prevCards.findIndex(card => card.id === cardToRemove.id);
+                if (index === -1) return prevCards;
+
+                const newCards = [...prevCards];
+                newCards.splice(index, 1); // supprime UNE seule occurrence
+                return newCards;
+            });
+
+            // Si la carte est dans cardsSelected, on la retire
+            if (cardsSelected.some(card => card.id === cardToRemove.id)) {
+                setCardsSelected(prevCards => prevCards.filter(card => card.id !== cardToRemove.id));
+            } else {
+                // Sinon on l'ajoute à cardsUnselected
+                setCardsUnselected(prevCards => [...prevCards, cardToRemove]);
+            }
         };
+
+        // Réupère les cartes unsélectionnées par l'utilisateur sans doublons d'ID
+        useEffect(() => {
+            const getCardsUnselectedUnit = () => {
+                try {
+                    const unitsCardsMap = new Map();
+
+                    // On parcourt les cartes sélectionnées et on ne garde qu'une seule par ID
+                    cardsUnselected.forEach(card => {
+                        if (!unitsCardsMap.has(card.id)) {
+                            unitsCardsMap.set(card.id, card);
+                        }
+                    });
+
+                    // On récupère uniquement les valeurs uniques (les cartes)
+                    const listUnitCards = Array.from(unitsCardsMap.values());
+
+                    setCardsUnselectedUnit(listUnitCards);
+
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            getCardsUnselectedUnit();
+        }, [cardsUnselected]);
+
                 
         // Retire tous les exemplaires d'une carte
+        // Retire tous les exemplaires d'une carte
         const unselectCards = (cardToRemove) => {
-
-
-            setDeckCards((prevCards) => {
+            setDeckCards(prevCards => {
                 // Sépare les cartes à garder et celles à retirer
                 const remainingCards = prevCards.filter(card => card.id !== cardToRemove.id);
                 const removedCards = prevCards.filter(card => card.id === cardToRemove.id);
 
-
                 // Met à jour cardsUnselected en évitant les doublons
-                setCardsUnselected((prevUnselected) => {
-                    // On filtre les ids déjà présents
-                    const newIds = removedCards
-                        .map(card => card.id)
-                        .filter(id => !prevUnselected.includes(id));
+                setCardsUnselected(prevUnselected => {
+                    const existingIds = new Set(prevUnselected.map(card => card.id));
 
-                    return [...prevUnselected, ...newIds];
+                    // On garde seulement les cartes retirées qui ne sont pas déjà dans cardsUnselected
+                    const newUnselectedCards = removedCards.filter(card => !existingIds.has(card.id));
+
+                    return [...prevUnselected, ...newUnselectedCards];
                 });
 
                 return remainingCards;
             });
-
         };
+
 
 
         // Donne le nombre d'exemplaire d'une carte
@@ -795,12 +851,15 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             try { 
                 setDisplayLoading(true)
 
+                const cardsSelectedID = cardsSelected.map(card => card.id);
+                const cardsUnselectedID = cardsUnselected.map(card => card.id);
+
 
                 if(cardsSelected.length > 0) {
-                const request1 = await axiosInstance.post(`f_user/duplicateCardsOnDeck?cardsId=${cardsSelected}&deckId=${id}`, null, { withCredentials: true });
+                const request1 = await axiosInstance.post(`f_user/duplicateCardsOnDeck?cardsId=${cardsSelectedID}&deckId=${id}`, null, { withCredentials: true });
                 }
                 if (cardsUnselected.length > 0) {
-                const request2 = await axiosInstance.delete(`/f_user/deleteCardsListOnDeck?cardId=${cardsUnselected}&deckId=${id}`, { withCredentials: true });
+                const request2 = await axiosInstance.delete(`/f_user/deleteCardsListOnDeck?cardId=${cardsUnselectedID}&deckId=${id}`, { withCredentials: true });
                 }
 
                 window.location.reload();
@@ -1207,18 +1266,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     <AiOutlineMinusCircle size={'2em'} color={'black'} className="icon-add-card" />
                                 </button>
 
-                                {cardsSelected.filter(cardDeck => cardDeck === card.id).length > 0 && (
-                                    <p className='p-card-add-length-deckbuilding'>
-                                    + {cardsSelected.filter(cardDeck => cardDeck === card.id).length}
-                                    </p>
-                                )}
-
-                                {cardsUnselected.filter(cardDeck => cardDeck === card.id).length > 0 && (
-                                    <p className='p-card-add-length-deckbuilding' style={{ color: 'red' }}>
-                                    - {cardsUnselected.filter(cardDeck => cardDeck === card.id).length}
-                                    </p>
-                                )}
-
                                 <p className='p-card-length'>{count(card.id)}</p>
 
                                 <button
@@ -1621,16 +1668,121 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
                 {/* Popup d'ajout de cartes */}
                 { displayAddPopUp && (
-                                   <div className='popup-bckg'>
-                                        <div className='popup-update-user'>
-                                            <div className='header-ban-container'>
-                                                <h2 style={{color: 'white', fontFamily: 'MedievalSharp, cursive'}}>Modifications effectuées</h2>
-                                            </div>
-                                            <h4 className='active-p1' style={{padding:'5%', color: 'black', textAlign: 'center'}} >{updateCardText()}</h4>                               
-                                            <button className='valid-popup' onClick={() => updateCards()} disabled={displayLoading}><h4 className='valid-poup-title'>Enregistrer</h4></button>
-                                          </div> 
-                                          <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayAddPopUp(false)}/> 
+                 <div className='popup-bckg'>
+                       <div className='popup-cards-selected' style={{ backgroundImage: `url(${backgroundPopup})`}} >
+                                              <div className='header-popup-cards-selected'>
+                                                  <h2><strong>Cartes sélectionnées ({cardsSelected.length})</strong></h2>
+                                              </div>
+                                              <div className='cards-selected-container'>
+                                                <img className='card-add-img' src={
+                                                    cardImage
+                                                        ? cardImage.startsWith('/uploads/')
+                                                        ? `http://localhost:8080${cardImage}`
+                                                        : cardImage
+                                                        : defaultImg
+                                                    }
+                                                    alt="deck-img" />
+                                                <div className='cards-deck-unit-container'> 
+                                                  {cardsSelectedUnit.map(card => ( 
+                                                    <div className="land-text-details" id='land-card'  key={card.id}> 
+                                                        <h5 className='land-text-name' onMouseEnter={() => setCardImage( card.image ? card.image :  defaultImg)} >{card.name}</h5>
+                                                      { format !== "commander" && !card.legendary && (
+                                                        <div className='land-text-number'>                              
+                                                            {cardsSelected.filter(cardDeck => cardDeck.id === card.id).length > 0 && (
+                                                                <p className='p-card-add-length-deckbuilding'>
+                                                                + {cardsSelected.filter(cardDeck => cardDeck.id === card.id).length}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                      )}
+                                                        
+                                                        {detailsCard && detailsCard.id === card.id && (
+                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
+                                                        )} 
+                                                    </div>
+                                            
+                                                  ))}
+                                                  {cardsUnselectedUnit.map(card => ( 
+                                                    <div className="land-text-details" id='land-card'  key={card.id}> 
+                                                        <h5 className='land-text-name' onMouseEnter={() => setCardImage( card.image ? card.image :  defaultImg)} >{card.name}</h5>
+                                                      { format !== "commander" && !card.legendary && (
+                                                        <div className='land-text-number'>                              
+
+                                                            {cardsUnselected.filter(cardDeck => cardDeck.id === card.id).length > 0 && (
+                                                                <p className='p-card-add-length-deckbuilding' style={{ color: 'red' }}>
+                                                                - {cardsUnselected.filter(cardDeck => cardDeck.id === card.id).length}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                      )}
+                                                        
+                                                        {detailsCard && detailsCard.id === card.id && (
+                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
+                                                        )} 
+                                                    </div>
+                                            
+                                                  ))}  
+                                              </div>
+                                              </div>                                       
+                                                <div className='valid-popup-container'>                                   
+                                                  <button className='valid-popup' disabled={displayLoading}>
+                                                      <h4 className='valid-popup-title' onClick={() => updateCards()}>Ajouter au deck</h4>
+                                                  </button>
+                                                </div>
+                       </div> 
+                      {/*
+                        <div className='popup-cards-selected-mobile' style={{ backgroundImage: `url(${backgroundPopup})`}}>
+                            <div className='header-popup-cards-selected'>
+                              <h3>Cartes sélectionnées ({cardsSelected.length})</h3>
+                            </div>
+                            <div className='cards-selected-container-mobile'>
+                              
+
+                              <div className='button-nav-mobile'>   
+                                <IconButtonHover onClick={() => prevCard()} disabled={cardNumber === 0}
+                                icon={<MdOutlinePlayArrow className='icon-nav' style={{ transform: 'scaleX(-1)' }} />} />
+                                <IconButtonHover onClick={() => nextCard()}  disabled={cardNumber === cardsSelectedUnit.length - 1}
+                                icon={<MdOutlinePlayArrow className='icon-nav' />} />                   
+                              </div>
+                              <img className="card-selected-img-mobile"
+                                              src={cardsSelectedUnit[cardNumber].image && cardsSelectedUnit[cardNumber].image.startsWith('/uploads/') ? `http://localhost:8080${cardsSelectedUnit[cardNumber].image}` : cardsSelectedUnit[0].image} alt="Card mtg"/>
+                              <div className='cards-deck-unit-container'> 
+                                {cardsSelectedUnit.length > 0 && (
+                                  <div className="land-text-details" id='land-card' key={cardsSelectedUnit[cardNumber].id}>
+                                    { format !== "COMMANDER" && (
+                                    <div className='land-text-number'>                              
+                                      <button className="add-button-deckbuilding" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={() => unselectCard(cardsSelectedUnit[cardNumber])}
+                                      disabled={lessCard(cardsSelectedUnit[cardNumber])} >
+                                     <AiOutlineMinusCircle className="icon-add-card-form" size={'2em'} color={'black'} />
+                                      </button> 
+                                      <p className='p-card-length' style={{ fontWeight: 'bold' }}> {cardsSelected.filter(cardSelected => cardSelected.id === cardsSelectedUnit[cardNumber].id).length}</p>
+                                      <button className="add-button-deckbuilding" disabled={count(cardsSelectedUnit[cardNumber]) > 3} style={{ backgroundColor: 'transparent', border: 'none'}}
+                                       onClick={() => selectCard(cardsSelectedUnit[cardNumber])} ><CgAdd className="icon-add-card-form" size={'2em'} color={'black'} />
+                                      </button> 
                                       </div>
+                                    )}
+                                  <TiDeleteOutline className='delete-card-button-form' style={{marginTop: '2%'}}
+                                  color='red' size={'4em'} onClick={()=>unselectCards(cardsSelectedUnit[cardNumber])} />
+                                  </div>
+                                )}
+                                
+                              </div>
+                            </div>
+                            
+                              <button className='valid-popup' style={{padding : '2%'}} disabled={displayLoading}>
+                                <h4 className='valid-popup-title' onClick={() => addCards()}>Ajouter au deck</h4>
+                              </button>
+                        </div>
+                      */}
+
+                      <div className='icon-close-popup-container-desktop'>
+                        <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>(setDisplayAddPopUp(false), setCardImage(defaultImg))}/>
+                      </div>
+                      
+                      <div className='icon-close-popup-container-mobile'>
+                        <CgCloseO className='icon-close-popup' color='white' size={'3em'}  onClick={()=>(setDisplayAddPopUp(false), setCardImage(defaultImg))}/> 
+                      </div>
+              </div>
                                 )}
                             
                 {/* Popup publication du deck */}
@@ -1640,9 +1792,13 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                         <div className='set-attributs-deck'>
                             <div className='pub-title-container'>
                                 <h1 className='pub-title'>Deck publié !</h1>
-                            </div>
-                            <img src={deckPile} className='pub-image' alt="deck_pile" /> 
-                            <h4  className='pub-public'>public</h4>
+                            </div> 
+                            <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
+                                                format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
+                                                className="deck-public"                                 
+                                                 para="public"
+                                                 style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)'}}
+                                                 likenumberStyle={{display: "none"}} />
                             <button  type="button" className="valid-popup" onClick={() => {setPopupPub(false); window.location.reload();}}>
                                             <h4 className="valid-popup-title" >Fermer</h4> 
                                     </button>
