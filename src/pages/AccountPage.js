@@ -18,7 +18,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png"
+import incolore from "../assets/incolore-mtg.webp"
 import { FaPencilAlt } from "react-icons/fa";
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { FaHeart, FaRegHeart, FaPlus  } from 'react-icons/fa';
@@ -811,7 +811,7 @@ const AccountPage = () => {
                                      detailsDeck={detailsDeck} />
                                 ))} 
                                     <div className="deck-details" >
-                                        <div className='new-user-deck-contenair'>
+                                        <div className='new-deck-contenair'>
                                             <div className='new-deck-button-desktop'>
                                                 <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
                                                 style={{ width: '120px', height: '120px', backgroundColor: '#5D3B8C', marginBottom: '5%'
@@ -822,7 +822,7 @@ const AccountPage = () => {
                                                 style={{ width: '100px', height: '100px', backgroundColor: '#5D3B8C', marginBottom: '5%'
                                                         }}/>
                                             </div>
-                                            <h5 style={{padding:'5%'}} ><strong className="deck-named">Nouveau deck</strong></h5>                              
+                                            <h5><strong className="deck-named">Nouveau deck</strong></h5>                              
                                         </div>
                                     <h6 className='deck-public' style={{visibility: 'hidden'}}>privé</h6>
                                     <ButtonModif style={{visibility: 'hidden'}} />

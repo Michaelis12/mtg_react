@@ -9,7 +9,6 @@ import { CgCloseO  } from "react-icons/cg";
 import Card from '../model/Card';
 import Section from '../components/section';
 import Title from '../components/title';
-import TitleMobile from '../components/titleMobile';
 import OpenButton from '../components/openButton';
 import Pipeline from '../components/pipeline';
 import CheckboxFormat from '../components/checkboxFormat'
@@ -1432,7 +1431,7 @@ const NewDeck = () => {
                           <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-20px'}}/></h1>
   
                           <div className="deck-content">
-                              <img className="deck-selected-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
 
                               <div className="deck-selected-attributs" >
                                 

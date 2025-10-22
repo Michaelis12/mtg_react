@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react';
 import { useLocation ,  useNavigate} from 'react-router-dom';
 import "./css/Deckbuilding.css";
 import Card from '../model/CardApiSave';
-import deckPile from "../assets/deck_pile.png"
-import backgroundRedGreen from "../assets/background_cardsPage2.jpg"
+import backgroundPage from "../assets/background_cardsPage2.jpg"
 import backgroundHand from "../assets/background_hand.png"
 import backgroundPopup from "../assets/background_white.png"
 import backgroundCedh from "../assets/mtg_wallpaper.jpg"
@@ -13,7 +12,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import colorless from "../assets/incolore-mtg.png"
+import colorless from "../assets/incolore-mtg.webp"
 import loading from "../assets/loading.gif"
 import { TiDeleteOutline } from "react-icons/ti";
 import { RiResetLeftFill } from "react-icons/ri";
@@ -281,8 +280,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             if (deckCards.length > 0) {
 
             const validCards = deckCards.filter(card => !card.types.includes("Land"));
-
-            console.log("validCards : " + validCards.length)
 
             // Calcule la somme des cmc
             const totalCmc = validCards.reduce((sum, card) => sum + card.cmc, 0);
@@ -853,8 +850,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
                 const cardsSelectedID = cardsSelected.map(card => card.id);
                 const cardsUnselectedID = cardsUnselected.map(card => card.id);
-
-
+                
                 if(cardsSelected.length > 0) {
                 const request1 = await axiosInstance.post(`f_user/duplicateCardsOnDeck?cardsId=${cardsSelectedID}&deckId=${id}`, null, { withCredentials: true });
                 }
@@ -910,7 +906,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 { displayLoading && (
                     <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
                 )}
-                <img src={backgroundRedGreen} className="background-image" alt="background" />
+                <img src={backgroundPage} className="background-image" alt="background" />
                 
                 {/*  Boutons d'action edit */}
             
@@ -1244,9 +1240,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 {card.name}
                             </h5>
                             {card.types.includes("Basic") && (
-                                <p className="p-cards-deck-length">basic land</p>
+                                <p style={{marginTop: '17px'}} className="p-cards-deck-length">basic land</p>
                             )}
-                            </div>
+                            </div> 
 
                             <div className='card-link-mobile'>
                             <h5 className='land-text-name' onClick={() => openZoomPopup(card)}>
@@ -1666,12 +1662,12 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             </div>
                 )}
 
-                {/* Popup d'ajout de cartes */}
+                {/* Popup d'ajout ou de suppression des cartes */}
                 { displayAddPopUp && (
                  <div className='popup-bckg'>
                        <div className='popup-cards-selected' style={{ backgroundImage: `url(${backgroundPopup})`}} >
                                               <div className='header-popup-cards-selected'>
-                                                  <h2><strong>Cartes sélectionnées ({cardsSelected.length})</strong></h2>
+                                                  <h2><strong>Modifications effectuées</strong></h2>
                                               </div>
                                               <div className='cards-selected-container'>
                                                 <img className='card-add-img' src={
@@ -1686,7 +1682,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                   {cardsSelectedUnit.map(card => ( 
                                                     <div className="land-text-details" id='land-card'  key={card.id}> 
                                                         <h5 className='land-text-name' onMouseEnter={() => setCardImage( card.image ? card.image :  defaultImg)} >{card.name}</h5>
-                                                      { format !== "commander" && !card.legendary && (
                                                         <div className='land-text-number'>                              
                                                             {cardsSelected.filter(cardDeck => cardDeck.id === card.id).length > 0 && (
                                                                 <p className='p-card-add-length-deckbuilding'>
@@ -1694,7 +1689,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                 </p>
                                                             )}
                                                         </div>
-                                                      )}
                                                         
                                                         {detailsCard && detailsCard.id === card.id && (
                                                         <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
@@ -1705,7 +1699,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                   {cardsUnselectedUnit.map(card => ( 
                                                     <div className="land-text-details" id='land-card'  key={card.id}> 
                                                         <h5 className='land-text-name' onMouseEnter={() => setCardImage( card.image ? card.image :  defaultImg)} >{card.name}</h5>
-                                                      { format !== "commander" && !card.legendary && (
                                                         <div className='land-text-number'>                              
 
                                                             {cardsUnselected.filter(cardDeck => cardDeck.id === card.id).length > 0 && (
@@ -1713,9 +1706,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                 - {cardsUnselected.filter(cardDeck => cardDeck.id === card.id).length}
                                                                 </p>
                                                             )}
-                                                        </div>
-                                                      )}
-                                                        
+                                                        </div>                                                        
                                                         {detailsCard && detailsCard.id === card.id && (
                                                         <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
                                                         )} 
@@ -1726,7 +1717,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                               </div>                                       
                                                 <div className='valid-popup-container'>                                   
                                                   <button className='valid-popup' disabled={displayLoading}>
-                                                      <h4 className='valid-popup-title' onClick={() => updateCards()}>Ajouter au deck</h4>
+                                                      <h4 className='valid-popup-title' onClick={() => updateCards()}>Enregistrer</h4>
                                                   </button>
                                                 </div>
                        </div> 

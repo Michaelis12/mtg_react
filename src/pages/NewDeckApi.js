@@ -9,18 +9,17 @@ import { CgCloseO  } from "react-icons/cg";
 import Card from '../model/CardApi';
 import Section from '../components/section';
 import Title from '../components/title';
-import TitleMobile from '../components/titleMobile';
 import OpenButton from '../components/openButton';
 import Pipeline from '../components/pipeline';
 import CheckboxFormat from '../components/checkboxFormat'
 import ButtonModif from '../components/iconModif';
-import ButtonSelect from '../components/buttonSelect';
 import ButtonValid from '../components/buttonValid';
 import AddButton from '../components/addButton';
 import InputName from '../components/inputName';
 import SearchBar from '../components/searchBar';
 import InputManaCost from '../components/inputManaCoast';
 import OpenButtonLarge from '../components/openButtonLarge';
+import FooterSection from '../components/footerSection';
 import axios from "axios";
 import axiosInstance from "../api/axiosInstance";
 import white from "../assets/white-mtg.png"
@@ -28,7 +27,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png"
+import incolore from "../assets/incolore-mtg.webp"
 import defaultImg from "../assets/default_deck.png"
 import defaultCardImg from "../assets/mtg-card-back.jpg"
 import backgroundCardsPage from "../assets/background_cardsPage2.jpg"
@@ -46,7 +45,7 @@ const NewDeck = () => {
    const [displayLoading, setDisplayLoading] = useState(false);
 
    // Récupère les couleurs pour le checkbox
-   const [existingColors, setExistingColors] = React.useState(["W", "U", "R", "G", "B", "colorless"])
+   const [existingColors, setExistingColors] = React.useState(["W", "U", "R", "G", "B"])
       
     // Change de valeur à la sélection 
     const [selectedColors, setSelectedColors] = React.useState([])
@@ -397,7 +396,7 @@ const NewDeck = () => {
         };
   
         recupStorage();
-    }, []);
+    }, []); 
   
           
           
@@ -560,7 +559,7 @@ const NewDeck = () => {
                                            }
                   const selectColors = (newColor) => {
                   console.log(newColor)
-                    setSelectedColors((prevColors) => {
+                    setFilterColors((prevColors) => {
                       const colorsArray = Array.isArray(prevColors)
                         ? prevColors
                         : typeof prevColors === 'string'
@@ -1110,7 +1109,7 @@ const NewDeck = () => {
                     <IoIosArrowDropleft className='icon-return'  size={'7em'} onClick={()=>returnFormat()} /> 
                   </div>
 
-             <div className='display-objects-section'>
+          <div className='display-objects-section'>
 
               <div className='map-cards-section'>
                   <div className='icon-return-container-mobile'>
@@ -1144,7 +1143,7 @@ const NewDeck = () => {
 
           </div>
             
-          
+           <FooterSection/>
           </div>
         )} 
 
@@ -1257,7 +1256,7 @@ const NewDeck = () => {
                           <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-20px'}}/></h1>
   
                           <div className="deck-content">
-                              <img className="deck-selected-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
 
                               <div className="deck-selected-attributs" >
                                 
@@ -1382,11 +1381,11 @@ const NewDeck = () => {
                           <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-20px'}}/></h1>
   
                           <div className="deck-content">
-                              <img className="deck-selected-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
 
                               <div className="deck-selected-attributs" >
 
-                                  <div className='cedh-line-attribut'>
+                                  <div className='card-line-cedh-attribut'>
                                       <h4 className='new-deck-line-title' > Commandant : </h4>
                                       <h3 className='new-deck-cedh' onMouseEnter={() => hoveredCard(cedh.id) } onMouseOut={() => hoveredCard()}
                                         > {cedh.name}<ButtonModif onClick={() => returnCedh()} 
@@ -1396,13 +1395,13 @@ const NewDeck = () => {
                                         )} 
                                 </div> 
                                 
-                                  <div className='card-line-attribut'>
+                                  <div className='card-line-cedh-attribut'>
                                       <h4 className='new-deck-line-title'> Format : </h4>
                                       <p className='new-deck-format'>{format} </p>
                                       <ButtonModif onClick={() => returnFormat()} /> 
                                   </div>  
 
-                                  <div className='card-line-attribut'>
+                                  <div className='card-line-cedh-attribut'>
                                       <h4 className='new-deck-line-title' > Couleurs : </h4> 
                                       {colors && colors.length > 0 && (
                                         <div className='new-deck-colors-mapping' >

@@ -20,7 +20,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import colorless from "../assets/incolore-mtg.png"
+import colorless from "../assets/incolore-mtg.webp"
 import loading from "../assets/loading.gif"
 import { getImageUrl } from '../utils/imageUtils';
 import { buildQuery } from '../utils/buildQuery';

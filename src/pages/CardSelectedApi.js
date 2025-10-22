@@ -17,7 +17,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import colorless from "../assets/incolore-mtg.png"
+import colorless from "../assets/incolore-mtg.webp"
 import { getImageUrl, getDeckImageUrl } from '../utils/imageUtils';
 import innistrad from '../assets/innistrad.png';
 import ixalan from '../assets/ixalan.png';
@@ -72,7 +72,7 @@ const CardSelectedApi = () => {
                 const request = await axios.get(`https://api.scryfall.com/cards/${newID}`);
                 const response = request.data   
 
-                console.log(request.data.legalities)
+                console.log(request.data)
                 setCard(response)
 
             }   
@@ -326,13 +326,23 @@ const CardSelectedApi = () => {
 
                                 
                                 <div className="card-selected-attributs" >
-                                        
+
+                                    {card.game_changer && (
+                                      <div className='card-line-attribut'>
+                                            <h4 className='card-selected-rarity' style={{ background : "linear-gradient(135deg, #D4AF37 0%, #F7C83D 100%)" }}>
+                                            <strong>Game Changer</strong>
+                                            </h4>
+                                    </div>  
+                                    )}  
+
+                                    {card?.type_line && !card.type_line.includes("Land") && (  
                                     <div className='card-line-attribut'>
                                                 <h4 className='card-line-title'> Cout en mana : </h4>
                                                 <div className='card-line-devotion'>
                                                     {getManaImages(card.mana_cost)}
                                                 </div>
                                     </div>
+                                    )}
 
                                     <div className='card-line-attribut'>
                                             <h4 className='card-line-title'> Type : </h4>
@@ -374,7 +384,7 @@ const CardSelectedApi = () => {
                                         )}
                                     </div>
  
-                                
+                                     {card?.type_line && !card.type_line.includes("Land") && (  
                                     <div className='card-line-attribut'>
                                         <h4 className='card-line-title' > Couleurs : </h4> 
                                         {card.colors && card.colors.length > 0 && (
@@ -384,7 +394,8 @@ const CardSelectedApi = () => {
                                             ))}
                                         </div>
                                         )}
-                                    </div>                                                             
+                                    </div>     
+                                     )}                                                        
                                    </div>
                                 </div>
                                 
