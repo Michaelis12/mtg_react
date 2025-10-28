@@ -430,7 +430,7 @@ const navNewDeck = () => {
           </div>  
 
           {/*Mapping des top decks*/}
-          <div className="top-objets-container" >
+          <div className="top-objets-container">
             <Title title={"Top Decks"} style={{marginTop: "0px"}}/> 
             <div className="top-cards" style={{
                   backgroundImage: `url(${BackgroundTopCards})`, 

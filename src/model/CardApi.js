@@ -14,7 +14,7 @@ class Card {
   }) {
     this.id = id;
     this.name = name;
-    this.text = oracle_text || ""; // Texte de règles
+    this.text = oracle_text || ""; 
     this.image = image_uris?.normal || null; // image_uris contient plusieurs tailles
     this.manaCost = mana_cost || null;
     this.cmc = cmc || 0;

@@ -714,6 +714,7 @@ const CardsDeckPage = () => {
                 const payload = cardsSelected.map(card => ({
                     apiID: card.id,          
                     name: card.name,
+                    text: card.text,
                     image: card.image,
                     manaCost: card.manaCost,
                     cmc: card.cmc,
@@ -721,9 +722,10 @@ const CardsDeckPage = () => {
                     types: card.types,
                     formats: card.formats,
                     legendary: card.legendary || false,
+                    rarity: card.rarity,
+                    edition : card.edition,
                     decksNumber: card.decksNumber || 0
                 }));
-
 
                 
                 const response = await axiosInstance.post(`f_user/addCardsOnDeck?deckId=${id}`, payload, { withCredentials: true });
