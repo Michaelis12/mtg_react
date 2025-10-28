@@ -29,7 +29,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png" 
+import incolore from "../assets/incolore-mtg.webp" 
 import loading from "../assets/loading.gif"
 import { getImageUrl } from '../utils/imageUtils';
 
@@ -321,7 +321,7 @@ const CardsPage = () => {
          
                    const getBgDate= () => {
                      if(displayCards==="id") {
-                       return '#5D3B8C'
+                       return '#1B1D40'
                      } 
                      else {
                        return '#D3D3D3'
@@ -330,7 +330,7 @@ const CardsPage = () => {
          
                     const getBgTop= () => {
                      if(displayCards==="popularity") {
-                       return '#5D3B8C'
+                       return '#1B1D40'
                      }
                      else {
                        return '#D3D3D3'

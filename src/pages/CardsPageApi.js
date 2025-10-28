@@ -58,59 +58,49 @@ const CardsPage = () => {
 
     // Récupère la première page de cartes 
  
-    const getCards = async () => {
-            try {
-                setDisplayLoading(true); 
-                /*
-                if (filterEditions.length <1 || filterRarities.length <1 || filterColors.length <1
-                    || filterFormats.length <1 || filterTypes.length <1
-                ) {
-                    setDisplayLoading(false);
-                    return;
-                }
-                */
+    const getCards = async (cancelToken) => {
+    try {
+        setDisplayLoading(true);
 
-                // Contient les RequestParams de la requete
-                
-                const params = {
-                  q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, filterFormats, 
-                                filterRarities, filterTypes, filterLegendary, filterEditions
-                  ),
-                  page: 1
-                };
+        const params = {
+            q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, filterFormats, 
+                         filterRarities, filterTypes, filterLegendary, filterEditions),
+            page: 1
+        };
 
+        const response = await axios.get('https://api.scryfall.com/cards/search', {
+            params,
+            cancelToken
+        });
 
-                
-                const response = await axios.get('https://api.scryfall.com/cards/search', {
-                  params,
-                  paramsSerializer: {
-                    indexes: null 
-                }
-                });
-                
-                
-                const listCards = response.data.data.map(cardData => Card.fromApi(cardData));
-                setCards(listCards)
-                setHasMore(response.data.has_more);
-                            
-                 
-                setPage(2);
-                setDisplayLoading(false);
-                
-            }   
-            catch (error) {
-                setCards([])
-                setHasMore(false)
-                setDisplayLoading(false);
-                console.log(error);
-            }
+        const listCards = response.data.data.map(cardData => Card.fromApi(cardData));
+        setCards(listCards);
+        setHasMore(response.data.has_more);
+        setPage(2);
+        setDisplayLoading(false);
 
-    
+    } catch (error) {
+        if (axios.isCancel(error)) {
+            console.log("Request canceled:", error.message);
+        } else {
+            setCards([]);
+            setHasMore(false);
+            setDisplayLoading(false);
+            console.log(error);
         }
-        React.useEffect(() => {
-          getCards();
-      }, [ filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, 
-          filterFormats, filterRarities, filterEditions, filterTypes, filterLegendary]);
+    }
+};
+
+React.useEffect(() => {
+    const source = axios.CancelToken.source();
+    getCards(source.token);
+
+    return () => {
+        source.cancel("Operation canceled due to new request.");
+    };
+}, [filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, 
+    filterFormats, filterRarities, filterEditions, filterTypes, filterLegendary]);
+
 
     
     // Charge plus de cartes pour la pagination
@@ -178,7 +168,8 @@ const CardsPage = () => {
                       const filterText = sessionStorage.getItem('cpFilterText');
                       const inputManaCostMin = sessionStorage.getItem('cpInputManacostMin');
                       const inputManaCostMax = sessionStorage.getItem('cpInputManacostMax');
-                      const filterLegendary = sessionStorage.getItem('cpFilterLegendary');  
+                      const filterLegendary = sessionStorage.getItem('cpFilterLegendary');
+                      const filterEditions = sessionStorage.getItem('cpFilterEditions');  
                       
                       if (filterName) {
                           setFilterName(JSON.parse(filterName));
@@ -199,6 +190,10 @@ const CardsPage = () => {
                       if(filterLegendary) {
                           setFilterLegendary(JSON.parse(filterLegendary));
                           sessionStorage.removeItem('cpFilterLegendary');
+                        }
+                      if(filterEditions) {
+                          setFilterEditions(JSON.parse(filterEditions));
+                          sessionStorage.removeItem('cpFilterEditions');
                         }
                       
                       
@@ -497,27 +492,7 @@ const CardsPage = () => {
         const [types, setTypes] = React.useState([])
         const callTypes = useRef(false);
         
-        // Récupère les formats dans le storage si l'user vient de cardSelected
-        const recupStorageTypes = (response) => {
-              try {
-        
-                  if (callTypes.current) return;
-                
-                  const stored = sessionStorage.getItem('cpFilterTypes');
-        
-                    if (stored) {
-                        
-                        setFilterTypes(JSON.parse(stored));
-                        sessionStorage.removeItem('cpFilterTypes');
-                        callTypes.current = true;
-                    } else {
-                        setFilterTypes(response);
-                        
-                    }
-            } catch (error) {
-                console.error("Erreur lors de la récupération du sessionStorage :", error);
-            }
-        };
+
 
 
         const selectTypes = (newType) => {
@@ -559,7 +534,22 @@ const CardsPage = () => {
       const [arrowEditionSens, setArrowEditionSens] = React.useState(<SlArrowDown/>)
       const [displayFilterEditions, setDisplayFilterEditions] = React.useState(false)
 
-
+      useEffect(() => {
+      const getEditions = async () => {
+                              try {
+                                  const request = await axios.get(`https://api.scryfall.com/sets`);
+              
+                                  const response = request.data.data
+                      
+                                  setEditions(response)
+              
+                              }   
+                              catch (error) {
+                                  console.log(error);
+                              }
+      }
+      getEditions();
+      }, []);
 
       const selectEditions = (newEdition) => {
         setFilterEditions((prevEditions) => {
@@ -579,6 +569,12 @@ const CardsPage = () => {
         });
       };
 
+      // Refiltre selon toutes les couleurs du deck
+          const removeEditions = () => {
+           setFilterEditions([])
+          } 
+
+
 
 
       // Affiche le filtre des éditions
@@ -588,22 +584,6 @@ const CardsPage = () => {
       }
       
 
-       useEffect(() => {
-            const getEditions = async () => {
-                try {
-                    const request = await axios.get(`https://api.scryfall.com/sets`);
-
-                    const response = request.data.data
-        
-                    setEditions(response)
-
-                }   
-                catch (error) {
-                    console.log(error);
-                }
-            }
-            getEditions();
-            }, []);
 
 
 
@@ -710,7 +690,7 @@ const CardsPage = () => {
                       </div>
                     </div>
                   )}
-                </div>
+                </div> 
                 
 
                 <div className="filter-formats-container">                 
@@ -812,24 +792,29 @@ const CardsPage = () => {
                   <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
                   { displayFilterEditions && ( 
                     <div className='add-card-filter-container' style={{zIndex: filterZIndex--}} >
-                      {editions.map((edition, index) => (
-                          <li className="li-checkbox" key={index}>
-                            <input
-                              className='component-input'
-                              type="checkbox"
-                              name={edition.name}
-                              value={edition.code}
-                              onChange={(event) => selectEditions(event.target.value)}
-                              checked={filterEditions.includes(edition.code)}
-                            />
-                            <p
-                              className='checkbox-type-p'
-                              style={{ margin: '0px' }}
-                            >
-                              {edition.name}
-                            </p>
-                          </li>
-                        ))}
+                      <div className="compenant-checkbox">
+                        <div className="compenant-checkbox-map-large" style={{width:"100%"}}>
+                          {editions.map((edition, index) => (
+                              <li className="li-checkbox" key={index} style={{width:"90%"}}>
+                                <input
+                                  className='component-input'
+                                  type="checkbox"
+                                  name={edition.name}
+                                  value={edition.code}
+                                  onChange={(event) => selectEditions(event.target.value)}
+                                  checked={filterEditions.includes(edition.code)}
+                                />
+                                <p
+                                  className='checkbox-type-p'
+                                  style={{ margin: '0px' }}
+                                >
+                                  {edition.name}
+                                </p>
+                              </li>
+                            ))}
+                        </div>
+                         <TbFilterCancel className='compenant-reset' onClick={removeEditions}/>
+                      </div>
                     </div>
                   )}
                 </div>

@@ -8,7 +8,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png"
+import incolore from "../assets/incolore-mtg.webp"
 
 const Deck = function (props) {
 
@@ -34,7 +34,7 @@ const Deck = function (props) {
                                             return incolore
                                         }
                                        
-        };
+        }; 
 
     
    

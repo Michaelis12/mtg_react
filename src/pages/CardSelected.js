@@ -22,7 +22,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png"
+import incolore from "../assets/incolore-mtg.webp"
 import FooterSection from '../components/footerSection';
 import { getImageUrl, getDeckImageUrl } from '../utils/imageUtils';
 import innistrad from '../assets/innistrad.png';
@@ -511,7 +511,7 @@ const CardSelected = () => {
 
                 const getBgDate = () => {
                 if (displayDecks === "id") {
-                    return '#5D3B8C';
+                    return '#1B1D40';
                 } else {
                     return '#D3D3D3';
                 }
@@ -519,7 +519,7 @@ const CardSelected = () => {
 
                 const getBgTop = () => {
                 if (displayDecks === "popularity") {
-                    return '#5D3B8C';
+                    return '#1B1D40';
                 } else {
                     return '#D3D3D3';
                 }

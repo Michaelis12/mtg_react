@@ -21,15 +21,13 @@ import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { TbFilterCancel } from "react-icons/tb";
 import { FaHeart, FaRegHeart  } from 'react-icons/fa';
 import backgroundCardsPage from "../assets/background_cardsPage3.jpg"
-import BackgroundDeck from "../assets/background_deck_scelled.png"
-import BackgroundDeckAttributs from "../assets/old-paper.jpg"
 import backgroundWhite from "../assets/background_white.png"
 import white from "../assets/white-mtg.png"
 import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png"
+import incolore from "../assets/incolore-mtg.webp"
 import axiosInstance from "../api/axiosInstance";
 import loading from "../assets/loading.gif"
 import { getDeckImageUrl } from '../utils/imageUtils';
@@ -50,9 +48,8 @@ const DecksPage = () => {
      
 
     // Filtre recherche
+        const [name, setName] = React.useState("")
         const [filterName, setFilterName] = React.useState("")
-        const [inputValueMin, setInputValueMin] = React.useState("")
-        const [inputValueMax, setInputValueMax] = React.useState("")
         const [inputManaCostMin, setInputManaCostMin] = React.useState("")
         const [inputManaCostMax, setInputManaCostMax] = React.useState("")
         const [filterColors, setFilterColors] = React.useState([])
@@ -77,14 +74,8 @@ const DecksPage = () => {
         const getDecksWithDate = async () => {
             try {
                 setDisplayLoading(true);
+
                 // Contient les RequestParams de la requete
-                /*
-                if (filterColors.length <1 || filterFormats.length <1
-                ) {
-                    setDisplayLoading(false);
-                    return;
-                }
-                */
                 const params = {
                     page: 0,
                     size: pageSize,
@@ -97,6 +88,7 @@ const DecksPage = () => {
 
                 }; 
 
+
                 const response = await axiosInstance.get('f_all/getDecks', {
                   params,
                   paramsSerializer: {
@@ -108,8 +100,6 @@ const DecksPage = () => {
                             deck.colors, deck.manaCost, deck.value, deck.isPublic, deck.deckBuilder,
                             deck.deckBuilderName, deck.likeNumber, deck.cards, deck.commander
                 ) )
-
-                console.log(listDecks)
                         
                 setDecks(listDecks)
                 setPage(1) // Quand la méthode initiale est appelé on reinitialise la page à 1
@@ -126,7 +116,7 @@ const DecksPage = () => {
     
         }
         getDecksWithDate();
-        }, [displayDecks, filterName, inputValueMin, inputValueMax, inputManaCostMin, inputManaCostMax,
+        }, [displayDecks, filterName, inputManaCostMin, inputManaCostMax,
             filterColors, filterFormats]);
 
 
@@ -142,13 +132,11 @@ const DecksPage = () => {
                                 name: filterName,
                                 colors: filterColors,
                                 formats: filterFormats,
-                                valueMin : inputValueMin,
-                                valueMax : inputValueMax,
                                 manaCostMin : inputManaCostMin,
                                 manaCostMax : inputManaCostMax
                             };
 
-                            const request = await axiosInstance.get(`f_all/getDecksPaged`, {
+                            const request = await axiosInstance.get(`f_all/getDecks`, {
                                     params,
                                     paramsSerializer: { indexes: null }
                                 });
@@ -174,12 +162,6 @@ const DecksPage = () => {
         useEffect(() => {
           const getDecksWithLikes = async () => {
                   setDisplayLoading(true)
-
-                  if (filterColors.length <1 || filterFormats.length <1
-                ) {
-                    setDisplayLoading(false);
-                    return;
-                }
                 
                   try {
                       const params = {
@@ -189,14 +171,12 @@ const DecksPage = () => {
                           name: filterName,
                           colors: filterColors,
                           formats: filterFormats,
-                          valueMin : inputValueMin,
-                          valueMax : inputValueMax,
                           manaCostMin : inputManaCostMin,
                           manaCostMax : inputManaCostMax
       
                       };
       
-                      const response = await axiosInstance.get('f_all/getDecksPaged', {
+                      const response = await axiosInstance.get('f_all/getDecks', {
                       params,
                       paramsSerializer: {
                         indexes: null // Cela désactive l'ajout des crochets
@@ -223,7 +203,7 @@ const DecksPage = () => {
           
               }
               getDecksWithLikes();
-              }, [displayDecks, deckLikedId, filterName, inputValueMin, inputValueMax, inputManaCostMin, inputManaCostMax,
+              }, [displayDecks, deckLikedId, filterName, inputManaCostMin, inputManaCostMax,
                   filterColors, filterFormats]);
 
 
@@ -239,13 +219,11 @@ const DecksPage = () => {
                                         name: filterName,
                                         colors: filterColors,
                                         formats: filterFormats,
-                                        valueMin : inputValueMin,
-                                        valueMax : inputValueMax,
                                         manaCostMin : inputManaCostMin,
                                         manaCostMax : inputManaCostMax
                                     };
         
-                                    const request = await axiosInstance.get(`/f_all/getDecksPaged`, {
+                                    const request = await axiosInstance.get(`/f_all/getDecks`, {
                                             params,
                                             paramsSerializer: { indexes: null }
                                         });
@@ -282,7 +260,7 @@ const DecksPage = () => {
 
           const getBgDate= () => {
             if(displayDecks==="date") {
-              return '#5D3B8C'
+              return '#1B1D40'
             } 
             else {
               return '#D3D3D3'
@@ -291,7 +269,7 @@ const DecksPage = () => {
 
            const getBgTop= () => {
             if(displayDecks==="popularity") {
-              return '#5D3B8C'
+              return '#1B1D40'
             }
             else {
               return '#D3D3D3'
@@ -326,8 +304,6 @@ const DecksPage = () => {
         // Naviguer vers un deck
          const chooseDeck = (id) => {
           sessionStorage.setItem('dpFilterName', JSON.stringify(filterName));
-          sessionStorage.setItem('dpInputValueMin', JSON.stringify(inputValueMin));
-          sessionStorage.setItem('dpInputValueMax', JSON.stringify(inputValueMax));
           sessionStorage.setItem('dpInputManacostMin', JSON.stringify(inputManaCostMin));
           sessionStorage.setItem('dpInputManacostMax', JSON.stringify(inputManaCostMax));
           sessionStorage.setItem('dpFilterColors', JSON.stringify(filterColors));
@@ -343,8 +319,6 @@ const DecksPage = () => {
           try {
             setDisplayLoading(true);
             sessionStorage.setItem('dpFilterName', JSON.stringify(filterName));
-            sessionStorage.setItem('dpInputValueMin', JSON.stringify(inputValueMin));
-            sessionStorage.setItem('dpInputValueMax', JSON.stringify(inputValueMax));
             sessionStorage.setItem('dpInputManacostMin', JSON.stringify(inputManaCostMin));
             sessionStorage.setItem('dpInputManacostMax', JSON.stringify(inputManaCostMax));
             sessionStorage.setItem('dpFilterColors', JSON.stringify(filterColors));
@@ -374,14 +348,6 @@ const DecksPage = () => {
                               if (filterName) {
                                   setFilterName(JSON.parse(filterName));
                                   sessionStorage.removeItem('dpFilterName');
-                              }
-                              if (inputValueMin) {
-                                  setInputValueMin(JSON.parse(inputValueMin));
-                                  sessionStorage.removeItem('dpInputValueMin');
-                              }
-                              if (inputValueMax) {
-                                  setInputValueMax(JSON.parse(inputValueMax));
-                                  sessionStorage.removeItem('dpInputValueMax');
                               }
                               if (inputManaCostMin) {
                                   setInputManaCostMin(JSON.parse(inputManaCostMin));
@@ -499,6 +465,13 @@ const DecksPage = () => {
               return deck.likeNumber;
             };
 
+        // Affiche le bouton de la searchbar name
+          const displayResetName = () => {
+               if(filterName === "") {
+                 return 'none'
+               }
+            }
+
 
         // Filtres mobile
 
@@ -523,11 +496,6 @@ const DecksPage = () => {
             setDisplayFilterValue(!displayFilterValue)
          }
 
-        // Reset le filtre value
-        const ResetFilterValue = () => {
-          setInputValueMin("")
-          setInputValueMax("")
-          }
 
          // Filtre manaCost
 
@@ -602,22 +570,22 @@ const DecksPage = () => {
 
           // Récupère l'image de chaque couleur
           const getColorPics = (value) => {
-                                if(value === "BLANC") {
+                                if(value === "W") {
                                     return white
                                 }
-                                if(value === "BLEU") {
+                                if(value === "U") {
                                     return blue
                                 }
-                                if(value === "VERT") {
+                                if(value === "G") {
                                     return green
                                 }
-                                if(value === "ROUGE") {
+                                if(value === "R") {
                                     return red
                                 }
-                                if(value === "NOIR") {
+                                if(value === "B") {
                                     return black
                                 }
-                                if(value === "INCOLORE") {
+                                if(value === "colorless") {
                                     return incolore
                                 }
                                
@@ -695,8 +663,11 @@ const DecksPage = () => {
 
             {/* Searchbar desktop*/}
             <div className="search-line">            
-              <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} placeholder={" Chercher un deck"}
-              style={{marginBottom: '30px'}} />
+              <SearchBar value={name} placeholder={" Chercher un deck"}
+                onClick={() => (setFilterName(name))}
+                onChange={(event) => (setName(event.target.value))}
+                onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName() }}
+                style={{marginBottom: '30px'}} />
             </div>
             
 
@@ -709,18 +680,6 @@ const DecksPage = () => {
               {/* Filtres desktop */}
               <div className="filters-line">
                   
-                  <div className="filter-value-container">
-                  <OpenButton text="Filtrer par valeur €" icon={arrowValueSens} onClick={OpenFilterValue} />
-                  {displayFilterValue && (
-                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                          <InputValue style={{width: '150px'}} value={inputValueMin}
-                          onChange={(event) => (setInputValueMin(event.target.value))} placeholder={"min"}/>
-                          <InputValue style={{width: '150px'}} value={inputValueMax}
-                          onChange={(event) => (setInputValueMax(event.target.value))} placeholder={"max"}/>
-                          <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterValue()} />
-                      </div>
-                  )}
-                </div>
                 
                 <div className="filter-manaCost-container">
                   <OpenButton text="Filtrer par cout en mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />
@@ -737,24 +696,100 @@ const DecksPage = () => {
 
                 <div className="filter-colors-container">
                 <OpenButton text="Filtrer par couleur" icon={arrowColorSens} onClick={OpenFilterColor} />
-                  { displayFilterColors && (
-                  <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                    <CheckboxColor attributs={colors} onChange={(event) => selectColors(event.target.value)} filter={filterColors}
-                    image={getColorPics} onPush={removeColors} />
-                  </div>
+                  {displayFilterColors && (
+                    <div className='add-card-filter-container' style={{ zIndex: filterZIndex-- }}>
+                      <div className="compenant-checkbox">
+                        <div className="compenant-checkbox-map-large">
+
+                          {[ 
+                            { value: "W"},
+                            { value: "U"},
+                            { value: "B"},
+                            { value: "R"},
+                            { value: "G"},
+                          ].map((color, index) => (
+                            <li className="li-checkbox" key={index}>
+                              <input
+                                className='component-input'
+                                type="checkbox"
+                                name={color.value}
+                                value={color.value}
+                                onChange={(event) => selectColors(event.target.value)}
+                                checked={filterColors.includes(color.value) && !filterColors.includes("colorless")}
+                              />
+                              <img src={getColorPics(color.value)} className="filter-color-img" alt={color}/>
+                            </li>
+                          ))}
+                          <li className="li-checkbox">
+                              <input
+                                className='component-input'
+                                type="checkbox"
+                                name="colorless"
+                                value="colorless"
+                                onChange={(event) => selectColors(event.target.value)}
+                                checked={filterColors.includes("colorless")}
+                              />
+                              <img src={getColorPics("colorless")} className="filter-color-img" alt="colorless"/>
+                            </li>
+
+                        </div>
+                        <TbFilterCancel className='compenant-reset' onClick={removeColors}/>
+                      </div>
+                    </div>
                   )}
                 </div>
 
-
-                <div className="filter-formats-container">
-                  <OpenButton text="Filtrer par format" icon={arrowFormatSens} onClick={OpenFilterFormat} />
+                <div className="filter-formats-container">                 
+                  <OpenButton
+                    text="Filtrer par format"
+                      icon={arrowFormatSens}
+                    onClick={OpenFilterFormat}
+                  />
                   {displayFilterFormats && (
-                  <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                    <Checkbox attributs={formats} onChange={(event) => selectFormats(event.target.value)} filter={filterFormats}
-                    onPush={removeFormats} classNameP='checkbox-format-p'/>
-                  </div>
-                  )}                 
+                    <div className='add-card-filter-container' style={{ zIndex: filterZIndex-- }}>
+                      <div className="compenant-checkbox">
+                        <div className="compenant-checkbox-map-large">
+
+                          {[
+                            { value: "standard", label: "STANDARD" },
+                            { value: "future", label: "FUTURE" },
+                            { value: "historic", label: "HISTORIC" },
+                            { value: "gladiator", label: "GLADIATOR" },
+                            { value: "pioneer", label: "PIONEER" },
+                            { value: "modern", label: "MODERN" },
+                            { value: "legacy", label: "LEGACY" },
+                            { value: "pauper", label: "PAUPER" },
+                            { value: "vintage", label: "VINTAGE" },
+                            { value: "commander", label: "COMMANDER" },
+                            { value: "brawl", label: "BRAWL" },
+                            { value: "alchemy", label: "ALCHEMY" },
+                            { value: "duel", label: "DUEL" },
+                            { value: "oldschool", label: "OLDSCHOOL" },
+                            { value: "premodern", label: "PREMODERN" },
+                            // ajoute ou enlève les formats que tu veux ici
+                          ].map((format, index) => (
+                            <li className="li-checkbox" key={index}>
+                              <input
+                                className='component-input'
+                                type="checkbox"
+                                name={format.value}
+                                value={format.value}
+                                onChange={(event) => selectFormats(event.target.value)}
+                                checked={filterFormats.includes(format.value)}
+                              />
+                              <p className='checkbox-format-p' style={{ margin: '0px' }}>
+                                {format.label}
+                              </p>
+                            </li>
+                          ))}
+
+                        </div>
+                        <TbFilterCancel className='compenant-reset' onClick={removeFormats} />
+                      </div>
+                    </div>
+                  )}
                 </div>
+
 
               </div>
 
@@ -764,18 +799,7 @@ const DecksPage = () => {
                       <div className='filter-mobile-container' style={{ backgroundImage: `url(${backgroundWhite})`}} >
                         <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} 
                         placeholder={"Chercher un deck"} style={{marginTop: '20px'}} />
-                        <div className="filter-value-container">
-                          <OpenButton text="Filtrer par valeur €" icon={arrowValueSens} onClick={OpenFilterValue} />
-                          {displayFilterValue && (
-                            <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                              <InputValue  value={inputValueMin}
-                              onChange={(event) => (setInputValueMin(event.target.value))} placeholder={"min"}/>
-                              <InputValue  value={inputValueMax}
-                              onChange={(event) => (setInputValueMax(event.target.value))} placeholder={"max"}/>
-                              <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterValue()} />
-                            </div>
-                          )}
-                        </div>
+ 
                         <div className="filter-manaCost-container">
                           <OpenButton text="Filtrer par cout en mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />
                           {displayFilterManaCost && (

@@ -36,7 +36,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png"
+import incolore from "../assets/incolore-mtg.webp"
 import defaultImg from "../assets/mtg-card-back.jpg"
 
 
@@ -501,7 +501,7 @@ const CardsDeckPage = () => {
     const getBgDate= () => {
       
                      if(displayCardsOrder ==="id") {
-                       return '#5D3B8C'
+                       return '#1B1D40'
                      } 
                      else {
                        return '#D3D3D3'
@@ -511,7 +511,7 @@ const CardsDeckPage = () => {
          
     const getBgTop= () => {
                      if(displayCardsOrder ==="like") {
-                       return '#5D3B8C'
+                       return '#1B1D40'
                      }
                      else {
                        return '#D3D3D3'
@@ -520,7 +520,7 @@ const CardsDeckPage = () => {
 
     const getBgLike= () => {
                      if(displayCards==="liked") {
-                       return '#5D3B8C'
+                       return '#1B1D40'
                      }
                      else {
                        return '#D3D3D3'

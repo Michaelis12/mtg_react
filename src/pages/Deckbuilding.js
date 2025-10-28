@@ -13,7 +13,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import colorless from "../assets/incolore-mtg.png"
+import colorless from "../assets/incolore-mtg.webp"
 import loading from "../assets/loading.gif"
 import { TiDeleteOutline } from "react-icons/ti";
 import { RiResetLeftFill } from "react-icons/ri";
@@ -2003,7 +2003,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                         style={{
                                                             margin: 0,
                                                             color: 'white',
-                                                            backgroundColor: '#5D3B8C',
+                                                            backgroundColor: '#1B1D40',
                                                             width: '100%',
                                                             padding: '6px 0',
                                                             fontSize: '14px',

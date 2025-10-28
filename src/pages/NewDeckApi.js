@@ -860,7 +860,7 @@ const NewDeck = () => {
         {format.length === 0 && (
             <div className='formats-group'>
                   <div className='pipeline-container'>
-                    <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#5D3B8C', color: '#ffffff', zIndex: '0', fontFamily: 'MedievalSharp, cursive' }} text={"Format"}/>
+                    <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#1B1D40', color: '#ffffff', zIndex: '0', fontFamily: 'MedievalSharp, cursive' }} text={"Format"}/>
                     <Pipeline style={{ backgroundColor: '#D3D3D3', color:'#000000', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>                 
                     <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
                   </div>
@@ -1152,7 +1152,7 @@ const NewDeck = () => {
           <div className='color-group'>
                 <div className='pipeline-container'>
                     <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '0', fontFamily: 'MedievalSharp, cursive'  }}  text={"Format"}/>
-                    <Pipeline style={{ backgroundColor: '#5D3B8C', color:'#ffffff', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>
+                    <Pipeline style={{ backgroundColor: '#1B1D40', color:'#ffffff', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>
                     <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
                 </div> 
                 <div className='title-container-mobile'>
@@ -1200,7 +1200,7 @@ const NewDeck = () => {
               <div className='pipeline-container'>
                   <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '0', fontFamily: 'MedievalSharp, cursive' }} text={"Format"}/>
                   <Pipeline style={{backgroundColor: '#D3D3D3', color:'#000000', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>
-                  <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#5D3B8C', color: '#ffffff', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
+                  <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#1B1D40', color: '#ffffff', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
               </div>
               <div className='title-container-mobile'>
 

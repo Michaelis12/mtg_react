@@ -7,6 +7,12 @@
         align-items: center;
         background-color: #5D3B8C;
         height: 90px;
+        width: 100%;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        z-index: 1000;
+        border-bottom: 2px solid white;
     }
 
     .link-home {

@@ -12,7 +12,7 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import colorless from "../assets/incolore-mtg.png"
+import colorless from "../assets/incolore-mtg.webp"
 import Card from '../model/CardApiSave';
 import { GiCardRandom } from "react-icons/gi";
 import { SlRefresh } from "react-icons/sl";
@@ -1126,7 +1126,7 @@ import FooterSection from '../components/footerSection';
                                                             style={{
                                                                 margin: 0,
                                                                 color: 'white',
-                                                                backgroundColor: '#5D3B8C',
+                                                                backgroundColor: '#1B1D40',
                                                                 width: '100%',
                                                                 padding: '6px 0',
                                                                 fontSize: '14px',

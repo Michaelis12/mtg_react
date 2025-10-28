@@ -10,7 +10,6 @@ import RulesPage from './pages/RulesPage';
 import RulesPageAdmin from './pages/RulesPageAdmin';
 import RuleSelected from './pages/RuleSelected';
 import CardsPage from './pages/CardsPageApi';
-import CardsLikedPage from './pages/CardsLikedPage';
 import CardSelected from './pages/CardSelectedApi';
 import DecksPage from './pages/DecksPage';
 import DeckSelected from './pages/DeckSelected';
@@ -28,7 +27,6 @@ import Contact from './pages/Contact';
 // Pages admin
 import NewRule from './pages/NewRule';
 import CardsPageAdmin from './pages/CardsPageAdmin';
-import NewCard from './pages/NewCard';
 import UsersList from './pages/UsersList'; 
 import NewAdmin from './pages/NewAdmin';
 
@@ -59,8 +57,6 @@ const Router = createBrowserRouter([
       element: <NewRule/>},
     {path: "/cards",
       element: <CardsPage/>},
-    {path: "/cardsLiked",
-      element: <CardsLikedPage/>},
     {path: "/cardSelected",
       element: <CardSelected/>},
     {path: "/decks",
@@ -83,8 +79,6 @@ const Router = createBrowserRouter([
         element: <NewDeck/>},
     {path:"admin/cards", 
         element : <CardsPageAdmin/>},
-    {path:"admin/addCard", 
-        element : <NewCard/>},
     {path:"admin/users", 
         element : <UsersList/>},
     {path:"admin/addAdmin", 

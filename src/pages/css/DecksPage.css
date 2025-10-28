@@ -107,6 +107,7 @@
 } 
 
 
+
 .deck-page-pp {
     height: 200px;
 }
@@ -126,13 +127,15 @@
  .deck-db {
     overflow: hidden;
     text-align: center;
-    width: 200px;
+    padding: 5%;
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: white;
  }
 
  .deck-db:hover {
     overflow: hidden;
     text-align: center;
-    width: 200px;
     text-decoration: underline;
     color: #667eea;
     cursor: pointer;

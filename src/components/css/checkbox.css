@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }
 
 .compenant-checkbox-map {
@@ -25,6 +26,7 @@
 
 
 .compenant-reset {
+    position: relative;
     cursor: pointer;
     margin-top: 10px;
     font-size: 2.5em;

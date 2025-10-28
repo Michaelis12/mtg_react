@@ -2,7 +2,6 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import "./css/CardSelected.css";
-import Deck from '../model/Deck';
 import axios from "axios";
 import defaultImg from "../assets/mtg-card-back.jpg"
 import backgroundPage from "../assets/background_cardsPage2.jpg"
@@ -19,13 +18,7 @@ import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
 import colorless from "../assets/incolore-mtg.webp"
 import { getImageUrl, getDeckImageUrl } from '../utils/imageUtils';
-import innistrad from '../assets/innistrad.png';
-import ixalan from '../assets/ixalan.png';
-import friches_eldraine from '../assets/friches_eldraine.png';
-import meutre_manoir from '../assets/meurtre_manoir.png';
-import ravinca from '../assets/ravinca.png';
-import modernHorizon from '../assets/modern_horizon.png';
-import bloomburrow from '../assets/bloomburrow.png';
+
 
 const CardSelectedApi = () => {  
     const [card, setCard] = React.useState([])
@@ -195,27 +188,6 @@ const CardSelectedApi = () => {
                                   return colorless
                               }
                              
-        }; 
-
-        // Affichage de l'image correspondant à l'édition
-        const getEditions = (edition) => {
-    switch (edition) {
-        case "MYSTICAL":
-            return innistrad;  
-        case "LES_FRICHES_D_ELDRAINE":
-            return friches_eldraine;  
-        case "LES_CAVERNES_OUBLIÉES_D_IXALAN":
-            return ixalan;  
-        case "RAVNICA_REMASTERED":
-            return ravinca;
-        case "MURDERS_AT_KARLOV_MANOR":
-            return meutre_manoir;  
-        case "MODERN_HORIZONS_3":
-            return modernHorizon; 
-        case "BLOOMBURROW":
-            return bloomburrow;    
-
-    }
         }; 
 
       // Désactive le bouton si il n'y a plus de cartes qui suivent     

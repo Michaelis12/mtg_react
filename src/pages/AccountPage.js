@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation} from 'react-router-dom';
 import { AuthContext } from "../context/authContext"
-import axiosInstance, { setCsrfToken } from '../api/axiosInstance';
+import axiosInstance from '../api/axiosInstance';
 import Section from '../components/section';
 import DeckMap from '../components/deck';
 import TitleArrow from '../components/titleArrow';
-import IconButton from '../components/buttonIcon'
 import ButtonModif from '../components/iconModif';
 import IconButtonHover from '../components/buttonIconHover';
 import ParagraphBlank from '../components/paragraphBlank'
@@ -82,7 +81,7 @@ const AccountPage = () => {
                     order: "date"
                 };
 
-                const response = await axiosInstance.get('f_user/getDecksCreateFilterPaged', {
+                const response = await axiosInstance.get('f_user/getDecksCreate', {
                   params,
                   paramsSerializer: {
                     indexes: null // Cela désactive l'ajout des crochets
@@ -814,12 +813,12 @@ const AccountPage = () => {
                                         <div className='new-deck-contenair'>
                                             <div className='new-deck-button-desktop'>
                                                 <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
-                                                style={{ width: '120px', height: '120px', backgroundColor: '#5D3B8C', marginBottom: '5%'
+                                                style={{ width: '120px', height: '120px', backgroundColor: '#1B1D40', marginBottom: '5%'
                                                         }}/>
                                             </div>
                                             <div className='new-deck-button-mobile'>
                                                 <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
-                                                style={{ width: '100px', height: '100px', backgroundColor: '#5D3B8C', marginBottom: '5%'
+                                                style={{ width: '100px', height: '100px', backgroundColor: '#1B1D40', marginBottom: '5%'
                                                         }}/>
                                             </div>
                                             <h5><strong className="deck-named">Nouveau deck</strong></h5>                              

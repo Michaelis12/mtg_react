@@ -23,7 +23,6 @@ import CheckboxAdd from '../components/checkboxAdd'
 import CheckboxAddImage from '../components/checkboxAddImage'
 import CheckboxColor from '../components/checkboxColor';
 import CheckboxRarity from '../components/checkboxRarity';
-import CheckboxEdition from '../components/checkboxEdition';
 import ButtonSelect from '../components/buttonSelect';
 import PopupDelete from '../components/popupDelete';
 import ButtonValidPopup from "../components/buttonValidPopup";
@@ -36,15 +35,8 @@ import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
-import incolore from "../assets/incolore-mtg.png"
+import incolore from "../assets/incolore-mtg.webp"
 import loading from "../assets/loading.gif"
-import innistrad from '../assets/innistrad.png';
-import ixalan from '../assets/ixalan.png';
-import friches_eldraine from '../assets/friches_eldraine.png';
-import meutre_manoir from '../assets/meurtre_manoir.png';
-import ravinca from '../assets/ravinca.png';
-import modernHorizon from '../assets/modern_horizon.png';
-import bloomburrow from '../assets/bloomburrow.png';
 import { getImageUrl } from '../utils/imageUtils';
 
 const CardsPageAdmin = () => {
@@ -351,7 +343,7 @@ const CardsPageAdmin = () => {
          
     const getBgDate= () => {
                      if(displayCards==="id") {
-                       return '#5D3B8C'
+                       return '#1B1D40'
                      } 
                      else {
                        return '#D3D3D3'
@@ -360,7 +352,7 @@ const CardsPageAdmin = () => {
          
     const getBgTop= () => {
                      if(displayCards==="like") {
-                       return '#5D3B8C'
+                       return '#1B1D40'
                      }
                      else {
                        return '#D3D3D3'
@@ -1231,28 +1223,6 @@ const CardsPageAdmin = () => {
                   }
       };
 
-    // Affichage de l'image correspondant à l'édition
-    const getEditions = (edition) => {
-
-      if (edition === "MYSTICAL") {
-        return innistrad;
-      } else if (edition === "LES_FRICHES_D_ELDRAINE") {
-        return friches_eldraine;
-      } else if (edition === "LES_CAVERNES_OUBLIÉES_D_IXALAN") {
-        return ixalan;
-      } else if (edition === "RAVNICA_REMASTERED") {
-        return ravinca;
-      } else if (edition === "MURDERS_AT_KARLOV_MANOR") {
-        return meutre_manoir;
-      } else if (edition === "MODERN_HORIZONS_3") {
-        return modernHorizon;
-      } else if (edition === "BLOOMBURROW") {
-        return bloomburrow;
-      }
-
-      return null;
-    };
-
 
     // Correction portée du compteur z-index
     let filterZIndex = 99;
@@ -1335,17 +1305,6 @@ const CardsPageAdmin = () => {
                     onPush={removeRarities} className='checkbox-rarity-p'/>
                   </div>
                   )}                 
-                </div>
-          
-                 
-                <div className="filter-editions-container" >
-                  <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
-                  { displayFilterEditions && ( 
-                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--}} >
-                      <CheckboxEdition attributs={editions} onChange={(event) => selectEditions(event.target.value)} filter={filterEditions}
-                        onPush={removeEditions}/>
-                    </div>
-                  )}
                 </div>
                 
                 <div className="filter-types-container">
@@ -1431,17 +1390,6 @@ const CardsPageAdmin = () => {
                     onPush={removeRarities} className='checkbox-rarity-p'/>
                   </div>
                   )}                 
-                </div>
-          
-                 
-                <div className="filter-editions-container">
-                  <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
-                  { displayFilterEditions && ( 
-                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
-                      <CheckboxEdition attributs={editions} onChange={(event) => selectEditions(event.target.value)} filter={filterEditions}
-                        onPush={removeEditions}/>
-                    </div>
-                  )}
                 </div>
                 
                 <div className="filter-types-container">
@@ -1601,16 +1549,7 @@ const CardsPageAdmin = () => {
                             </div>
                     )}
 
-                <h5 className='card-line-title'>Edition : </h5>
-                <CheckboxAddImage
-                  style={{marginBottom: '5%'}}
-                  styleL={{height: '100px', backgroundColor: "#f3eaff"}}
-                  attributs={editions}
-                  filter={cardEdition}
-                  onChange={(event) => changeEdition(event.target.value)}
-                  image={getEditions}
-                  classNameImg='checkbox-edition-img'
-                />
+                
                 <div className="compenant-checkbox-add" 
                   style={{marginBottom: '5%', width: '100%', flexDirection: 'column', alignItems: 'center'}}>
                   <h5 className='card-line-title'>Texte :</h5>
@@ -1717,16 +1656,6 @@ const CardsPageAdmin = () => {
                                 </div>
                         )}
 
-                    <h5 className='card-line-title'>Edition : </h5>
-                    <CheckboxAddImage
-                      style={{marginBottom: '5%'}}
-                      styleL={{height: '70px', backgroundColor: "#f3eaff"}}
-                      attributs={editions}
-                      filter={cardEdition}
-                      onChange={(event) => changeEdition(event.target.value)}
-                      image={getEditions}
-                      classNameImg='checkbox-edition-img'
-                    />
                     <div className="compenant-checkbox-add" 
                       style={{marginBottom: '5%', width: '100%', flexDirection: 'column', alignItems: 'center'}}>
                       <h5 className='card-line-title'>Texte :</h5>
@@ -1835,16 +1764,6 @@ const CardsPageAdmin = () => {
                                 </div>
                         )}
 
-                    <h5 className='card-line-title'>Edition : </h5>
-                    <CheckboxAddImage
-                      style={{marginBottom: '5%'}}
-                      styleL={{height: '50px', backgroundColor: "#f3eaff"}}
-                      attributs={editions}
-                      filter={cardEdition}
-                      onChange={(event) => changeEdition(event.target.value)}
-                      image={getEditions}
-                      classNameImg='checkbox-edition-img'
-                    />
                     <div className="compenant-checkbox-add" 
                       style={{marginBottom: '5%', width: '100%', flexDirection: 'column', alignItems: 'center'}}>
                       <h5 className='card-line-title'>Texte :</h5>
