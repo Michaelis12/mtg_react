@@ -10,6 +10,7 @@ import RulesPage from './pages/RulesPage';
 import RulesPageAdmin from './pages/RulesPageAdmin';
 import RuleSelected from './pages/RuleSelected';
 import CardsPage from './pages/CardsPageApi';
+import CardsPageSave from './pages/CardsSavePage';
 import CardSelected from './pages/CardSelectedApi';
 import DecksPage from './pages/DecksPage';
 import DeckSelected from './pages/DeckSelected';
@@ -57,6 +58,8 @@ const Router = createBrowserRouter([
       element: <NewRule/>},
     {path: "/cards",
       element: <CardsPage/>},
+    {path: "/cardsSave",
+      element: <CardsPageSave/>},
     {path: "/cardSelected",
       element: <CardSelected/>},
     {path: "/decks",

@@ -11,8 +11,20 @@ const Card = ({ cards = [] }) => {
           key={index}
           className="cardlink"
           onClick={() => {
-            if (card.onClick) card.onClick(); // exécute le code avant navigation
-            if (card.link) navigate(card.link); // ensuite navigue
+            if (card.onClick) card.onClick();
+
+            // Si link est une fonction, on la laisse gérer la navigation
+            if (typeof card.link === "function") {
+              card.link(navigate);
+            } 
+            // Si link est un objet { path, options }
+            else if (typeof card.link === "object" && card.link.path) {
+              navigate(card.link.path, card.link.options || {});
+            } 
+            // Si link est une simple string
+            else if (typeof card.link === "string") {
+              navigate(card.link);
+            }
           }}
         >
           <img
@@ -30,5 +42,3 @@ const Card = ({ cards = [] }) => {
 };
 
 export default Card;
-
-

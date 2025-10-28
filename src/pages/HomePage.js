@@ -65,6 +65,8 @@ const HomePage = function () {
   {
     image: img3,
     caption: "Quels sont les commandants les plus joués du moment ?",
+    link: ('/cardsSave', { state: { order: "cedh" }})
+    
   },
 ];
 
@@ -118,6 +120,7 @@ const data = [
     {
       image: img3,
       caption: "Commandants les plus joués",
+      link: { path: '/cardsSave', options: { state: { order: "cedh" } } }
     },
     {
       image: img4,
