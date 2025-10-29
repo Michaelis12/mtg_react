@@ -982,7 +982,12 @@ React.useEffect(() => {
                         alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         />
-                
+                        { order === "deck" && (
+                          <p className="p-cards-deck-length" >dans {card.decksNumber} decks</p>
+                        )}
+                        {order === "cedh" && (
+                          <p className="p-cards-deck-length">dans {card.cedhNumber} decks</p>
+                        )}
 
                     {detailsCard && detailsCard.id === card.id && (
                     <img className="card-img-zoom" src={card.image ? getImageUrl(card.image) : defaultImg} alt={card.name}/>
@@ -1005,7 +1010,7 @@ React.useEffect(() => {
       <FooterSection/>       
 
   </Section>
-        )
+        ) 
 }
 
 export default CardsPage;

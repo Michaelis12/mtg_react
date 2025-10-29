@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useRef, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from "../context/authContext"
 import Section from '../components/sectionMap';
 import OpenButtonLarge from '../components/openButtonLarge';
@@ -45,7 +45,6 @@ const DecksPage = () => {
     const [deckLikedId, setDeckLikedId] = React.useState([])
     const { getCookie } = useContext(AuthContext);
     const [displayLoading, setDisplayLoading] = useState(false);
-     
 
     // Filtre recherche
         const [name, setName] = React.useState("")
@@ -67,11 +66,13 @@ const DecksPage = () => {
         const [newDeckLikedId, setNewDeckLikedId] = React.useState([])
         const [newDeckDislikedId, setNewDeckDislikedId] = React.useState([])
 
-        const [displayDecks, setDisplayDecks] = React.useState("date")
+        //const [displayDecks, setDisplayDecks] = React.useState("date")
+        const location = useLocation();
+        const order = location.state?.order; 
         
         // Récupérer les decks triés par date
         useEffect(() => {
-        const getDecksWithDate = async () => {
+        const getDecks = async () => {
             try {
                 setDisplayLoading(true);
 
@@ -79,7 +80,7 @@ const DecksPage = () => {
                 const params = {
                     page: 0,
                     size: pageSize,
-                    order: "date",
+                    order: order,
                     name: filterName,
                     manaCostMin : inputManaCostMin,
                     manaCostMax : inputManaCostMax,
@@ -102,7 +103,7 @@ const DecksPage = () => {
                 ) )
                         
                 setDecks(listDecks)
-                setPage(1) // Quand la méthode initiale est appelé on reinitialise la page à 1
+                setPage(1) 
                 setTotalPages(response.data.totalPages)
                 setTotalElements(response.data.totalElements)
                 setHasMore(!response.data.isLast)
@@ -115,12 +116,12 @@ const DecksPage = () => {
 
     
         }
-        getDecksWithDate();
-        }, [displayDecks, filterName, inputManaCostMin, inputManaCostMax,
+        getDecks();
+        }, [filterName, inputManaCostMin, inputManaCostMax,
             filterColors, filterFormats]);
 
 
-        const displayMoreDecksByDate = async () => {
+        const displayMoreDecks = async () => {
  
                         try {
                             setIsLoading(true);
@@ -128,7 +129,7 @@ const DecksPage = () => {
                             const params = {
                                 page: page,
                                 size: pageSize,
-                                order: "date",
+                                order: order,
                                 name: filterName,
                                 colors: filterColors,
                                 formats: filterFormats,
@@ -157,7 +158,7 @@ const DecksPage = () => {
                         setIsLoading(false);
                         }
                 };
-
+/*
         // Récupérer les decks triés par nb de likes
         useEffect(() => {
           const getDecksWithLikes = async () => {
@@ -294,7 +295,7 @@ const DecksPage = () => {
             }
            }
   
-        
+*/       
         
         // Afficher les détails d'un deck
         const hoveredDeck = (id, name, format) => {
@@ -840,18 +841,17 @@ const DecksPage = () => {
             <div className='deck-title'>
               <Title title={"DeckList"}/>
             </div>
-          
+          {/*
           <div className='cards-buttons-order-container'>
               <ButtonSelect className={"button-date"} onClick={() => (displayDateDecks(), setTopDecks([]))} text={"Les plus récents"}
                           backgroundColor={getBgDate()} color={getColorDate()}/>
               <ButtonSelect className={"button-top"} onClick={() => (displayTopDecks(), setDecks([]))} text={"Les plus populaires"} 
                           backgroundColor={getBgTop()} color={getColorTop()}/>
           </div>
-
+        */}
 
           <div className='display-objects-section'>
-              {displayDecks === "date" && (  
-                <div className='display-decks-section'>
+            <div className='display-decks-section'>
                             {decks.map(deck => ( 
                               <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
                                                 format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
@@ -864,14 +864,15 @@ const DecksPage = () => {
                                                 detailsDeck={detailsDeck} />                        
                             ))}
                                    
-                    </div>   
-              )} 
+            </div>   
+          { hasMore && (
+            <button className='next-page-button' disabled={!hasMore}
+            onClick={()=>displayMoreDecks()}>Afficher plus</button> 
+          )}
 
-              { displayDecks === "date" && decks.length > 0 && hasMore && (
-                                <button className='next-page-button' disabled={!hasMore}
-                                onClick={()=>displayMoreDecksByDate()}>Afficher plus</button> 
-                            )}
+          </div>
 
+        {/*
               {displayDecks === "popularity" && (  
                 <div className='display-decks-section'>
                             {topDecks.map(deck => ( 
@@ -893,7 +894,7 @@ const DecksPage = () => {
                                 onClick={()=>displayMoreDecksByLikes()}>Afficher plus</button> 
                         )} 
           </div>   
-
+        */}
 
           <FooterSection/>               
           

@@ -25,12 +25,12 @@ import BackgroundPage from "../assets/background_homepage.png"
 import loading from "../assets/loading.gif"
 import BackgroundTopCards from "../assets/background_purple.jpg"
 import { FaHeart  } from 'react-icons/fa';
+import { MdOutlinePlayArrow } from "react-icons/md";
 import Card from '../model/CardApiSave';
 import Deck from '../model/Deck';
 import Title from "../components/title";
 import CardLink from "../components/cardLink";
 import Section from "../components/section";
-import DeckMap from '../components/deck';
 import { getImageUrl } from '../utils/imageUtils';
 import BackgroundDeck from "../assets/background_deck_scelled.png"
  
@@ -398,8 +398,8 @@ const navNewDeck = () => {
                                               )} 
                   </div>
                     )
-                  )
-                }
+                  )}
+                <MdOutlinePlayArrow className='icon-nav-mapping' onClick={()=>navigate('/cardsSave', { state: { order: "deck" }})}/>
             </div>
           </div>  
 
@@ -429,6 +429,7 @@ const navNewDeck = () => {
                     )
                   )
                 }
+                <MdOutlinePlayArrow className='icon-nav-mapping' onClick={()=>navigate('/cardsSave', { state: { order: "cedh" }})}/>
             </div>
           </div>  
 
@@ -492,6 +493,7 @@ const navNewDeck = () => {
                     )
                   )
                 }
+                <MdOutlinePlayArrow className='icon-nav-mapping' onClick={()=>navigate('/decks', { state: { order: "like" }})}/>
             </div>
           </div> 
 

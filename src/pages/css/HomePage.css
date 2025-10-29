@@ -196,6 +196,7 @@
 
 .top-objets-container {
     width: 100%;
+    position : relative;
 }
 
 
@@ -844,6 +845,20 @@
     border-radius: 50%; 
     object-fit: cover;
   }
+
+
+.icon-nav-mapping {
+    font-size: 8em;
+    color: white;
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    cursor : pointer;
+}
+
+.icon-nav-mapping:hover {
+    transform: scale(0.9);
+}
 
 
 @media (max-width: 1250px) {

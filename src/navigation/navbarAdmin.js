@@ -278,7 +278,7 @@ const NavbarAdmin = function () {
                 <strong className="p-navbar" onMouseEnter={()=> navDecks()}>Decks</strong>
                 { adminDecks && (
                     <div className="hv-deck-nav" onMouseLeave={()=> setAdminDecks(!adminDecks)}>
-                        <button className="btn-navbar" onClick={()=>{navigate(`/decks`); sessionStorage.clear();}}>Recherche avancée</button>
+                        <button className="btn-navbar" onClick={()=>{navigate('/decks', { state: { order: 'date' } }); sessionStorage.clear();}}>Recherche avancée</button>
                         <button className="btn-navbar" onClick={()=>{navigate(`/decksCreate`); sessionStorage.clear();}}>Decks créés</button>
                         <button className="btn-navbar" onClick={()=>{navigate(`/decksLiked`); sessionStorage.clear();}}>Decks likés</button>
                         <button className="btn-navbar" onClick={()=>{navigate(`addDeck`); sessionStorage.clear();}}>Créer un deck</button>
@@ -387,7 +387,7 @@ const NavbarAdmin = function () {
                         <button className="section-navbar-mobile" onClick={()=> {setAdminDecks(!adminDecks);}}><strong>Decks</strong><span className="icon-fleche">{arrowSensDecks}</span></button>
                         { adminDecks && (
                         <div className="btn-navbar-mobile-hover">
-                            <button className="btn-navbar-mobile" onClick={()=>{navigate(`/decks`); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}>Recherche avancée</button>
+                            <button className="btn-navbar-mobile" onClick={()=>{navigate('/decks', { state: { order: 'date' } }); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}>Recherche avancée</button>
                             <button className="btn-navbar-mobile" onClick={()=>{navigate(`/mySpace`, { state: { arrowUp: true } }); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}>Decks créés</button>
                             <button className="btn-navbar-mobile" onClick={()=>{navigate(`/mySpace`, { state: { arrowUp3: true } }); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}>Decks likées</button>
                             <button className="btn-navbar-mobile" onClick={()=>{navigate(`addDeck`); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}>Créer un deck</button>

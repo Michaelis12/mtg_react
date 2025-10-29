@@ -256,7 +256,8 @@
     color: grey;
     font-style: italic; 
     font-size: 1em;
-    margin-top: 15px;
+    margin-top: 10px;
+    margin-bottom: 0px;
 }
 
 @media (max-width: 1300px) {

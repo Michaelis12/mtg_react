@@ -17,6 +17,30 @@ import green from "../assets/green-mtg.png"
 import red from "../assets/red-mtg.png"
 import black from "../assets/black-mtg.png"
 import colorless from "../assets/incolore-mtg.webp"
+import blackGreen from "../assets/card-selected-img/black&green-mtg.png";
+import blackRed from "../assets/card-selected-img/black&red-mtg.png";
+import blackWhite from "../assets/card-selected-img/black&white-mtg.png";
+import blueBlack from "../assets/card-selected-img/blue&black-mtg.png";
+import blueRed from "../assets/card-selected-img/blue&red-mtg.png";
+import blueWhite from "../assets/card-selected-img/white&blue-mtg.png"; 
+import greenBlue from "../assets/card-selected-img/green&blue-mtg.png";
+import greenWhite from "../assets/card-selected-img/green&white-mtg.png";
+import redGreen from "../assets/card-selected-img/red&green-mtg.png";
+import redWhite from "../assets/card-selected-img/red&white-mtg.png";
+import one from "../assets/card-selected-img/1.png";
+import two from "../assets/card-selected-img/2.png";
+import three from "../assets/card-selected-img/3.png";
+import four from "../assets/card-selected-img/4.png";
+import five from "../assets/card-selected-img/5.png";
+import six from "../assets/card-selected-img/6.png";
+import seven from "../assets/card-selected-img/7.png";
+import eight from "../assets/card-selected-img/8.png";
+import nine from "../assets/card-selected-img/9.png";
+import ten from "../assets/card-selected-img/10.png";
+import tap from "../assets/card-selected-img/tap.webp";
+
+
+
 import { getImageUrl, getDeckImageUrl } from '../utils/imageUtils';
 
 
@@ -213,42 +237,177 @@ const CardSelectedApi = () => {
 
 
 
-        // Affichage des symboles de mana en image
         const getManaImages = (manaCost) => {
-                if (!manaCost) return [];
+        if (!manaCost) return [];
 
-                const symbols = manaCost.match(/\{(.*?)\}/g); // ["{1}", "{R}", "{R}"]
-                if (!symbols) return [];
+        const symbols = manaCost.match(/\{(.*?)\}/g); // ex: ["{1}", "{R}", "{R}", "{W/U}"]
+        if (!symbols) return [];
 
-                return symbols.map((symbol, index) => {
-                    const value = symbol.replace(/\{|\}/g, "");
+        // Dictionnaire des coûts numériques
+        const numberImages = {
+            "1": one,
+            "2": two,
+            "3": three,
+            "4": four,
+            "5": five,
+            "6": six,
+            "7": seven,
+            "8": eight,
+            "9": nine,
+            "10": ten,
+        };
 
-                    // Si c'est une couleur connue → image
-                    if (["W","U","B","R","G"].includes(value.toUpperCase())) {
-                    return (
+        // Dictionnaire des manas hybrides
+        const hybridImages = {
+            "B/G": blackGreen,
+            "B/R": blackRed,
+            "B/W": blackWhite,
+            "U/B": blueBlack,
+            "U/R": blueRed,
+            "W/U": blueWhite,
+            "G/U": greenBlue,
+            "G/W": greenWhite,
+            "R/G": redGreen,
+            "R/W": redWhite,
+        };
+
+        return symbols.map((symbol, index) => {
+            const value = symbol.replace(/\{|\}/g, "").toUpperCase();
+
+            // Si c'est une couleur simple → image couleur
+            if (["W", "U", "B", "R", "G"].includes(value)) {
+            return (
+                <img
+                key={index}
+                src={getColor(value)}
+                className="card-mana-devotion-img"
+                alt={value}
+                />
+            );
+            }
+
+            // Si c'est un chiffre → image numérique
+            if (numberImages[value]) {
+            return (
+                <img
+                key={index}
+                src={numberImages[value]}
+                className="card-mana-devotion-img"
+                alt={value}
+                />
+            );
+            }
+
+            // Si c'est un symbole hybride → image correspondante
+            if (hybridImages[value]) {
+            return (
+                <img
+                key={index}
+                src={hybridImages[value]}
+                className="card-mana-devotion-img"
+                alt={value}
+                />
+            );
+            }
+
+            // Sinon : symbole inconnu → rien affiché
+            return null;
+        });
+        };
+
+                const getTextImages = (text) => {
+                if (!text) return [];
+
+                // On découpe le texte pour garder les séquences {T}, {1}, etc.
+                const parts = text.split(/(\{[^\}]+\})/g);
+
+                return parts.map((part, index) => {
+                    // On ne remplace que si c’est un symbole complet, ex: "{T}"
+                    const match = part.match(/^\{([^\}]+)\}$/);
+                    if (match) {
+                    const value = match[1].toUpperCase(); // ex: "T", "1"
+
+                    const symbolImages = {
+                        "1": one,
+                        "2": two,
+                        "3": three,
+                        "4": four,
+                        "5": five,
+                        "6": six,
+                        "7": seven,
+                        "8": eight,
+                        "9": nine,
+                        "10": ten,
+                        "T": tap,
+                        "W": white,
+                        "U": blue,
+                        "B": black,
+                        "R": red,
+                        "G": green,
+                        "C": colorless,
+                        "B/G": blackGreen,
+                        "B/R": blackRed,
+                        "B/W": blackWhite,
+                        "U/B": blueBlack,
+                        "U/R": blueRed,
+                        "W/U": blueWhite,
+                        "G/U": greenBlue,
+                        "G/W": greenWhite,
+                        "R/G": redGreen,
+                        "R/W": redWhite
+                    };
+
+                    if (symbolImages[value]) {
+                        return (
                         <img
-                        key={index}
-                        src={getColor(value.toUpperCase())}
-                        className="card-mana-devotion-img"
-                        style={{margin: '0px'}}
-                        alt={value}
+                            key={index}
+                            src={symbolImages[value]}
+                            alt={value}
+                            className="card-text-icon"
+                            style={{
+                            verticalAlign: "middle",
+                            marginLeft: "2px",
+                            marginRight: "2px"
+                            }}
                         />
-                    );
+                        );
+                    }
                     }
 
-                    // Sinon c'est un coût générique (chiffre) → afficher le texte
-                    return (
-                    <span key={index} className="card-mana-generic">
-                        {value}
-                    </span>
-                    );
+                    // Sinon on laisse le texte tel quel
+                    return <span key={index}>{part}</span>;
                 });
                 };
+
         
         
         const cardTypeSize = (type) => {
                 if (!type) return '2em'; 
-                return type.length > 25 ? '1.5em' : '2em';
+                return type.length > 25 ? '1.5em' : '1.8em';
+            };
+
+        const cardTypeSizeMedium = (type) => {
+                if (!type) return '1.5em'; 
+                return type.length > 25 ? '1em' : '1.5em';
+            };
+
+        const cardTypeSizeMobile = (type) => {
+                if (!type) return '1em'; 
+                return type.length > 25 ? '0.8em' : '1em';
+            };
+
+        const cardTypeMarginMobile = (type) => {
+                if (!type) return '0px';
+                console.log(type) 
+                console.log(type.length)
+                //return type.length > 25 ? '5px' : '5px';
+                if(type.length > 25 ) {
+                  console.log(type.length + " > 35")
+                  return  '-10px'
+                }
+                else {
+                    return  '5px'
+                }
             };
                          
  
@@ -273,8 +432,6 @@ const CardSelectedApi = () => {
                     </div>
                                     
                     {/* Carte format desktop */}
-
-
                     <div className='card-selected-desktop' style={{ backgroundImage: `url(${backgroundPopup})`, marginTop: '2%'}}>
                                 <div className='title-card-container'>
                                   <h1  className='card-selected-name'>{card.name}</h1>
@@ -286,7 +443,8 @@ const CardSelectedApi = () => {
                                             className="card-selected-image"
                                             src={card.image_uris.normal}
                                             alt={card.name}
-                                        />
+                                            onClick={() => setDisplayPopup(true)}
+                                        />                                       
                                         ) : (
                                         <img
                                             className="card-selected-image"
@@ -295,13 +453,12 @@ const CardSelectedApi = () => {
                                         />
                                     )}
                                   </div>
-
-                                
-                                <div className="card-selected-attributs" >
+                              
+                                  <div className="card-selected-attributs" >
 
                                     {card.game_changer && (
                                       <div className='card-line-attribut'>
-                                            <h4 className='card-selected-rarity' style={{ background : "linear-gradient(135deg, #D4AF37 0%, #F7C83D 100%)" }}>
+                                            <h4 className='card-selected-game-changer' style={{ background : "linear-gradient(135deg, #D4AF37 0%, #F7C83D 100%)" }}>
                                             <strong>Game Changer</strong>
                                             </h4>
                                     </div>  
@@ -316,24 +473,37 @@ const CardSelectedApi = () => {
                                     </div>
                                     )}
 
-                                    <div className='card-line-attribut'>
+                                    <div className='card-line-attribut-large-content'>
                                             <h4 className='card-line-title'> Type : </h4>
-                                            <h3 style={{ fontSize: cardTypeSize(card.type_line), textAlign:"center" }}>
+                                            <h3 className='card-selected-type' 
+                                            style={{ fontSize: cardTypeSize(card.type_line), textAlign:"center", marginTop: "5px" }}>
                                             <strong>{card.type_line}</strong>
                                             </h3>
+
+                                            <h3 className='card-selected-type-medium' 
+                                            style={{ fontSize: cardTypeSizeMedium(card.type_line), textAlign:"center", marginTop: cardTypeMarginMobile(card.type_line) }}>
+                                            <strong>{card.type_line}</strong>
+                                            </h3>
+
+                                            <h3 className='card-selected-type-mobile' 
+                                            style={{ fontSize: cardTypeSizeMobile(card.type_line), textAlign:"center", marginTop: '-5px' }}>
+                                            <strong>{card.type_line}</strong>
+                                            </h3>
+
+                                           
                                     </div>
 
                                     <div className='card-line-attribut'>
-                                            <h4 className='card-line-title'> Rareté : </h4>
+                                            <h4 className='card-line-title-rarity'> Rareté : </h4>
                                             <h4 className='card-selected-rarity' 
                                             style={{ background: getBackgroundColor(card.rarity) }}>{card.rarity} </h4>
                                     </div>
 
-                                    <div className='card-line-attribut'>
-                                            <h4 className='card-line-title'> Texte : </h4>
-                                            <h6 style={{textAlign: 'center'}}><strong>{card.oracle_text}
+                                    <div className='card-line-attribut-large-content'>
+                                            <h4 className='card-line-title' style={{marginLeft: '5px'}}> Texte : </h4>
+                                            <div className='card-selected-text' style={{textAlign: 'center'}}><strong>{getTextImages(card.oracle_text)}
                                             </strong>
-                                            </h6>
+                                            </div>
                                     </div>
 
                                     
@@ -359,148 +529,45 @@ const CardSelectedApi = () => {
                                      {card?.type_line && !card.type_line.includes("Land") && (  
                                     <div className='card-line-attribut'>
                                         <h4 className='card-line-title' > Couleurs : </h4> 
-                                        {card.colors && card.colors.length > 0 && (
-                                        <div className='map-colors-container' style={{marginTop: "-5px"}} >
-                                            {card.colors.map((color, index)  => (
-                                            <img key={index} src={getColor(color)} className="card-colors-img" alt={color}/>                                
-                                            ))}
-                                        </div>
-                                        )}
-                                    </div>     
+                                        {card.colors && (
+                                            card.colors.length > 0 ? (
+                                                <div className='map-colors-container' style={{ marginTop: "-5px" }}>
+                                                {card.colors.map((color, index) => (
+                                                    <img
+                                                    key={index}
+                                                    src={getColor(color)}
+                                                    className="card-colors-img"
+                                                    alt={color}
+                                                    />
+                                                ))}
+                                                </div>
+                                            ) : (
+                                                <div className='map-colors-container' style={{ marginTop: "-5px" }}>
+                                                <img
+                                                    src={getColor("colorless")}
+                                                    className="card-colors-img"
+                                                    alt="colorless"
+                                                />
+                                                </div>
+                                            )
+                                            )}
+                                        </div>     
                                      )}                                                        
-                                   </div>
+                                  </div>
                                 </div>
                                 
                     </div>
 
                 </div> 
                                         
-                {/*
+               
 
-                <h2 className='card-selected-tablet-name'>{card.name}</h2>
-                <div className="card-selected-tablet" style={{ backgroundImage: `url(${backgroundPopup})`}}>
-                    <div className="img-container">
-                                          <img className="card-image-mobile" src={getImageUrl(card.image)} alt="Deck mtg"/>
-                    </div>
-                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>                           
-                            <div className='card-line-attribut'>
-                                <h4 style={{marginTop: '-10px'}} className='deck-medium-line-title'> Valeur : </h4>
-                                <h3 className='card-mobile-value' style={{color: 'black', marginTop: '0px'}} ><strong>{card.value} €</strong></h3>
-                            </div>
-
-
-                              <div className='card-line-attribut'>
-                                    <h4 className='deck-medium-line-title' style={{marginTop: '-10px'}}> Type : </h4>
-                                    <h3 style={{color: 'black'}} className='card-mobile-type'><strong>{card.type}</strong></h3>
-                              </div>
-                                    
-                               <div className='card-line-attribut'>
-                                    <h4 className='deck-medium-line-title' style={{marginTop: '0px'}}> Rareté : </h4>
-                                    <h4 className='card-selected-rarity' 
-                                        style={{ background: getBackgroundColor(card.rarity) }}>{card.rarity} </h4>
-                              </div>
-                               
-
-                                
-                                <div className='card-line-attribut-format'>
-                                        <h4 className='deck-medium-line-title' >Formats : </h4> 
-                                        {card.formats && card.formats.length > 0 && (
-                                        <div  className='card-selected-format-map'>
-                                            {formats.map((format, index)  => (
-                                            <li key={index} className='card-selected-format' style={{ background: getBackgroundFormats(format) }}>{format}</li>                               
-                                            ))}
-                                        </div>
-                                        )}
-                                    </div> 
-
-                                <div className='card-line-attribut'>
-                                    <h4 className='deck-medium-line-title' style={{marginTop: '5px'}} > Couleurs : </h4> 
-                                    {card.colors && card.colors.length > 0 && (
-                                      <div className='card-selected-colors' >
-                                        {card.colors.map((color, index)  => (
-                                        <img key={index} src={getColor(color)} className="card-colors-imgs" alt={color}/>                                
-                                        ))}
-                                      </div>
-                                    )}
-                                </div> 
-
-
-                                <div className='card-line-edition'>
-                                                        <h4 className='deck-medium-line-title' > Edition : </h4> 
-                                                        <img  src={getEditions(card.edition)} className="card-edition-img" alt={card.edition}/>                                
-                                    </div>
-
-                            </div> 
-                </div>
-
-
-
-                <div className="card-selected-mobile"> 
-                                        <div className="header-card" style={{backgroundImage:`url(${backgroundPopup})`}}>
-                                            <img src={getImageUrl(card.image)}  onClick={()=> setDisplayPopup(true)}
-                                            className="card-image-mobile" alt="user-pp"/>
-                                                <h1 className="user-pseudo">{card.name}</h1>   
-                                        </div>  
-
-                    
-
-                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>                           
-                            <div className='card-line-attribut'>
-                                <h4 className='user-date-line-title'> Valeur : </h4>
-                                <h4 className='card-mobile-value'><strong>{card.value} € </strong></h4>
-                            </div>
-
-
-                              <div className='card-line-attribut'>
-                                    <h4 className='user-date-line-title'> Type : </h4>
-                                    <h4 className='card-mobile-type'><strong>{card.type}</strong></h4>
-                              </div>
-                                    
-                               <div className='card-line-attribut'>
-                                    <h4 className='user-date-line-title' style={{marginTop: '5px'}}> Rareté : </h4>
-                                    <h4 className='card-selected-rarity' 
-                                        style={{ background: getBackgroundColor(card.rarity) }}>{card.rarity} </h4>
-                              </div>
-                               
-
-                                
-                                <div className='card-line-attribut-format'>
-                                        <h4 className='user-date-line-title' >Formats : </h4> 
-                                        {card.formats && card.formats.length > 0 && (
-                                        <div  className='card-selected-format-map'>
-                                            {formats.map((format, index)  => (
-                                            <li key={index} className='card-selected-format' style={{ background: getBackgroundFormats(format) }}>{format}</li>                               
-                                            ))}
-                                        </div>
-                                        )}
-                                    </div> 
-
-                                <div className='card-line-attribut'>
-                                    <h4 className='user-date-line-title' style={{marginTop: '5px'}} > Couleurs : </h4> 
-                                    {card.colors && card.colors.length > 0 && (
-                                      <div className='card-selected-colors' >
-                                        {card.colors.map((color, index)  => (
-                                        <img key={index} src={getColor(color)} className="card-colors-imgs" alt={color}/>                                
-                                        ))}
-                                      </div>
-                                    )}
-                                </div> 
-
-                                <div className='card-line-edition'>
-                                                        <h4 className='user-date-line-title' > Edition : </h4> 
-                                                        <img  src={getEditions(card.edition)} className="card-edition-img" alt={card.edition}/>                                
-                                    </div>
-
-                            </div>    
-
-                            </div>
-                */}
 
 
                  {/* Affiche la carte zoomée */} 
                 {displayPopup && ( 
                     <div className='popup-bckg'>
-                        <img className="card-selected-image-zoom" src={getImageUrl(card.image)} alt="Card mtg"/>
+                        <img className="card-selected-image-zoom" src={getImageUrl(card.image_uris.normal)} alt="Card mtg"/>
                         <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=> setDisplayPopup(!displayPopup)}/>
                     </div>  
                 )} 

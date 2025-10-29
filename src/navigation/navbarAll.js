@@ -16,7 +16,7 @@ const NavbarUser = function () {
             <nav className="nav-container">               
                 <strong onClick={()=> {navigate(`/rules`); sessionStorage.clear();}} className="p-navbar">Règles du jeu</strong>
                 <strong onClick={()=> {navigate(`/cards`); sessionStorage.clear();}} className="p-navbar">Cartes</strong>
-                <strong onClick={()=> {navigate(`/decks`); sessionStorage.clear();}} className="p-navbar">Decks</strong>
+                <strong onClick={()=> {navigate('/decks', { state: { order: 'date' } }); sessionStorage.clear();}} className="p-navbar">Decks</strong>
                 <strong onClick={()=> {navigate(`/sign`); sessionStorage.clear();}}  className="p-navbar">Se connecter</strong>
             </nav>  
 
@@ -25,9 +25,9 @@ const NavbarUser = function () {
             { displayNavBarMobile && (
             <nav className="nav-mobile">
                 <CgCloseO className='icon-close-navbar' color='white' size={'3em'}  onClick={()=>setDisplayNavBarMobile(!displayNavBarMobile)}/>
-                <button className="section-navbar-mobile" onClick={()=> {navigate(`/rules`); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}><strong>Règle du jeu</strong></button>
+                <button className="section-navbar-mobile" onClick={()=> {navigate(`/rules`); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}><strong>Règles du jeu</strong></button>
                 <button className="section-navbar-mobile" onClick={()=> {navigate(`/cards`); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}><strong>Cartes</strong></button>
-                <button className="section-navbar-mobile" onClick={()=> {navigate(`/decks`); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}><strong>Decks</strong></button>
+                <button className="section-navbar-mobile" onClick={()=> {navigate('/decks', { state: { order: 'date' } }); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}}><strong>Decks</strong></button>
                 <button className="section-navbar-mobile" onClick={()=> {navigate(`/sign`); sessionStorage.clear(); setDisplayNavBarMobile(!displayNavBarMobile);}} ><strong>Se connecter</strong></button>
             </nav> 
         )} 
