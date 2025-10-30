@@ -89,7 +89,6 @@ const CardSelectedApi = () => {
                 const request = await axios.get(`https://api.scryfall.com/cards/${newID}`);
                 const response = request.data   
 
-                console.log(request.data)
                 setCard(response)
 
             }   
@@ -398,9 +397,6 @@ const CardSelectedApi = () => {
 
         const cardTypeMarginMobile = (type) => {
                 if (!type) return '0px';
-                console.log(type) 
-                console.log(type.length)
-                //return type.length > 25 ? '5px' : '5px';
                 if(type.length > 25 ) {
                   console.log(type.length + " > 35")
                   return  '-10px'

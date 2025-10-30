@@ -146,8 +146,8 @@ React.useEffect(() => {
 
           sessionStorage.setItem('cpFilterName', JSON.stringify(filterName));
           sessionStorage.setItem('cpFilterText', JSON.stringify(filterText));
-          sessionStorage.setItem('cpInputManacost', JSON.stringify(inputManaCostMin));
-          sessionStorage.setItem('cpInputManacost', JSON.stringify(inputManaCostMax));
+          sessionStorage.setItem('cpInputManacostMin', JSON.stringify(inputManaCostMin));
+          sessionStorage.setItem('cpInputManacostMax', JSON.stringify(inputManaCostMax));
           sessionStorage.setItem('cpFilterColors', JSON.stringify(filterColors));
           sessionStorage.setItem('cpFilterFormats', JSON.stringify(filterFormats));
           sessionStorage.setItem('cpFilterTypes', JSON.stringify(filterTypes));
@@ -168,9 +168,22 @@ React.useEffect(() => {
                       const filterText = sessionStorage.getItem('cpFilterText');
                       const inputManaCostMin = sessionStorage.getItem('cpInputManacostMin');
                       const inputManaCostMax = sessionStorage.getItem('cpInputManacostMax');
+                      const filterColors  = sessionStorage.getItem('cpFilterColors');
+                      const filterFormats  = sessionStorage.getItem('cpFilterFormats');
+                      const filterTypes  = sessionStorage.getItem('cpFilterTypes');
                       const filterLegendary = sessionStorage.getItem('cpFilterLegendary');
+                      const filterRarities  = sessionStorage.getItem('cpFilterRarities');
                       const filterEditions = sessionStorage.getItem('cpFilterEditions');  
+
                       
+                      if (filterName) {
+                          setName(JSON.parse(filterName));
+                          sessionStorage.removeItem('cpName');
+                      }
+                      if (filterText) {
+                          setText(JSON.parse(filterText));
+                          sessionStorage.removeItem('cpText');
+                      }
                       if (filterName) {
                           setFilterName(JSON.parse(filterName));
                           sessionStorage.removeItem('cpFilterName');
@@ -184,12 +197,28 @@ React.useEffect(() => {
                           sessionStorage.removeItem('cpInputManacostMin');
                       }
                       if (inputManaCostMax) {
-                          setInputManaCostMin(JSON.parse(inputManaCostMax));
-                          sessionStorage.removeItem('cpInputManacostMin');
+                          setInputManaCostMax(JSON.parse(inputManaCostMax));
+                          sessionStorage.removeItem('cpInputManacostMax');
                       }
+                      if(filterColors) {
+                          setFilterColors(JSON.parse(filterColors));
+                          sessionStorage.removeItem('cpFilterColors');
+                        }
+                      if(filterFormats) {
+                          setFilterFormats(JSON.parse(filterFormats));
+                          sessionStorage.removeItem('cpFilterFormats');
+                        }
+                      if(filterTypes) {
+                          setFilterTypes(JSON.parse(filterTypes));
+                          sessionStorage.removeItem('cpFilterTypes');
+                        }
                       if(filterLegendary) {
                           setFilterLegendary(JSON.parse(filterLegendary));
                           sessionStorage.removeItem('cpFilterLegendary');
+                        }
+                      if(filterRarities) {
+                          setFilterRarities(JSON.parse(filterRarities));
+                          sessionStorage.removeItem('cpFilterRarities');
                         }
                       if(filterEditions) {
                           setFilterEditions(JSON.parse(filterEditions));

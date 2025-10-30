@@ -8,6 +8,7 @@ import { IoIosArrowDropleft } from "react-icons/io";
 import { CgCloseO  } from "react-icons/cg";
 import Card from '../model/CardApi';
 import Section from '../components/section';
+import SectionMap from '../components/sectionMap';
 import Title from '../components/title';
 import OpenButton from '../components/openButton';
 import Pipeline from '../components/pipeline';
@@ -160,7 +161,11 @@ const NewDeck = () => {
         setName("");
       };
 
-      
+       // Refiltre selon toutes les couleurs du deck
+          const removeEditions = () => {
+           setFilterEditions([])
+          } 
+
       // Créé le deck
       const createDeck = async () => {
         try {
@@ -254,22 +259,12 @@ const NewDeck = () => {
     
         
    // Récupère les cartes 
-    const getCards = async () => {
+    const getCards = async (cancelToken) => {
                 try {
-                    setDisplayLoading(true); 
-                    /*
-                    if (filterEditions.length <1 || filterRarities.length <1 || filterColors.length <1
-                        || filterFormats.length <1 || filterTypes.length <1
-                    ) {
-                        setDisplayLoading(false);
-                        return;
-                    }
-                    */
+                    setDisplayLoading(true);                  
     
                     // Contient les RequestParams de la requete
-
-                    console.log(filterText)
-                    
+                   
                     const params = {
                       q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, [format],
                                     filterRarities, ["Creature"], ["Legendary"], filterEditions
@@ -281,9 +276,7 @@ const NewDeck = () => {
                     
                     const response = await axios.get('https://api.scryfall.com/cards/search', {
                       params,
-                      paramsSerializer: {
-                        indexes: null 
-                    }
+                      cancelToken
                     });
                     
                     
@@ -297,10 +290,14 @@ const NewDeck = () => {
                     
                 }   
                 catch (error) {
-                  setCards([])
-                  setHasMore(false)
-                  setDisplayLoading(false);
-                  console.log(error);
+                   if (axios.isCancel(error)) {
+                      console.log("Request canceled:", error.message);
+                  } else {
+                      setCards([]);
+                      setHasMore(false);
+                      setDisplayLoading(false);
+                      console.log(error);
+                  }
                 }
     
         
@@ -348,55 +345,95 @@ const NewDeck = () => {
           }
         }
   
-          // Naviguer vers une carte depuis id
-          const navCard = (id) => {     
-            sessionStorage.setItem('filterName', JSON.stringify(filterName));
-            sessionStorage.setItem('filterText', JSON.stringify(filterText));
-            sessionStorage.setItem('inputManacostMin', JSON.stringify(inputManaCostMin));
-            sessionStorage.setItem('inputManacostMax', JSON.stringify(inputManaCostMax));
-            sessionStorage.setItem('filterColors', JSON.stringify(filterColors));
-            sessionStorage.setItem('filterRarities', JSON.stringify(filterRarities));
-            sessionStorage.setItem('filterEditions', JSON.stringify(filterEditions));
-  
-            const cardsIds = cards.map(card => card.id);
-            navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds}})
+        // Naviguer vers une carte depuis id
+        const navCard = (id) => {
+              sessionStorage.setItem('ndFormat', JSON.stringify(format));
+              sessionStorage.setItem('ndCedhSelected', JSON.stringify(cedhSelected));
+              sessionStorage.setItem('ndFilterName', JSON.stringify(filterName));
+              sessionStorage.setItem('ndFilterText', JSON.stringify(filterText));
+              sessionStorage.setItem('ndInputManacostMin', JSON.stringify(inputManaCostMin));
+              sessionStorage.setItem('ndInputManacostMax', JSON.stringify(inputManaCostMax));
+              sessionStorage.setItem('ndFilterColors', JSON.stringify(filterColors));
+              sessionStorage.setItem('ndFilterRarities', JSON.stringify(filterRarities));
+              sessionStorage.setItem('ndFilterEditions', JSON.stringify(filterEditions));
+
+
+              const cardsIds = cards.map(card => card.id);
+              navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
           };
-  
-        // Récupère le contenu depuis le storage si l'user revient de cardSelected
-        useEffect(() => {
-        const recupStorage = () => {
-            try {
-                const filterName = sessionStorage.getItem('filterName');
-                const filterText = sessionStorage.getItem('filterText');
-                const inputManaCostMin = sessionStorage.getItem('inputManacostMin');
-                const inputManaCostMax = sessionStorage.getItem('inputManaCostMax');
-                  
-                
-                if (filterName) {
-                    setFilterName(JSON.parse(filterName));
-                    sessionStorage.removeItem('filterName');
-                }
-                if (filterText) {
-                    setFilterText(JSON.parse(filterText));
-                    sessionStorage.removeItem('filterText');
-                }
-                if (inputManaCostMin) {
-                    setInputManaCostMin(JSON.parse(inputManaCostMin));
-                    sessionStorage.removeItem('inputManacostMin');
-                }
-                if (inputManaCostMax) {
-                    setInputManaCostMin(JSON.parse(inputManaCostMax));
-                    sessionStorage.removeItem('inputManaCostMax');
-                }
-                
-                
-            } catch (error) {
-                console.error("Erreur lors de la récupération du sessionStorage :", error);
-            }
-        };
-  
-        recupStorage();
-    }, []); 
+
+
+          // Récupère le contenu depuis le storage si l'user revient de cardSelected
+          useEffect(() => {
+          const recupStorage = () => {
+                  try {
+                      const format = sessionStorage.getItem('ndFormat');
+                      const cedhSelected = sessionStorage.getItem('ndCedhSelected');
+                      const filterName = sessionStorage.getItem('ndFilterName');
+                      const filterText = sessionStorage.getItem('ndFilterText');
+                      const inputManaCostMin = sessionStorage.getItem('ndInputManacostMin');
+                      const inputManaCostMax = sessionStorage.getItem('ndInputManacostMax');
+                      const filterColors = sessionStorage.getItem('ndFilterColors');
+                      const filterRarities = sessionStorage.getItem('ndFilterRarities');
+                      const filterEditions = sessionStorage.getItem('ndFilterEditions');
+
+                      if (format) {
+                          setFormat(JSON.parse(format));
+                          sessionStorage.removeItem('ndFormat');
+                      }
+                      if (cedhSelected) {
+                          setCedhSelected(JSON.parse(cedhSelected));
+                          sessionStorage.removeItem('ndCedhSelected');
+                      }
+                      if (cedhID) {
+                          setCedhID(JSON.parse(cedhID));
+                          sessionStorage.removeItem('ndCedhID');
+                      }
+                      if (filterName) {
+                          setNameSelected(JSON.parse(filterName));
+                          sessionStorage.removeItem('ndName');
+                      }
+                      if (filterText) {
+                          setTextSelected(JSON.parse(filterText));
+                          sessionStorage.removeItem('ndText');
+                      }
+                      if (filterName) {
+                          setFilterName(JSON.parse(filterName));
+                          sessionStorage.removeItem('ndFilterName');
+                      }
+                      if (filterText) {
+                          setFilterText(JSON.parse(filterText));
+                          sessionStorage.removeItem('ndFilterText');
+                      }
+                      if (inputManaCostMin) {
+                          setInputManaCostMin(JSON.parse(inputManaCostMin));
+                          sessionStorage.removeItem('ndInputManacostMin');
+                      }
+                      if (inputManaCostMax) {
+                          setInputManaCostMax(JSON.parse(inputManaCostMax));
+                          sessionStorage.removeItem('ndInputManacostMax');
+                      }
+                      if(filterColors) {
+                          setFilterColors(JSON.parse(filterColors));
+                          sessionStorage.removeItem('ndFilterColors');
+                      }
+                      if(filterRarities) {
+                          setFilterRarities(JSON.parse(filterRarities));
+                          sessionStorage.removeItem('ndFilterRarities');
+                      }
+                      if(filterEditions) {
+                          setFilterEditions(JSON.parse(filterEditions));
+                          sessionStorage.removeItem('ndFilterEditions');
+                      }
+
+
+                  } catch (error) {
+                      console.error("Erreur lors de la récupération du sessionStorage :", error);
+                  }
+           };
+
+              recupStorage();
+          }, []);
   
           
           
@@ -558,7 +595,6 @@ const NewDeck = () => {
                       
                                            }
                   const selectColors = (newColor) => {
-                  console.log(newColor)
                     setFilterColors((prevColors) => {
                       const colorsArray = Array.isArray(prevColors)
                         ? prevColors
@@ -880,22 +916,23 @@ const NewDeck = () => {
 
         {/*Le choix du commandant*/}
         {format === "commander" && cedhID === "" && (
-            <div className='cedh-add-container'>
 
+          <SectionMap style={{margin: "0px"}}>
 
             <OpenButtonLarge  text="Afficher les filtres" icon={arrowFiltersSens} onClick={OpenFilters}/>
 
             <div className="search-line">            
-             <SearchBar value={nameSelected} onChange={(event) => (setNameSelected(event.target.value))}
-             style={{position : "relative", width: '80%'}}
-             onClick={() => (setFilterName(nameSelected))} placeholder={" Chercher une carte"}
-             onPush={() => (setNameSelected(""), setFilterName(""))} iconStyle={{ display: displayResetName(), position: 'absolute', marginLeft: '75%' }} />
+
+             <SearchBar value={name} onChange={(event) => (setName(event.target.value))}
+                           style={{position : "relative"}}
+                           onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
+                           onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName() }} />
 
             <SearchBar value={textSelected}  onChange={(event) => (setTextSelected(event.target.value))}
-              style={{position : "relative", width: '80%', marginBottom: '30px'}}
-              onClick={() => (setFilterText(textSelected))} placeholder={" Chercher le texte d'une carte"}
-              onPush={() => (setTextSelected(""), setFilterText(""))}
-              iconStyle={{ display: displayResetText(), position: 'absolute', marginLeft: '75%'  }} />
+                            style={{position : "relative", marginBottom: '30px'}}
+                            onClick={() => (setFilterText(textSelected))} placeholder={" Chercher le texte d'une carte"}
+                            onPush={() => (setTextSelected(""), setFilterText(""))}
+                            iconStyle={{ display: displayResetText()}} />
             </div>
 
                {/*Les filtres pour la requete de carte*/}
@@ -998,30 +1035,36 @@ const NewDeck = () => {
                 </div>
 
                 <div className="filter-editions-container" >
-                  <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
-                  { displayFilterEditions && ( 
-                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--}} >
-                      {editions.map((edition, index) => (
-                          <li className="li-checkbox" key={index}>
-                            <input
-                              className='component-input'
-                              type="checkbox"
-                              name={edition.name}
-                              value={edition.code}
-                              onChange={(event) => selectEditions(event.target.value)}
-                              checked={filterEditions.includes(edition.code)}
-                            />
-                            <p
-                              className='checkbox-type-p'
-                              style={{ margin: '0px' }}
-                            >
-                              {edition.name}
-                            </p>
-                          </li>
-                        ))}
-                    </div>
-                  )}
+                                  <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
+                                  { displayFilterEditions && ( 
+                                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--}} >
+                                      <div className="compenant-checkbox">
+                                        <div className="compenant-checkbox-map-large" style={{width:"100%"}}>
+                                          {editions.map((edition, index) => (
+                                              <li className="li-checkbox" key={index} style={{width:"90%"}}>
+                                                <input
+                                                  className='component-input'
+                                                  type="checkbox"
+                                                  name={edition.name}
+                                                  value={edition.code}
+                                                  onChange={(event) => selectEditions(event.target.value)}
+                                                  checked={filterEditions.includes(edition.code)}
+                                                />
+                                                <p
+                                                  className='checkbox-type-p'
+                                                  style={{ margin: '0px' }}
+                                                >
+                                                  {edition.name}
+                                                </p>
+                                              </li>
+                                            ))}
+                                        </div>
+                                         <TbFilterCancel className='compenant-reset' onClick={removeEditions}/>
+                                      </div>
+                                    </div>
+                                  )}
                 </div>
+
              </div>
 
             
@@ -1144,7 +1187,7 @@ const NewDeck = () => {
           </div>
             
            <FooterSection/>
-          </div>
+          </SectionMap>
         )} 
 
         {/*Le choix de la couleur*/}

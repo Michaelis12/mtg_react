@@ -74,29 +74,6 @@ const CardsDeckPage = () => {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     
-/*
-     const callColors = useRef(false)
-     const recupStorageColors = (response) => {
-        try {
-
-             if (callColors.current) return;
-
-            const stored = sessionStorage.getItem('filterColors');
-
-            if (stored) {
-                setFilterColors(JSON.parse(stored));
-                sessionStorage.removeItem('filterColors');
-                callColors.current = true;
-            } else {
-                setFilterColors(response);
-                
-            }
-            
-        } catch (error) {
-            console.error("Erreur lors de la récupération du sessionStorage :", error);
-        }
-        };
-*/
 
     // Renvoie les attributs du deck sélectionné 
     useEffect(() => {
@@ -135,22 +112,13 @@ const CardsDeckPage = () => {
  
 
 
-
+  
   // Récupère les cartes 
-  const getCards = async () => {
+  const getCards = async (cancelToken) => {
               try {
                   setDisplayLoading(true); 
-                  /*
-                  if (filterEditions.length <1 || filterRarities.length <1 || filterColors.length <1
-                      || filterFormats.length <1 || filterTypes.length <1
-                  ) {
-                      setDisplayLoading(false);
-                      return;
-                  }
-                  */
-  
-                  // Contient les RequestParams de la requete
 
+                  // Contient les RequestParams de la requete
 
                    const params = {
                     q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, [format],
@@ -159,12 +127,10 @@ const CardsDeckPage = () => {
                     page: 1
                   };
 
-                  
+                  console.log(cardsSelected)
                   const response = await axios.get('https://api.scryfall.com/cards/search', {
                     params,
-                    paramsSerializer: {
-                      indexes: null 
-                    }
+                    cancelToken
                   });
 
                   const listCards = response.data.data.map(cardData => Card.fromApi(cardData));
@@ -175,10 +141,14 @@ const CardsDeckPage = () => {
                   
               }   
               catch (error) {
-                  setCards([])
-                  setHasMore(false)
-                  setDisplayLoading(false);
-                  console.log(error);
+                 if (axios.isCancel(error)) {
+                    console.log("Request canceled:", error.message);
+                } else {
+                    setCards([]);
+                    setHasMore(false);
+                    setDisplayLoading(false);
+                    console.log(error);
+                }
               }
   
       
@@ -226,67 +196,97 @@ const CardsDeckPage = () => {
         }
       }
 
-        // Naviguer vers une carte depuis id
-        const navCard = (id) => {     
-          sessionStorage.setItem('cardsSelected', JSON.stringify(cardsSelected));
-          sessionStorage.setItem('filterName', JSON.stringify(filterName));
-          sessionStorage.setItem('filterText', JSON.stringify(filterText));
-          sessionStorage.setItem('inputManacostMin', JSON.stringify(inputManaCostMin));
-          sessionStorage.setItem('inputManacostMax', JSON.stringify(inputManaCostMax));
-          sessionStorage.setItem('filterColors', JSON.stringify(filterColors));
-          sessionStorage.setItem('filterTypes', JSON.stringify(filterTypes));
-          sessionStorage.setItem('filterLegendary', JSON.stringify(filterLegendary));
-          sessionStorage.setItem('filterRarities', JSON.stringify(filterRarities));
-          sessionStorage.setItem('filterEditions', JSON.stringify(filterEditions));
+    // Naviguer vers une carte depuis id
+        const navCard = (id) => {
+          sessionStorage.setItem('cpCardsSelected', JSON.stringify(cardsSelected));
+          sessionStorage.setItem('cpFilterName', JSON.stringify(filterName));
+          sessionStorage.setItem('cpFilterText', JSON.stringify(filterText));
+          sessionStorage.setItem('cpInputManacostMin', JSON.stringify(inputManaCostMin));
+          sessionStorage.setItem('cpInputManacostMax', JSON.stringify(inputManaCostMax));
+          sessionStorage.setItem('cpFilterColors', JSON.stringify(filterColors));
+          sessionStorage.setItem('cpFilterTypes', JSON.stringify(filterTypes));
+          sessionStorage.setItem('cpFilterLegendary', JSON.stringify(filterLegendary));
+          sessionStorage.setItem('cpFilterRarities', JSON.stringify(filterRarities));
+          sessionStorage.setItem('cpFilterEditions', JSON.stringify(filterEditions));
 
           const cardsIds = cards.map(card => card.id);
-          navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds}})
+          navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
         };
 
-      // Récupère le contenu depuis le storage si l'user revient de cardSelected
-      useEffect(() => {
-      const recupStorage = () => {
-          try {
-              const cardsSelected = sessionStorage.getItem('cardsSelected');
-              const filterName = sessionStorage.getItem('filterName');
-              const filterText = sessionStorage.getItem('filterText');
-              const inputManaCostMin = sessionStorage.getItem('inputManacostMin');
-              const inputManaCostMax = sessionStorage.getItem('inputManaCostMax');
-              const filterLegendary = sessionStorage.getItem('filterLegendary');
-                
-              if (cardsSelected) {
-                  setCardsSelected(JSON.parse(cardsSelected));
-                  sessionStorage.removeItem('cardsSelected');
-              }
-              if (filterName) {
-                  setFilterName(JSON.parse(filterName));
-                  sessionStorage.removeItem('filterName');
-              }
-              if (filterText) {
-                  setFilterText(JSON.parse(filterText));
-                  sessionStorage.removeItem('filterText');
-              }
-              if (inputManaCostMin) {
-                  setInputManaCostMin(JSON.parse(inputManaCostMin));
-                  sessionStorage.removeItem('inputManacostMin');
-              }
-              if (inputManaCostMax) {
-                  setInputManaCostMin(JSON.parse(inputManaCostMax));
-                  sessionStorage.removeItem('inputManaCostMax');
-              }
-              if(filterLegendary) {
-                setFilterLegendary(JSON.parse(filterLegendary));
-                sessionStorage.removeItem('filterLegendary');
-              }
-              
-              
-          } catch (error) {
-              console.error("Erreur lors de la récupération du sessionStorage :", error);
-          }
-      };
 
-      recupStorage();
-  }, []);
+        // Récupère le contenu depuis le storage si l'user revient de cardSelected
+              useEffect(() => {
+              const recupStorage = () => {
+                  try {
+                      const cardsSelected = sessionStorage.getItem('cpCardsSelected');
+                      const filterName = sessionStorage.getItem('cpFilterName');
+                      const filterText = sessionStorage.getItem('cpFilterText');
+                      const inputManaCostMin = sessionStorage.getItem('cpInputManacostMin');
+                      const inputManaCostMax = sessionStorage.getItem('cpInputManacostMax');
+                      const filterColors  = sessionStorage.getItem('cpFilterColors');
+                      const filterTypes  = sessionStorage.getItem('cpFilterTypes');
+                      const filterLegendary = sessionStorage.getItem('cpFilterLegendary');
+                      const filterRarities  = sessionStorage.getItem('cpFilterRarities');
+                      const filterEditions = sessionStorage.getItem('cpFilterEditions');  
+
+                      if (cardsSelected) {
+                          setCardsSelected(JSON.parse(cardsSelected));
+                          sessionStorage.removeItem('cpCardsSelected');
+                      }
+                      if (filterName) {
+                          setName(JSON.parse(filterName));
+                          sessionStorage.removeItem('cpName');
+                      }
+                      if (filterText) {
+                          setText(JSON.parse(filterText));
+                          sessionStorage.removeItem('cpText');
+                      }
+                      if (filterName) {
+                          setFilterName(JSON.parse(filterName));
+                          sessionStorage.removeItem('cpFilterName');
+                      }
+                      if (filterText) {
+                          setFilterText(JSON.parse(filterText));
+                          sessionStorage.removeItem('cpFilterText');
+                      }
+                      if (inputManaCostMin) {
+                          setInputManaCostMin(JSON.parse(inputManaCostMin));
+                          sessionStorage.removeItem('cpInputManacostMin');
+                      }
+                      if (inputManaCostMax) {
+                          setInputManaCostMax(JSON.parse(inputManaCostMax));
+                          sessionStorage.removeItem('cpInputManacostMax');
+                      }
+                      if(filterColors) {
+                          setFilterColors(JSON.parse(filterColors));
+                          sessionStorage.removeItem('cpFilterColors');
+                        }
+                      if(filterTypes) {
+                          setFilterTypes(JSON.parse(filterTypes));
+                          sessionStorage.removeItem('cpFilterTypes');
+                        }
+                      if(filterLegendary) {
+                          setFilterLegendary(JSON.parse(filterLegendary));
+                          sessionStorage.removeItem('cpFilterLegendary');
+                        }
+                      if(filterRarities) {
+                          setFilterRarities(JSON.parse(filterRarities));
+                          sessionStorage.removeItem('cpFilterRarities');
+                        }
+                      if(filterEditions) {
+                          setFilterEditions(JSON.parse(filterEditions));
+                          sessionStorage.removeItem('cpFilterEditions');
+                        }
+                      
+                      
+                  } catch (error) {
+                      console.error("Erreur lors de la récupération du sessionStorage :", error);
+                  }
+              };
+        
+              recupStorage();
+          }, []);
+        
 
         
         
@@ -1094,15 +1094,15 @@ const CardsDeckPage = () => {
 
                           
                         {/*La présence de cartes dans le deck*/}
-                        <div className="deck-presence-container">
+                        <div className="deck-presence-container" style={{marginTop: '12px'}}>
                           <p className="p-cards-deck-length">présence dans le deck : {deckCards.filter(cardDeck => cardDeck === card.id).length}</p>
-                          {cardsSelected.filter(cardDeck => cardDeck === card).length > 0 && (
-                            <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck === card).length}</p>
+                          {cardsSelected.filter(cardDeck => cardDeck.id === card.id).length > 0 && (
+                            <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck.id === card.id).length}</p>
                           )}                      
                         </div>
 
                           {/*Le bouton + si la carte n'est pas encore dans le deck*/}
-                        { !deckCards.includes(card.id) && !cardsSelected.includes(card) && (
+                        { !deckCards.includes(card.id) && !cardsSelected.some(c => c.id === card.id) && (
                           <AddButton onClick={() => selectCard(card)} style={{ backgroundColor: 'white', margin : '2%', marginBottom: '7%', border: 'none' }}
                                 icon={<CgAdd size={'2.5em'} color={'black'} />} />
                           )}
