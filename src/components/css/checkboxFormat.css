@@ -18,7 +18,6 @@
     flex-direction: column;
     justify-content: space-between; /* Pour espacer les éléments */
     align-items: stretch; /* Étend chaque élément enfant pour que la hauteur soit la même */
-    height: 260px;
     max-width: 400px;
 }
 
@@ -43,8 +42,9 @@
     background:  linear-gradient(135deg, #28a745 0%, #20c997 100%);
     border-radius: 30px;
     padding: 8px;
-    font-size: 25px;
-    text-align: center; /* Centre le texte */
+    font-size: 20px;
+    text-align: center;
+    min-width: 100px;
 }
 
 .format-text {
@@ -54,10 +54,15 @@
     flex-grow: 1; /* Permet au texte de prendre l'espace restant dans le conteneur */
 }
 
+@media (min-width: 880px) {
+
+ .checkbox-input-format-container {
+        height: 260px;
+    }
+
+}
 
 @media (max-width: 500px) {
-
-    
 
 
     .input-deck-format {

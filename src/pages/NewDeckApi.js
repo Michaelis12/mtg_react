@@ -4,17 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import { SlArrowDown, SlArrowUp } from "react-icons/sl";
 import { CgAdd } from "react-icons/cg";
 import { TbFilterCancel } from "react-icons/tb";
-import { IoIosArrowDropleft } from "react-icons/io";
 import { CgCloseO  } from "react-icons/cg";
 import Card from '../model/CardApi';
 import Section from '../components/section';
-import SectionMap from '../components/sectionMap';
 import Title from '../components/title';
 import OpenButton from '../components/openButton';
 import Pipeline from '../components/pipeline';
 import CheckboxFormat from '../components/checkboxFormat'
 import ButtonModif from '../components/iconModif';
 import ButtonValid from '../components/buttonValid';
+import ButtonReturn from '../components/buttonReturn';
 import AddButton from '../components/addButton';
 import InputName from '../components/inputName';
 import SearchBar from '../components/searchBar';
@@ -34,7 +33,6 @@ import defaultCardImg from "../assets/mtg-card-back.jpg"
 import backgroundCardsPage from "../assets/background_cardsPage2.jpg"
 import loading from "../assets/loading.gif"
 import backgroundPopup from "../assets/background_white.png"
-import backgroundWhite from "../assets/background_white.png";
 import { buildQuery } from '../utils/buildQuery';
 import { getImageUrl } from '../utils/imageUtils';
 
@@ -46,7 +44,7 @@ const NewDeck = () => {
    const [displayLoading, setDisplayLoading] = useState(false);
 
    // Récupère les couleurs pour le checkbox
-   const [existingColors, setExistingColors] = React.useState(["W", "U", "R", "G", "B"])
+   const [existingColors, setExistingColors] = React.useState(["W", "U", "R", "G", "B", "colorless"]);
       
     // Change de valeur à la sélection 
     const [selectedColors, setSelectedColors] = React.useState([])
@@ -595,6 +593,36 @@ const NewDeck = () => {
                       
                                            }
                   const selectColors = (newColor) => {
+                    setSelectedColors((prevColors) => {
+                      const colorsArray = Array.isArray(prevColors)
+                        ? prevColors
+                        : typeof prevColors === 'string'
+                          ? prevColors.split(',').filter(c => c.trim() !== '')
+                          : [];
+          
+                      // Si on clique sur "colorless"
+                      if (newColor === "colorless") {
+                        if (colorsArray.includes("colorless")) {
+                          // Retirer "colorless"
+                          return colorsArray.filter(color => color !== "colorless");
+                        } else {
+                          // Ajouter "colorless" et retirer toutes les autres couleurs
+                          return ["colorless"];
+                        }
+                      }
+          
+                      // Si on clique sur une couleur normale
+                      if (colorsArray.includes(newColor)) {
+                        // La retirer
+                        return colorsArray.filter(color => color !== newColor);
+                      } else {
+                        // Ajouter la couleur, en retirant "colorless" s'il est présent
+                        return [...colorsArray.filter(color => color !== "colorless"), newColor];
+                      }
+                    });
+                  };
+
+                  const selectFilterColors = (newColor) => {
                     setFilterColors((prevColors) => {
                       const colorsArray = Array.isArray(prevColors)
                         ? prevColors
@@ -716,6 +744,16 @@ const NewDeck = () => {
                     setCedh(cedhSelected)
                     setColors(cedhSelected.colors)
                     setCedhID(cedhSelected.id)
+                    setFilterName("")
+                    setNameSelected("")
+                    setFilterText("")
+                    setTextSelected("")
+                    setInputManaCostMin("")
+                    setInputManaCostMax("")
+                    setFilterColors([])
+                    setFilterRarities([])
+                    setFilterEditions([])
+
 
                  }   
             catch (error) {
@@ -901,7 +939,7 @@ const NewDeck = () => {
                     <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
                   </div>
                   <div className='pipeline-container-mobile'>
-                    <Title style={{marginTop : '-2%', marginBottom : '2%'}} title={"Sélectionner un format"}/>
+                    <Title  title={"Sélectionner un format"}/>
                   </div>
                   <div className='checkbox-format-container'>
                     <CheckboxFormat
@@ -917,7 +955,7 @@ const NewDeck = () => {
         {/*Le choix du commandant*/}
         {format === "commander" && cedhID === "" && (
 
-          <SectionMap style={{margin: "0px"}}>
+          <div className='cedh-section'>
 
             <OpenButtonLarge  text="Afficher les filtres" icon={arrowFiltersSens} onClick={OpenFilters}/>
 
@@ -1148,15 +1186,12 @@ const NewDeck = () => {
             </div>
             
 
-            <div className='icon-return-container'>
-                    <IoIosArrowDropleft className='icon-return'  size={'7em'} onClick={()=>returnFormat()} /> 
-                  </div>
 
           <div className='display-objects-section'>
 
               <div className='map-cards-section'>
                   <div className='icon-return-container-mobile'>
-                      <IoIosArrowDropleft className='icon-return'  size={'5em'} onClick={()=>returnFormat()} /> 
+                      
                     </div>
                   {cards.map(card => ( 
                       <div className="cards-details" key={card.id}>
@@ -1173,8 +1208,11 @@ const NewDeck = () => {
                       )}  
                   </div>
                   ))}
-                <ButtonValid onClick={()=> addCedh()} disabled={cedhSelected.length < 1} style={{position: 'fixed', bottom: '0%'}}
-                  text={'Ajouter'}/>   
+
+                <div className='button-nav-new-deck-container'>
+                  <ButtonReturn onClick={()=>returnFormat()} /> 
+                  <ButtonValid onClick={()=> addCedh()} disabled={cedhSelected.length < 1}/> 
+                </div>  
                 
               
               </div>
@@ -1187,7 +1225,7 @@ const NewDeck = () => {
           </div>
             
            <FooterSection/>
-          </SectionMap>
+          </div>
         )} 
 
         {/*Le choix de la couleur*/}
@@ -1198,14 +1236,13 @@ const NewDeck = () => {
                     <Pipeline style={{ backgroundColor: '#1B1D40', color:'#ffffff', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>
                     <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
                 </div> 
-                <div className='title-container-mobile'>
-
-                  <Title style={{marginTop : '2%', marginBottom : '2%'}} title={"Couleurs du deck"}/>
+                <div className='pipeline-container-mobile'>
+                  <Title title={"Couleurs du deck"}/>
               </div>
             
             <div className='deck-colors-container'>
               {existingColors.map((color, index) => ((
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10%' }} key={index}>
+                <div className="newDeck-checkbox-colors-container" style={{ display: 'flex', alignItems: 'center', gap: '10%' }} key={index}>
                   <input
                     className="newDeck-checkbox-colors"
                     type="checkbox"
@@ -1223,17 +1260,9 @@ const NewDeck = () => {
               ))    
               )}                                    
             </div>
+      
             
-
-            <div className='icon-return-container'>
-                    <IoIosArrowDropleft className='icon-return'  size={'7em'} onClick={()=>returnFormat()} /> 
-            </div>
-
-            <div className='icon-return-container-mobile'>
-                    <IoIosArrowDropleft className='icon-return'  size={'4em'} onClick={()=>returnFormat()} /> 
-            </div>
-            
-            <ButtonValid disabled={selectedColors.length === 0} text={"Valider"} onClick={() => validColors()}/>
+            <ButtonValid disabled={selectedColors.length === 0} onClick={() => validColors()}/>
           </div>
             )}
 
@@ -1265,15 +1294,9 @@ const NewDeck = () => {
                         onClick={() => validName()} disabled={selectedName.length < 8 || selectedName.length > 20}/>
                         <p className="instruction-para"> Le nom doit contenir entre 8 et 20 caractères </p>
                       </div>
-
-                      <div className='icon-return-container-mobile'>
-                      <IoIosArrowDropleft className='icon-return'  size={'5em'} onClick={()=>(returnColors(), returnCedh())} /> 
-                    </div>
                       
                   </div>
-                  <div className='icon-return-container'>
-                    <IoIosArrowDropleft className='icon-return'  size={'7em'} onClick={()=>(returnColors(), returnCedh())} /> 
-                  </div>
+   
 
                   <ButtonValid disabled={selectedName.length < 8 || selectedName.length > 25} 
                   text={"Valider"} onClick={() => validName()}/>
@@ -1285,18 +1308,11 @@ const NewDeck = () => {
         {/*La carte finale pour les decks non commander*/}
         {colors.length !== 0 && format !== "" && format !== "commander" && name !== "" && image !== "" && (
           <div className="final-card-group">
-              <div className='pipeline-container'>
-                  <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: 'rgba(176, 176, 176, 1)', color: 'white', zIndex: '0' }} text={"Format"}/> 
-                  <Pipeline style={{ backgroundColor: 'rgba(176, 176, 176, 1)', color: 'white', zIndex: '1' }} text={"Couleurs"}/>                 
-                  <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: 'rgba(176, 176, 176, 1)', color: 'white', zIndex: '-1'}} text={"Attributs"}/>
-              </div>
-
-             
-              <div className="new-deck-body-container">
-
+            
                {/*La carte finale format desktop*/}
-                <div className="new-deck-body" style={{ backgroundImage: `url(${backgroundPopup})`}}>
-                          <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-20px'}}/></h1>
+
+                <div className="new-deck-card-desktop" style={{ backgroundImage: `url(${backgroundPopup})`, marginTop: '0%'}} >
+                          <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-10px'}}/></h1>
   
                           <div className="deck-content">
                               <img className="new-deck-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
@@ -1327,44 +1343,8 @@ const NewDeck = () => {
                         <div className='valid-form-container'>      
                           <button className='valid-popup' disabled={displayLoading} onClick={() => createDeck()}><h4>Créer le deck</h4></button> 
                         </div>    
-                </div>  
-                
-                
-                {/*La carte finale format medium*/}
-                <h2 className='deck-card-medium-name'>{name} <ButtonModif onClick={() => returnName()} /></h2>
-                <div className="deck-card-medium">
-                                    <div className="img-container">
-                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
-                                    </div>
-          
-                
-                  <div className="new-deck-body-mobile" style={{ backgroundImage: `url(${backgroundPopup})`}} >
-                                                              
-                    <div className='card-line-attribut'>                        
-                                                    <h4 className='new-deck-line-title'> Couleurs : </h4> 
-                                                    <div className='color-modif'>
-                                                      {colors && colors.length > 0 && (
-                                                          <div className='mapping-color'>
-                                                            {colors.map((color, index)  => (
-                                                          <img key={index} src={getColorPics(color)} className="color-img-new-deck" alt={color}/>                                
-                                                      ))}
-                                                          </div>
-                                                      )} 
-                                                      <ButtonModif onClick={() => returnColors()} />
-                                                    </div>
-                      </div>
-                      <div className='card-line-attribut'>              
-                                  <h4 className='new-deck-line-title' style={{marginTop: '10px'}}> Format : </h4> 
-                                  <p className='new-deck-format' >{format}</p>
-                                  <ButtonModif onClick={() => returnFormat()} />
-                      </div>
-                                                                                                      
-                      <button style={{marginBottom: '5%', marginTop: '5%', paddingLeft: '2%', paddingRight: '2%'}} className="valid-popup" disabled={displayLoading} onClick={() => createDeck() } ><h3>Créer le deck</h3></button>                                          
-                    </div> 
                 </div> 
-
-              </div>
-
+                
                 {/*La carte finale format mobile*/}                                         
                 <h2 className='deck-card-mobile-name'>{name} <ButtonModif onClick={() => returnName()} /></h2>
                 <div className="deck-card-mobile">
@@ -1395,8 +1375,8 @@ const NewDeck = () => {
                                                                     <ButtonModif onClick={() => returnFormat()} />
                       </div>
                                                                                                       
-                      <button style={{marginBottom: '5%', marginTop: '5%', paddingLeft: '2%', paddingRight: '2%'}} className='valid-form' 
-                      disabled={displayLoading} onClick={() => createDeck()} ><h4>Créer le deck</h4></button>                                          
+                      <button style={{marginBottom: '5%', marginTop: '5%', paddingLeft: '2%', paddingRight: '2%', fontWeight: 'bold'}} className='valid-popup' 
+                       disabled={displayLoading} onClick={() => createDeck()} >Créer le deck</button>                                          
                     </div> 
                 </div> 
               

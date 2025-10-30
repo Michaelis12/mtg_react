@@ -31,6 +31,7 @@ import { buildQuery } from '../utils/buildQuery';
 
 const CardsPage = () => {
     const [cards, setCards] = React.useState([])
+    const [cardsID, setCardsID] = React.useState([])
     const [detailsCard, setDetailsCard] = React.useState(null)
     const navigate = useNavigate();
     const [editions, setEditions] = React.useState([])
@@ -108,7 +109,7 @@ const CardsPage = () => {
                             indexes: null 
                         }, cancelToken
                         });
-
+          
         const listCards = response.data.content.map(cardData => Card.fromApi(cardData));
         setCards(listCards);
         setHasMore(response.data.has_more);
@@ -138,7 +139,41 @@ React.useEffect(() => {
     filterFormats, filterRarities, filterEditions, filterTypes, filterLegendary]);
 
 
-     
+    // Récupère le rank de chaque carte dans la liste complète
+
+    const getCardsRanked = async (cancelToken) => {
+    try {
+        setDisplayLoading(true);
+
+        const params = {order : order};
+                       
+        const response = await axiosInstance.get('f_all/getCardsRanked', {params, cancelToken});         
+        const listCards = response.data
+
+        console.log(listCards);
+        setCardsID(listCards);
+        setDisplayLoading(false);
+
+    } catch (error) {
+        if (axios.isCancel(error)) {
+            console.log("Request canceled:", error.message);
+        } else {
+            setCards([]);
+            setHasMore(false);
+            setDisplayLoading(false);
+            console.log(error);
+        }
+    }
+    };
+    React.useEffect(() => {
+    const source = axios.CancelToken.source();
+    getCardsRanked(source.token);
+
+    return () => {
+        source.cancel("Operation canceled due to new request.");
+    };
+}, []);
+    
     // Charge plus de cartes pour la pagination
 
     const displayMoreCards = async () => {
@@ -202,6 +237,12 @@ React.useEffect(() => {
       }
     }
 
+    const getCardPosition = (cardId) => {
+      const index = cardsID.indexOf(cardId);
+      return index !== -1 ? index + 1 : null; // +1 car index commence à 0
+    };
+
+
 
         // Naviguer vers une carte depuis id
         const navCard = (id) => {
@@ -217,7 +258,7 @@ React.useEffect(() => {
           sessionStorage.setItem('cpFilterRarities', JSON.stringify(filterRarities));
           sessionStorage.setItem('cpFilterEditions', JSON.stringify(filterEditions));
 
-          const cardsIds = cards.map(card => card.id);
+          const cardsIds = cards.map(card => card.apiID);
           navigate(`/cardSelected`, { state: { cardID: id, ListCard: cardsIds }})
         }; 
 
@@ -979,14 +1020,15 @@ React.useEffect(() => {
                 {cards.map(card => ( 
                     <div className="cards-details" key={card.id}>
                         <img className="cards-img" src={card.image ? getImageUrl(card.image) : defaultImg} 
-                        alt="Card-image" onClick={() => navCard(card.id)}
+                        alt="Card-image" onClick={() => navCard(card.apiID)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         />
+                        <strong className="card-rank" style={{marginBottom: '0px'}} ># {getCardPosition(card.id)}</strong>
                         { order === "deck" && (
-                          <p className="p-cards-deck-length" >dans {card.decksNumber} decks</p>
+                          <p className="p-cards-deck-length" style={{marginTop: '-5px'}} >dans {card.decksNumber} decks</p>
                         )}
                         {order === "cedh" && (
-                          <p className="p-cards-deck-length">dans {card.cedhNumber} decks</p>
+                          <p className="p-cards-deck-length" style={{marginTop: '-5px'}}>dans {card.cedhNumber} decks</p>
                         )}
 
                     {detailsCard && detailsCard.id === card.id && (

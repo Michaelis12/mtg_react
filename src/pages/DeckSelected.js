@@ -589,6 +589,22 @@ import FooterSection from '../components/footerSection';
                     <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
                 )}
                 <img src={backgroundPage} className="background-image" alt="background" />
+
+
+
+                    {/* Boutons d'action */}
+                    <div className='deckbuilding-buttons-container'>                       
+                                
+                        <div className='admin-users-button'>
+                        
+                        {/* Afficher une main piochée dans le deck */}
+                        <button className='update-deck-container' onClick={()=>displayHand()}>
+                            <GiCardRandom className='icon-update-user' />
+                            <h5 className='update-user-p'>Piocher une main</h5>
+                        </button>
+                        
+                        </div>
+                    </div>
                 
                 
                             {/*La carte format desktop*/}
@@ -736,22 +752,7 @@ import FooterSection from '../components/footerSection';
                                                                 
                                     </div> 
                             </div>
-                
 
-            
-            {/*  Boutons d'action */}
-            <div className='deckbuilding-buttons-container'>                       
-                        
-                <div className='admin-users-button'>
-                
-                {/* Afficher une main piochée dans le deck */}
-                <button className='update-deck-container' onClick={()=>displayHand()}>
-                    <GiCardRandom className='icon-update-user' />
-                    <h5 className='update-user-p'>Piocher une main</h5>
-                </button>
-                
-                </div>
-            </div>
                 
 
             { format === "commander" && (

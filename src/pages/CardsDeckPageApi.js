@@ -1094,7 +1094,7 @@ const CardsDeckPage = () => {
 
                           
                         {/*La présence de cartes dans le deck*/}
-                        <div className="deck-presence-container" style={{marginTop: '12px'}}>
+                        <div className="deck-presence-container">
                           <p className="p-cards-deck-length">présence dans le deck : {deckCards.filter(cardDeck => cardDeck === card.id).length}</p>
                           {cardsSelected.filter(cardDeck => cardDeck.id === card.id).length > 0 && (
                             <p className='p-card-add-length'>+ {cardsSelected.filter(cardDeck => cardDeck.id === card.id).length}</p>

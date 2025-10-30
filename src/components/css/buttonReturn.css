@@ -1,0 +1,35 @@
+.button-return{
+        background-color: white;
+        border: 3px solid #5D3B8C;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+        height: 90px;
+        width: 90px;
+        border-radius: 50%;
+        padding: 0%;
+    }
+
+
+
+.button-return:hover {
+    transform: scale(0.9);
+    background-color: white;
+  }
+
+
+  .icon-button-fixed {
+    width: 70px;
+    height: 70px;
+  }
+
+
+
+@media (max-width: 500px) {
+  .button-return {
+    height: 50px;
+     width: 50px;
+  }
+}
+
+
