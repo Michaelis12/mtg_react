@@ -601,6 +601,7 @@ const AccountPage = () => {
                     </div>  
                     )}  
 
+                    {/*Carte de l'utilisateur*/}
                     <div className="card-user-container">                    
                     
                                             <div className="card-user-desktop" style={{ backgroundImage: `url(${BackgroundWhite})`}}>
@@ -694,7 +695,7 @@ const AccountPage = () => {
                     
                                             </div>
 
-
+                                            {/*Formulaire de modification du profil*/}
                                             { updateProfil && (
                                             
                                             <div className='popup-bckg'>
@@ -733,7 +734,7 @@ const AccountPage = () => {
                                                             <button  type="button" className="valid-edit-button"
                                                             disabled={pseudo.length < 6 && bio === "" && avatar === "" || displayLoading}
                                                             onClick={() => updateDeckBuilder()}>
-                                                                <h3>Valider</h3>
+                                                                <h3 style={{margin:"0px"}}>Valider</h3>
                                                             </button>
                                                         </div>
                                             

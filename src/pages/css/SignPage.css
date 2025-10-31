@@ -246,7 +246,9 @@ button:hover {
 .instruction-para {
     color: gray;
     font-style: italic;
-    font-size: 1em;
+    font-weight: 500;
+    font-size: 1.1em;
+    text-align: center;
 }
 
 .instruction-para-sign {

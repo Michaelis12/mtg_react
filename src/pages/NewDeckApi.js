@@ -111,6 +111,9 @@ const NewDeck = () => {
       // Validation colors
       const validColors = () => {
         setColors(selectedColors)
+        setCedhSelected([])
+        setCedh([])
+        setCedhID("")
       }
        
       // Choix format
@@ -151,6 +154,8 @@ const NewDeck = () => {
       // Revenir au choix des couleurs
       const returnColors = () => {
         setColors([]);
+        setCedh([]);
+        setCedhID("")
         setName("");
       };
 
@@ -947,8 +952,9 @@ const NewDeck = () => {
                         filterFormats={selectedFormat}                   
                     />
                   </div>
-                  <ButtonValid disabled={selectedFormat === ""} text={"Valider"} 
-                  onClick={() => validFormat()}/>
+                  <div className='button-nav-new-deck-container'>
+                    <ButtonValid disabled={selectedFormat.length < 1} onClick={()=> validFormat()}/> 
+                  </div>  
             </div>
               )} 
 
@@ -1316,8 +1322,10 @@ const NewDeck = () => {
               )}                                    
             </div>
       
-            
-            <ButtonValid disabled={selectedColors.length === 0} onClick={() => validColors()}/>
+              <div className='button-nav-new-deck-container'>
+                  <ButtonReturn onClick={()=>returnFormat()} /> 
+                  <ButtonValid onClick={()=> validColors()} disabled={selectedColors.length < 1}/> 
+              </div>
           </div>
             )}
 
@@ -1334,29 +1342,52 @@ const NewDeck = () => {
                   <Title style={{marginTop : '2%', marginBottom : '2%'}} title={"Attributs du deck"}/>
               </div>
 
-                  <div className='attribut-container' style={{ backgroundImage: `url(${backgroundPopup})`}}>
-                    <div className='input-img-container'>
-                        <input
-                          className='input-deck-img'
-                          type="file"
-                          accept="image/*" 
-                          onChange={(e) => selectImage(e)}
-                        />
-                      </div>
-                      <div className='input-name-container'>
-                        <img className='deck-selected-img' src={selectedImage} alt="deck-img" />
-                        <InputName onChange={(e) => setSelectedName(e.target.value)}  placeholder='Entrer le nom du deck'
-                        onClick={() => validName()} disabled={selectedName.length < 8 || selectedName.length > 20}/>
-                        <p className="instruction-para"> Le nom doit contenir entre 8 et 20 caractères </p>
-                      </div>
-                      
+
+                  <div className="card-user-desktop" style={{ backgroundImage: `url(${backgroundPopup})`}}>
+                                                                          <div className="card-user-avatar-section">
+                                                                              <img
+                                                                              src={selectedImage}
+                                                                              className="deck-selected-img"
+                                                                              alt="user-avatar"
+                                                                              />
+                                                                              <div className='input-image-container'>
+                                                                                  <input className='input-image' type="file"  accept="image/*"
+                                                                                     onChange={(e) => selectImage(e)}/> 
+                                                                              </div>
+                                                                          </div>
+                                      
+                                                                          <div className="card-user-info">
+                                                                              <InputName onChange={(e) => setSelectedName(e.target.value)}  placeholder='Entrer le nom du deck'
+                                                                                onClick={() => validName()} disabled={selectedName.length < 8 || selectedName.length > 20}/>
+                                                                                
+                                                                                <p className="instruction-para"> Le nom doit contenir entre 8 et 20 caractères </p>
+                                                                          
+                                                                          </div> 
+                                                              
                   </div>
-   
 
-                  <ButtonValid disabled={selectedName.length < 8 || selectedName.length > 25} 
-                  text={"Valider"} onClick={() => validName()}/>
-              
+                  <div className="card-name-new-deck" style={{backgroundImage:`url(${backgroundPopup})`}}> 
+                                                                    <img src={selectedImage} className="deck-selected-img" alt="user-pp"/>
+                                                                    <div className='input-image-container'>
+                                                                    <input className='input-image' type="file"  accept="image/*"
+                                                                     onChange={(e) => selectImage(e)}/> 
+                                                                    </div>
 
+                                                                    <div className='input-image-container'>
+                                                                                  <input className='input-image' type="file"  accept="image/*"
+                                                                                     onChange={(e) => selectImage(e)}/> 
+                                                                              </div>
+
+                                                                    <InputName onChange={(e) => setSelectedName(e.target.value)}  placeholder='Entrer le nom du deck'
+                                                                                onClick={() => validName()} disabled={selectedName.length < 8 || selectedName.length > 20}/>
+                                                                                
+                                                                                <p className="instruction-para"> Le nom doit contenir entre 8 et 20 caractères </p>
+                  </div>
+
+                  <div className='button-nav-new-deck-container'>
+                      <ButtonReturn onClick={()=>returnColors()} /> 
+                      <ButtonValid onClick={()=> validName()} disabled={selectedName.length < 8 || selectedName.length > 25}/> 
+                  </div>
           </div> 
           )} 
 
@@ -1445,18 +1476,8 @@ const NewDeck = () => {
         {colors.length !== 0 && format === "commander" && cedhID !== "" && name !== "" && image !== "" && (
           <div className="final-card-group">
 
-              <div className='pipeline-container'>
-                  <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: 'rgba(176, 176, 176, 1)', color: 'white', zIndex: '0' }} text={"Format"}/> 
-                  <Pipeline style={{ backgroundColor: 'rgba(176, 176, 176, 1)', color: 'white', zIndex: '1' }} text={"Couleurs"}/>                 
-                  <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: 'rgba(176, 176, 176, 1)', color: 'white', zIndex: '-1'}} text={"Attributs"}/>
-              </div>
-
-              
-
-
-              <div className="new-deck-body-container" >
-                <div className="new-deck-body" style={{ backgroundImage: `url(${backgroundPopup})`}}>
-                          <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-20px'}}/></h1>
+              <div className="new-deck-card-desktop" style={{ backgroundImage: `url(${backgroundPopup})`}} >
+                          <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-10px'}}/></h1>
   
                           <div className="deck-content">
                               <img className="new-deck-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
@@ -1496,57 +1517,9 @@ const NewDeck = () => {
                         <div className='valid-form-container'>      
                           <button className='valid-popup' disabled={displayLoading} onClick={() => createCedh()}><h4 className='valid-popup-title'>Créer le deck</h4></button> 
                         </div>    
-                </div> 
               </div>
     
-
-
-              <h2 className='deck-card-medium-name'>{name} <ButtonModif onClick={() => returnName()} /></h2>
-                <div className="deck-card-medium">
-                                    <div className="img-container">
-                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
-                                    </div>
-          
-                
-                  <div className="new-deck-body-mobile" style={{ backgroundImage: `url(${backgroundPopup})`}} >
-
-
-                    <div className='cedh-line-attribut'>
-                                      <h4 className='new-deck-line-title' > Commandant : </h4>
-                                      <h3 className='new-deck-cedh' onMouseEnter={() => hoveredCard(cedh.id) } onMouseOut={() => hoveredCard()}
-                                        > {cedh.name}<ButtonModif onClick={() => returnCedh()} 
-                                        style={{marginTop: '-20px'}}  /> </h3>
-                                      {detailsCard && detailsCard.id === cedh.id && (
-                                            <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `http://localhost:8080${cedh.image}` : cedh.image} alt="Card-image"/>
-                                        )} 
-                                </div> 
-                                                              
-                    <div className='card-line-attribut'>                        
-                                                    <h4 className='new-deck-line-title'> Couleurs : </h4> 
-                                                    <div className='color-modif'>
-                                                      {colors && colors.length > 0 && (
-                                                          <div className='mapping-color'>
-                                                            {colors.map((color, index)  => (
-                                                          <img key={index} src={getColorPics(color)} className="color-img-new-deck" alt={color}/>                                
-                                                      ))}
-                                                          </div>
-                                                      )} 
-                                                    </div>
-                      </div>
-                      <div className='card-line-attribut'>              
-                                  <h4 className='new-deck-line-title' style={{marginTop: '10px'}}> Format : </h4> 
-                                  <p className='new-deck-format' >{format}</p>
-                                  <ButtonModif onClick={() => returnFormat()} />
-                      </div>
-                                                                                                      
-                      <button style={{marginBottom: '5%', marginTop: '5%', paddingLeft: '2%', paddingRight: '2%'}} className="valid-form" 
-                      onClick={() => createCedh()} disabled={displayLoading} ><h4>Créer le deck</h4></button>                                          
-                    </div> 
-                </div>  
-
-              
-
-              <h2 className='deck-card-mobile-name'>{name} <ButtonModif onClick={() => returnName()} style={{marginLeft : '10px'}} /></h2>
+              <h2 className='deck-card-mobile-name'>{name} <ButtonModif onClick={() => returnName()} style={{marginLeft : '10px', marginTop : '5px'}} /></h2>
               <div className="deck-card-mobile" >
                                   <div className="img-container">
                                                         <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
@@ -1555,8 +1528,8 @@ const NewDeck = () => {
               
                 <div className="new-deck-body-mobile" >
 
-                    <div className='card-line-attribut'>
-                                                  <h4 className='format'>Commandant :</h4>
+                    <div className='card-line-attribut' style={{gap:'0px'}}>
+                                                  <h4 className='format' style={{marginRight:'10px'}}>Commandant :</h4>
                                                   <h2 className='card-cedh'><strong>{cedh.name} <ButtonModif style={{marginTop : '-10px'}} onClick={() => returnCedh()} /></strong></h2>
                     </div>
                                                              
@@ -1581,8 +1554,6 @@ const NewDeck = () => {
                   </div> 
               </div> 
               
-
-
         </div>
 
               

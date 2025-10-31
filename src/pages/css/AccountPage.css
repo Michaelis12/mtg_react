@@ -35,6 +35,7 @@
       background-color: #5D3B8C;
       color: white;
       width: 100%;
+      text-align: center;
   }
 
 .valid-edit-button:disabled {
@@ -53,6 +54,10 @@
   display: none;
 
 }
+
+  .valid-edit-button-title {
+    margin-bottom: 0;
+  }
 
 
 @media (max-width: 1000px) {
@@ -98,17 +103,18 @@
 
 }
 
-
+@media (max-width: 600px) {
+ .input-bio {
+    font-size: 0.8em;
+  }
+}
 
 @media (max-width: 500px) {
 
   .user-input-pseudo { 
-      font-size: 1.4em;
+      font-size: 1em;
 }
 
-  .input-bio {
-    font-size: 0.8em;
-  }
 
   .valid-edit-button {
     padding: 10px;
