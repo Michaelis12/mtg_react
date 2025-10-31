@@ -104,6 +104,10 @@
     .compenant-reset-searchbar {
        font-size: 2em;
     }
+
+    .compenant-reset-searchbar {
+      margin-left: 70%;
+    }
   }
 
 

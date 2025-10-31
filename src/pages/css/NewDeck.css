@@ -1009,9 +1009,7 @@
       margin-top: -60px;
     }
 
-    .deck-selected-img {
-      margin-top: 30px;
-    }
+    
 
 
     .deck-colors-img {
@@ -1027,6 +1025,6 @@
   }
 
   .input-img-container {
-    margin-top: 180px;
+    margin-top: 0px;
   }
   }

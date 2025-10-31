@@ -265,7 +265,6 @@ h1, h2, h3 {
     flex-wrap: wrap;
     justify-content: center;
     height: 90%;
-    gap: 20px 10px;
 }
 
     .p-tutorial {

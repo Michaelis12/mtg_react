@@ -16,6 +16,7 @@
     max-height: 50vh;
     width: 70%;
     overflow-y: scroll;
+    overflow-x: hidden;
 } 
 
 
@@ -49,6 +50,10 @@ li {
     .checkbox-rarity-p {
         font-size: 0.6em;
          min-width: 50px;
+    }
+
+    .compenant-checkbox-map-large {
+         max-height: 250px;
     }
 
 }
