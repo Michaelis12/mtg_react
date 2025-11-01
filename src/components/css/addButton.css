@@ -4,13 +4,13 @@
     height: 40px;   
     padding: 0;
     border: 'none';  
-    background-color: #f8f9fa;
+    background-color: transparent;
 }
 
 .addButton:hover {
     cursor: pointer;
     border: 'none';
-    background-color: #f8f9fa;
+    background-color: transparent;
 }
 
 .addButton:disabled {
@@ -44,7 +44,6 @@
   .addButton {
     width: 20px;                 
     height: 20px; 
-    background-color: red;
   }
 
   .icon-add-card {

@@ -15,6 +15,7 @@ import Card from '../model/CardApiSave';
 import axios from "axios";
 import axiosInstance from '../api/axiosInstance';
 import "./css/CardsPage.css";
+import backgroundWhite from "../assets/background_white.png"
 import defaultImg from "../assets/mtg-card-back.jpg"
 import white from "../assets/white-mtg.png"
 import blue from "../assets/blue-mtg.png"
@@ -722,16 +723,22 @@ React.useEffect(() => {
             <OpenButtonLarge  text="Afficher les filtres" icon={arrowFiltersSens} onClick={OpenFilters}/>
 
             <div className="search-line">            
-              <SearchBar value={name} onChange={(event) => (setName(event.target.value))}
-              style={{position : "relative"}}
-              onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
-              onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName() }} />
-
-              <SearchBar value={text}  onChange={(event) => (setText(event.target.value))}
-                style={{position : "relative", marginBottom: '30px'}}
-                onClick={() => (setFilterText(text))} placeholder={" Chercher le texte d'une carte"}
-                onPush={() => (setText(""), setFilterText(""))}
-                iconStyle={{ display: displayResetText()}} />
+             <div className="search-line">            
+                           <SearchBar value={name} onChange={(event) => (setName(event.target.value))} 
+                                         filter={filterName}  
+                                         prompt={name}                        
+                                         style={{position : "relative"}}                           
+                                         onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
+                                         onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName() }} />
+             
+                           <SearchBar value={text}  onChange={(event) => (setText(event.target.value))}
+                                           filter={filterText}
+                                           prompt={text}
+                                           style={{position : "relative", marginBottom: '30px'}}
+                                           onClick={() => (setFilterText(text))} placeholder={" Chercher le texte d'une carte"}
+                                           onPush={() => (setText(""), setFilterText(""))}
+                                           iconStyle={{ display: displayResetText()}} /> 
+                         </div>
             </div>
 
               {/*Les filtres pour la requete de carte*/}
@@ -1006,6 +1013,238 @@ React.useEffect(() => {
                    
 
               </div>
+
+              { displayFilters && (
+                                                      <div className="filters-line-mobile">
+                                                        <div className='filter-mobile-container' style={{ backgroundImage: `url(${backgroundWhite})`}} >
+                                                        <SearchBar value={name} onChange={(event) => (setName(event.target.value))} 
+                                                          filter={filterName}  
+                                                          prompt={name}                        
+                                                          style={{position : "relative"}}                           
+                                                          onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
+                                                          onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName() }} />
+                            
+                                                        <SearchBar value={text}  onChange={(event) => (setText(event.target.value))}
+                                                                      filter={filterText}
+                                                                      prompt={text}
+                                                                      style={{position : "relative"}}
+                                                                      onClick={() => (setFilterText(text))} placeholder={" Chercher le texte d'une carte"}
+                                                                      onPush={() => (setText(""), setFilterText(""))}
+                                                                      iconStyle={{ display: displayResetText()}} /> 
+                                                        
+                                                        <div className="filter-manaCost-container">
+                                                          <OpenButton text="Filtrer par cout en mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />
+                                                          {displayFilterManaCost && (
+                                                          <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
+                                                            <InputManaCost style={{width: '150px', marginTop: "10px"}}  value={inputManaCostMin}
+                                                              onChange={(event) => (setInputManaCostMin(event.target.value))} placeholder={"min"}/>
+                                                            <InputManaCost style={{width: '150px'}} value={inputManaCostMax}
+                                                            onChange={(event) => (setInputManaCostMax(event.target.value))} placeholder={"max"}/>
+                                                            <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterManaCost()} />
+                                                          </div>
+                                                          )}
+                                                        </div> 
+                                        
+                                                        <div className="filter-colors-container">
+                                                                              <OpenButton text="Filtrer par couleur" icon={arrowColorSens} onClick={OpenFilterColor} />
+                                                                                {displayFilterColors && (
+                                                                                  <div className='add-card-filter-container' style={{ zIndex: filterZIndex-- }}>
+                                                                                    <div className="compenant-checkbox">
+                                                                                      <div className="compenant-checkbox-map-large">
+              
+                                                                                          {[ 
+                                                                                            { value: "W"},
+                                                                                            { value: "U"},
+                                                                                            { value: "B"},
+                                                                                            { value: "R"},
+                                                                                            { value: "G"},
+                                                                                          ].map((color, index) => (
+                                                                                            <li className="li-checkbox" key={index}>
+                                                                                              <input
+                                                                                                className='component-input'
+                                                                                                type="checkbox"
+                                                                                                name={color.value}
+                                                                                                value={color.value}
+                                                                                                onChange={(event) => selectColors(event.target.value)}
+                                                                                                checked={filterColors.includes(color.value) && !filterColors.includes("colorless")}
+                                                                                              />
+                                                                                              <img src={getColorPics(color.value)} className="filter-color-img" alt={color}/>
+                                                                                            </li>
+                                                                                          ))}
+                                                                                          <li className="li-checkbox">
+                                                                                              <input
+                                                                                                className='component-input'
+                                                                                                type="checkbox"
+                                                                                                name="colorless"
+                                                                                                value="colorless"
+                                                                                                onChange={(event) => selectColors(event.target.value)}
+                                                                                                checked={filterColors.includes("colorless")}
+                                                                                              />
+                                                                                              <img src={getColorPics("colorless")} className="filter-color-img" alt="colorless"/>
+                                                                                            </li>
+              
+                                                                                      </div>
+                                                                                      <TbFilterCancel className='compenant-reset' onClick={removeColors}/>
+                                                                                    </div>
+                                                                                  </div>
+                                                                                )}
+                                                        </div> 
+                            
+                                                        <div className="filter-types-container">
+                                                        <OpenButton text="Filtrer par type" icon={arrowTypeSens} onClick={OpenFilterType} />
+                                                        {displayFilterTypes && (
+                                                          <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
+                                                            <div className="compenant-checkbox">
+                                                                <div className="compenant-checkbox-map-large">
+                                                                  {[
+                                                                    "Artifact",
+                                                                    "Creature",
+                                                                    "Enchantment",
+                                                                    "Instant",
+                                                                    "Land",
+                                                                    "Planeswalker",
+                                                                    "Sorcery",
+                                                                    "Battle",
+                                                                    "Conspiracy",
+                                                                    "Tribal",
+                                                                    "Vanguard",
+                                                                    "Artifact Creature",
+                                                                    "Enchantment Creature",
+                                                                    "Artifact Land"
+                                                                  ].map((type, index) => (
+                                                                    <li className="li-checkbox" key={index}>
+                                                                      <input
+                                                                        className='component-input'
+                                                                        type="checkbox"
+                                                                        name={type}
+                                                                        value={type}
+                                                                        onChange={(event) => selectTypes(event.target.value)}
+                                                                        checked={filterTypes.includes(type)}
+                                                                      />
+                                                                      <p style={{margin: '0px'}} className='checkbox-type-p'>{type.toUpperCase()}</p>
+                                                                    </li>
+                                                                  ))}
+                                                                  
+                                                                </div>
+                                                                <TbFilterCancel className='compenant-reset' onClick={removeTypes}/>
+                                                          </div>  
+                                                          </div>
+                                                        )}  
+                                                      </div>
+                            
+                                                      <div className="filter-legendary-container">
+                                                      <OpenButton
+                                                        text="Filtrer les légendaires"
+                                                        icon={arrowLegendarySens}
+                                                        onClick={OpenFilterLegendary}
+                                                      />
+                            
+                                                        {displayFilterLegendary && (
+                                                          <div className='add-card-filter-container' style={{ zIndex: filterZIndex-- }}>
+                                                            <div className="compenant-checkbox">
+                                                              <div className="compenant-checkbox-map-large">
+                            
+                                                                  <li className="li-checkbox">
+                                                                    <input
+                                                                      className='component-input'
+                                                                      type="checkbox"
+                                                                      name="Legendary"
+                                                                      value="Legendary"
+                                                                      onChange={() => setFilterLegendary(!filterLegendary)}
+                                                                      checked={filterLegendary}
+                                                                    />
+                                                                    <p
+                                                                      className='checkbox-type-p'
+                                                                      style={{ margin: '0px' }}
+                                                                    >
+                                                                      LEGENDAIRE
+                                                                    </p>
+                                                                  </li>
+                            
+                                                              </div>
+                                                              <TbFilterCancel className='compenant-reset' onClick={() => setFilterLegendary("")}/>
+                                                            </div>
+                                                          </div>
+                                                        )}
+                                                       </div> 
+                                                               
+                                                        <div className="filter-rarities-container">
+                                                        <OpenButton
+                                                          text="Filtrer par rareté"
+                                                          icon={arrowRaritiesSens}
+                                                          onClick={OpenFilterRarities}
+                                                        />
+                                        
+                                                        {displayFilterRarities && (
+                                                          <div className='add-card-filter-container' style={{ zIndex: filterZIndex-- }}>
+                                                            <div className="compenant-checkbox">
+                                                              <div className="compenant-checkbox-map-large">
+                                        
+                                                                {[
+                                                                  { value: "mythic", label: "MYTHIQUE" },
+                                                                  { value: "rare", label: "RARE" },
+                                                                  { value: "uncommon", label: "UNCO" },
+                                                                  { value: "common", label: "COMMUNE" }
+                                                                ].map((rarity, index) => (
+                                                                  <li className="li-checkbox" key={index}>
+                                                                    <input
+                                                                      className='component-input'
+                                                                      type="checkbox"
+                                                                      name={rarity.value}
+                                                                      value={rarity.value}
+                                                                      onChange={(event) => selectRarities(event.target.value)}
+                                                                      checked={filterRarities.includes(rarity.value)}
+                                                                    />
+                                                                    <p
+                                                                      className='checkbox-rarity-p'
+                                                                      style={{ background: getBackgroundColor(rarity.value), margin: '0px' }}
+                                                                    >
+                                                                      {rarity.label}
+                                                                    </p>
+                                                                  </li>
+                                                                ))}
+                                        
+                                                              </div>
+                                                              <TbFilterCancel className='compenant-reset' onClick={removeRarities}/>
+                                                            </div>
+                                                          </div>
+                                                        )}
+                                                        </div>
+                                        
+                                                        <div className="filter-editions-container" >
+                                                                          <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
+                                                                          { displayFilterEditions && ( 
+                                                                            <div className='add-card-filter-container' style={{zIndex: filterZIndex--}} >
+                                                                              <div className="compenant-checkbox">
+                                                                                <div className="compenant-checkbox-map-large" style={{width:"100%"}}>
+                                                                                  {editions.map((edition, index) => (
+                                                                                      <li className="li-checkbox" key={index} style={{width:"90%"}}>
+                                                                                        <input
+                                                                                          className='component-input'
+                                                                                          type="checkbox"
+                                                                                          name={edition.name}
+                                                                                          value={edition.code}
+                                                                                          onChange={(event) => selectEditions(event.target.value)}
+                                                                                          checked={filterEditions.includes(edition.code)}
+                                                                                        />
+                                                                                        <p
+                                                                                          className='checkbox-type-p'
+                                                                                          style={{ margin: '0px' }}
+                                                                                        >
+                                                                                          {edition.name}
+                                                                                        </p>
+                                                                                      </li>
+                                                                                    ))}
+                                                                                </div>
+                                                                                 <TbFilterCancel className='compenant-reset' onClick={removeEditions}/>
+                                                                              </div>
+                                                                            </div>
+                                                                          )}
+                                                        </div>
+                                           
+                                                        </div>
+                                                      </div>
+                                          )}
 
  
             

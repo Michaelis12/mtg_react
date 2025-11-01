@@ -1,4 +1,4 @@
-.button-return{
+.button-return, .button-cancel {
         background-color: white;
         border: 3px solid #5D3B8C;
          display: flex;
@@ -17,6 +17,15 @@
     background-color: white;
   }
 
+  .button-cancel:hover {
+    transform: scale(0.9);
+    background-color: white;
+  }
+
+  .button-cancel:disabled {
+    display: none;
+  }
+
 
   .icon-button-fixed {
     width: 70px;
@@ -26,7 +35,7 @@
 
 
 @media (max-width: 500px) {
-  .button-return {
+  .button-return, .button-cancel {
     height: 50px;
      width: 50px;
   }

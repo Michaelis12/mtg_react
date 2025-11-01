@@ -9,6 +9,7 @@
       justify-content: space-between; /* Espace entre les deux éléments */
       align-items: center; /* Aligne verticalement les éléments au centre */
       border: 5px;
+      border-radius: 5px;
       width: 90%;
       margin-left: 5%;
       margin-top: 5%;

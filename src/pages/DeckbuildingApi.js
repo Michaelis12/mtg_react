@@ -551,6 +551,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             const nextCard =  () => {
                                         const currentIndex = navigateListID.indexOf(cardID);
                                          const currentImage = listImage.indexOf(cardImage);
+                                         console.log("cc")
             
                                         if (currentIndex >= 0 && currentIndex < navigateListID.length - 1) {
                                             setCardID(navigateListID[currentIndex + 1]);
@@ -976,12 +977,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                     </div>
                                     <div className="card-medium-body" >
                                     
-                                    {!deck.isPublic && (
-                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
-                                    )}
-                                    {deck.isPublic && (
-                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
-                                    )}
                                                                 
                                     <div className='attribut-mobile-container'>
                                                                       <h4 className='deck-selected-line-title'> Format : </h4>
@@ -999,12 +994,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                         </div>
                                                                       )}                                                      
                                     </div> 
-                
-                                    <div className='attribut-mobile-container'>              
-                                                                    <h4 className='deck-selected-line-title'> Valeur totale : </h4> 
-                                                                    <h3><strong>{deck.value} €</strong></h3>
-                                    </div>
-                
+
+
                                     <div className='attribut-mobile-container'>              
                                                                     <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
                                                                     <h3><strong>{cmc}</strong></h3>

@@ -17,6 +17,7 @@ import OpenButtonLarge from '../components/openButtonLarge';
 import SearchBar from '../components/searchBar';
 import InputManaCost from '../components/inputManaCoast';
 import AddButton from '../components/addButton';
+import ButtonCancel from '../components/buttonCancel';
 import ButtonValid from '../components/buttonValid';
 import Card from '../model/CardApi';
 import axios from "axios";
@@ -605,7 +606,10 @@ const CardsDeckPage = () => {
                 });
         };
         
-        
+        // Refiltre selon toutes les couleurs du deck
+          const removeEditions = () => {
+           setFilterEditions([])
+          } 
         
         // Affiche le filtre des éditions
         const OpenFilterEdition = () => {
@@ -698,10 +702,10 @@ const CardsDeckPage = () => {
         const changeIcon = (id) => {
           const cardIds = cardsSelected.map(card => card.id);
           if(!cardIds.includes(id)) {
-                          return <CgAdd size={'2.5em'} color={'black'} className="icon-add-card"/>
+                          return <CgAdd size={'2.5em'} color={'black'}/>
                           }
                           else {
-                              return <CgCloseO size={'2.5em'} color={'red'} className="icon-add-card"/>
+                              return <CgCloseO size={'2.5em'} color={'red'}/>
                           } 
         } 
         
@@ -819,16 +823,23 @@ const CardsDeckPage = () => {
             <OpenButtonLarge  text="Afficher les filtres" icon={arrowFiltersSens} onClick={OpenFilters}/>
 
             <div className="search-line">            
-              <SearchBar value={name} onChange={(event) => (setName(event.target.value))}
-              style={{position : "relative", width: '80%'}}
-              onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
-              onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName(), position: 'absolute', marginLeft: '75%' }} />
+
+              <SearchBar value={name} onChange={(event) => (setName(event.target.value))} 
+                            filter={filterName}  
+                            prompt={name}                        
+                            style={{position : "relative"}}                           
+                            onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
+                            onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName() }} />
 
               <SearchBar value={text}  onChange={(event) => (setText(event.target.value))}
-                style={{position : "relative", width: '80%', marginBottom: '30px'}}
-                onClick={() => (setFilterText(text))} placeholder={" Chercher le texte d'une carte"}
-                onPush={() => (setText(""), setFilterText(""))}
-                iconStyle={{ display: displayResetText(), position: 'absolute', marginLeft: '75%'  }} />
+                              filter={filterText}
+                              prompt={text}
+                              style={{position : "relative", marginBottom: '30px'}}
+                              onClick={() => (setFilterText(text))} placeholder={" Chercher le texte d'une carte"}
+                              onPush={() => (setText(""), setFilterText(""))}
+                              iconStyle={{ display: displayResetText()}} /> 
+
+              
             </div>
 
             {/*Les filtres pour la requete de carte*/}
@@ -932,33 +943,6 @@ const CardsDeckPage = () => {
                 )}
                 </div>
 
-                <div className="filter-editions-container" >
-                  <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
-                  { displayFilterEditions && ( 
-                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--}} >
-                      {editions.map((edition, index) => (
-                          <li className="li-checkbox" key={index}>
-                            <input
-                              className='component-input'
-                              type="checkbox"
-                              name={edition.name}
-                              value={edition.code}
-                              onChange={(event) => selectEditions(event.target.value)}
-                              checked={filterEditions.includes(edition.code)}
-                            />
-                            <p
-                              className='checkbox-type-p'
-                              style={{ margin: '0px' }}
-                            >
-                              {edition.name}
-                            </p>
-                          </li>
-                        ))}
-                    </div>
-                  )}
-                </div>
-
-                    
                 <div className="filter-types-container">
                   <OpenButton text="Filtrer par type" icon={arrowTypeSens} onClick={OpenFilterType} />
                   {displayFilterTypes && (
@@ -1036,17 +1020,278 @@ const CardsDeckPage = () => {
                   </div>
                 )}
                 </div>
+
+                <div className="filter-editions-container" >
+                                  <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
+                                  { displayFilterEditions && ( 
+                                    <div className='add-card-filter-container' style={{zIndex: filterZIndex--}} >
+                                      <div className="compenant-checkbox">
+                                        <div className="compenant-checkbox-map-large" style={{width:"100%"}}>
+                                          {editions.map((edition, index) => (
+                                              <li className="li-checkbox" key={index} style={{width:"90%"}}>
+                                                <input
+                                                  className='component-input'
+                                                  type="checkbox"
+                                                  name={edition.name}
+                                                  value={edition.code}
+                                                  onChange={(event) => selectEditions(event.target.value)}
+                                                  checked={filterEditions.includes(edition.code)}
+                                                />
+                                                <p
+                                                  className='checkbox-type-p'
+                                                  style={{ margin: '0px' }}
+                                                >
+                                                  {edition.name}
+                                                </p>
+                                              </li>
+                                            ))}
+                                        </div>
+                                         <TbFilterCancel className='compenant-reset' onClick={removeEditions}/>
+                                      </div>
+                                    </div>
+                                  )}
+                </div>
+
+                  
                    
 
             </div>
+
+            {/*Les filtres formats mobile*/}                         
+            { displayFilters && (
+                          <div className="filters-line-mobile">
+                            <div className='filter-mobile-container' style={{ backgroundImage: `url(${backgroundPopup})`}} >
+                            <SearchBar value={name} onChange={(event) => (setName(event.target.value))} 
+                              filter={filterName}  
+                              prompt={name}                        
+                              style={{position : "relative"}}                           
+                              onClick={() => (setFilterName(name))} placeholder={" Chercher une carte"}
+                              onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName() }} />
+
+                            <SearchBar value={text}  onChange={(event) => (setText(event.target.value))}
+                                          filter={filterText}
+                                          prompt={text}
+                                          style={{position : "relative"}}
+                                          onClick={() => (setFilterText(text))} placeholder={" Chercher le texte d'une carte"}
+                                          onPush={() => (setText(""), setFilterText(""))}
+                                          iconStyle={{ display: displayResetText()}} /> 
+                            
+                            <div className="filter-manaCost-container">
+                              <OpenButton text="Filtrer par cout en mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />
+                              {displayFilterManaCost && (
+                              <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
+                                <InputManaCost style={{width: '150px', marginTop: "10px"}}  value={inputManaCostMin}
+                                  onChange={(event) => (setInputManaCostMin(event.target.value))} placeholder={"min"}/>
+                                <InputManaCost style={{width: '150px'}} value={inputManaCostMax}
+                                onChange={(event) => (setInputManaCostMax(event.target.value))} placeholder={"max"}/>
+                                <TbFilterCancel className='compenant-reset' onClick={()=> ResetFilterManaCost()} />
+                              </div>
+                              )}
+                            </div> 
+            
+                            {!deckColors.includes("colorless") &&(
+                                <div className="filter-colors-container">
+                                                  <OpenButton text="Filtrer par couleur" icon={arrowColorSens} onClick={OpenFilterColor} />
+                                                    {displayFilterColors && (
+                                                      <div className='add-card-filter-container' style={{ zIndex: filterZIndex-- }}>
+                                                        <div className="compenant-checkbox">
+                                                          <div className="compenant-checkbox-map-large">
+                                
+                                                            {deckColors.map((color, index) => (
+                                                              <li className="li-checkbox" key={index}>
+                                                                <input
+                                                                  className='component-input'
+                                                                  type="checkbox"
+                                                                  name={color}
+                                                                  value={color}
+                                                                  onChange={(event) => selectColors(event.target.value)}
+                                                                  checked={filterColors.includes(color)}
+                                                                />
+                                                                <img src={getColorPics(color)} className="filter-color-img" alt={color}/>
+                                                              </li>
+                                                            ))}
+                                                            <li className="li-checkbox">
+                                                                <input
+                                                                  className='component-input'
+                                                                  type="checkbox"
+                                                                  name="colorless"
+                                                                  value="colorless"
+                                                                  onChange={(event) => selectColors(event.target.value)}
+                                                                  checked={filterColors.includes("colorless")}
+                                                                />
+                                                                <img src={getColorPics("colorless")} className="filter-color-img" alt="colorless"/>
+                                                              </li>
+                                                          </div>
+                                                          <TbFilterCancel className='compenant-reset' onClick={removeColors}/>
+                                                        </div>
+                                                      </div>
+                                                    )}
+                                                </div> 
+                              )} 
+
+                            <div className="filter-types-container">
+                            <OpenButton text="Filtrer par type" icon={arrowTypeSens} onClick={OpenFilterType} />
+                            {displayFilterTypes && (
+                              <div className='add-card-filter-container' style={{zIndex: filterZIndex--}}>
+                                <div className="compenant-checkbox">
+                                    <div className="compenant-checkbox-map-large">
+                                      {[
+                                        "Artifact",
+                                        "Creature",
+                                        "Enchantment",
+                                        "Instant",
+                                        "Land",
+                                        "Planeswalker",
+                                        "Sorcery",
+                                        "Battle",
+                                        "Conspiracy",
+                                        "Tribal",
+                                        "Vanguard",
+                                        "Artifact Creature",
+                                        "Enchantment Creature",
+                                        "Artifact Land"
+                                      ].map((type, index) => (
+                                        <li className="li-checkbox" key={index}>
+                                          <input
+                                            className='component-input'
+                                            type="checkbox"
+                                            name={type}
+                                            value={type}
+                                            onChange={(event) => selectTypes(event.target.value)}
+                                            checked={filterTypes.includes(type)}
+                                          />
+                                          <p style={{margin: '0px'}} className='checkbox-type-p'>{type.toUpperCase()}</p>
+                                        </li>
+                                      ))}
+                                      
+                                    </div>
+                                    <TbFilterCancel className='compenant-reset' onClick={removeTypes}/>
+                              </div>  
+                              </div>
+                            )}  
+                          </div>
+
+                          <div className="filter-legendary-container">
+                          <OpenButton
+                            text="Filtrer les légendaires"
+                            icon={arrowLegendarySens}
+                            onClick={OpenFilterLegendary}
+                          />
+
+                            {displayFilterLegendary && (
+                              <div className='add-card-filter-container' style={{ zIndex: filterZIndex-- }}>
+                                <div className="compenant-checkbox">
+                                  <div className="compenant-checkbox-map-large">
+
+                                      <li className="li-checkbox">
+                                        <input
+                                          className='component-input'
+                                          type="checkbox"
+                                          name="Legendary"
+                                          value="Legendary"
+                                          onChange={() => setFilterLegendary(!filterLegendary)}
+                                          checked={filterLegendary}
+                                        />
+                                        <p
+                                          className='checkbox-type-p'
+                                          style={{ margin: '0px' }}
+                                        >
+                                          LEGENDAIRE
+                                        </p>
+                                      </li>
+
+                                  </div>
+                                  <TbFilterCancel className='compenant-reset' onClick={() => setFilterLegendary("")}/>
+                                </div>
+                              </div>
+                            )}
+                           </div> 
+                                   
+                            <div className="filter-rarities-container">
+                            <OpenButton
+                              text="Filtrer par rareté"
+                              icon={arrowRaritiesSens}
+                              onClick={OpenFilterRarities}
+                            />
+            
+                            {displayFilterRarities && (
+                              <div className='add-card-filter-container' style={{ zIndex: filterZIndex-- }}>
+                                <div className="compenant-checkbox">
+                                  <div className="compenant-checkbox-map-large">
+            
+                                    {[
+                                      { value: "mythic", label: "MYTHIQUE" },
+                                      { value: "rare", label: "RARE" },
+                                      { value: "uncommon", label: "UNCO" },
+                                      { value: "common", label: "COMMUNE" }
+                                    ].map((rarity, index) => (
+                                      <li className="li-checkbox" key={index}>
+                                        <input
+                                          className='component-input'
+                                          type="checkbox"
+                                          name={rarity.value}
+                                          value={rarity.value}
+                                          onChange={(event) => selectRarities(event.target.value)}
+                                          checked={filterRarities.includes(rarity.value)}
+                                        />
+                                        <p
+                                          className='checkbox-rarity-p'
+                                          style={{ background: getBackgroundColor(rarity.value), margin: '0px' }}
+                                        >
+                                          {rarity.label}
+                                        </p>
+                                      </li>
+                                    ))}
+            
+                                  </div>
+                                  <TbFilterCancel className='compenant-reset' onClick={removeRarities}/>
+                                </div>
+                              </div>
+                            )}
+                            </div>
+            
+                            <div className="filter-editions-container" >
+                                              <OpenButton text="Filtrer par édition" icon={arrowEditionSens} onClick={OpenFilterEdition} />
+                                              { displayFilterEditions && ( 
+                                                <div className='add-card-filter-container' style={{zIndex: filterZIndex--}} >
+                                                  <div className="compenant-checkbox">
+                                                    <div className="compenant-checkbox-map-large" style={{width:"100%"}}>
+                                                      {editions.map((edition, index) => (
+                                                          <li className="li-checkbox" key={index} style={{width:"90%"}}>
+                                                            <input
+                                                              className='component-input'
+                                                              type="checkbox"
+                                                              name={edition.name}
+                                                              value={edition.code}
+                                                              onChange={(event) => selectEditions(event.target.value)}
+                                                              checked={filterEditions.includes(edition.code)}
+                                                            />
+                                                            <p
+                                                              className='checkbox-type-p'
+                                                              style={{ margin: '0px' }}
+                                                            >
+                                                              {edition.name}
+                                                            </p>
+                                                          </li>
+                                                        ))}
+                                                    </div>
+                                                     <TbFilterCancel className='compenant-reset' onClick={removeEditions}/>
+                                                  </div>
+                                                </div>
+                                              )}
+                            </div>
+               
+                            </div>
+                          </div>
+              )}
             
             {/*Titre d'affichage des cartes*/}
             <div className='title-cards-dispo-container'>
               <Title title='Cartes disponibles'/>
             </div>
-
+          
+           {/*Mapping des cartes*/}
           <div className='display-objects-section'>
-              {/*Mapping des cartes*/}    
               <div className='map-cards-section'>
               
                 {cards.map(card => ( 
@@ -1103,7 +1348,7 @@ const CardsDeckPage = () => {
 
                           {/*Le bouton + si la carte n'est pas encore dans le deck*/}
                         { !deckCards.includes(card.id) && !cardsSelected.some(c => c.id === card.id) && (
-                          <AddButton onClick={() => selectCard(card)} style={{ backgroundColor: 'white', margin : '2%', marginBottom: '7%', border: 'none' }}
+                          <AddButton onClick={() => selectCard(card)} style={{margin : '2%', border: 'none' }}
                                 icon={<CgAdd size={'2.5em'} color={'black'} />} />
                           )}
   
@@ -1115,7 +1360,7 @@ const CardsDeckPage = () => {
                             disabled={lessCard(card)} >
                               <AiOutlineMinusCircle  className="icon-add-card" size={'3em'} color={'black'} />
                             </button>
-                            <p className='p-card-length' style={{ fontWeight: 'bold', marginTop: '1%' }}>{count(card)}</p>
+                            <p className='p-card-length' style={{ fontWeight: 'bold'}}>{count(card)}</p>
                             <button className="add-button-deckbuilding" disabled={count(card) > 3} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => selectCard(card)} >
                               <CgAdd className="icon-add-card" size={'3em'} color={'black'} />
                             </button> 
@@ -1132,9 +1377,12 @@ const CardsDeckPage = () => {
                       )}  
                   </div>
                 ))}
-              
-                <ButtonValid style={{position: 'fixed', bottom: '15px', right: '50px'}}
-                onClick={()=>setDisplayPopup(true)} disabled={cardsSelected.length === 0} text={'+ ' + cardsSelected.length + ' cartes'}/>
+                <div className='button-nav-new-deck-container'>
+                <ButtonCancel style={{border: "3px red solid"}} disabled={cardsSelected.length <1} 
+                onClick={()=>(setCardsSelected([]), setCardsSelectedUnit([]))} />
+                <ButtonValid 
+                onClick={()=>setDisplayPopup(true)} disabled={cardsSelected.length === 0} />
+                </div>
 
                 
                 
@@ -1145,7 +1393,7 @@ const CardsDeckPage = () => {
               <button className='next-page-button' disabled={!hasMore} onClick={()=>displayMoreCards()}>Afficher plus</button> 
               )}
 
-            {/*Popup ajout de cartes*/} 
+            {/*Popup ajout de cartes*/}  
             { displayPopup && (
               <div className='popup-bckg'>
                        <div className='popup-cards-selected' style={{ backgroundImage: `url(${backgroundPopup})`}} >
@@ -1155,22 +1403,26 @@ const CardsDeckPage = () => {
                                               <div className='cards-selected-container'>
                                                 <img className='card-add-img' src={cardImage && cardImage.startsWith('/uploads/') ? `http://localhost:8080${cardImage}` : cardImage} alt="deck-img" />
                                                 <div className='cards-deck-unit-container'> 
+
                                                   {cardsSelectedUnit.map(card => ( 
                                                     <div className="land-text-details" id='land-card'  key={card.id}> 
-                                                        <h5 className='land-text-name' onMouseEnter={() => setCardImage( card.image ? card.image :  defaultImg)} >{card.name}</h5>
+                                                        <h5 className='land-text-name' onClick={() => setCardImage( card.image ? card.image :  defaultImg)} onMouseEnter={() => setCardImage( card.image ? card.image :  defaultImg)} >{card.name}</h5>
+                                                      
+                                                      <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: '10px'}}>
                                                       { format !== "commander" && !card.legendary && (
                                                         <div className='land-text-number'>                              
-                                                            <button className="addButton" style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => unselectCard(card)}
+                                                            <button className="add-button-deckbuilding" style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => unselectCard(card)}
                                                             disabled={lessCard(card)} >
-                                                              <AiOutlineMinusCircle  size={'2em'} color={'black'} />
+                                                              <AiOutlineMinusCircle className='icon-add-card'  size={'2.5em'} color={'black'} />
                                                             </button>
                                                             <p className='p-card-length' style={{ fontWeight: 'bold' }}> {cardsSelected.filter(cardSelected => cardSelected.id === card.id).length}</p>
-                                                            <button className="addButton" disabled={count(card) > 3} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} onClick={() => selectCard(card)} ><CgAdd size={'2em'} color={'black'} />
+                                                            <button className="add-button-deckbuilding" disabled={count(card) > 3} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }} 
+                                                             onClick={() => selectCard(card)} ><CgAdd className='icon-add-card' size={'2.5em'} color={'black'} />
                                                             </button> 
                                                         </div>
                                                       )}
                                                         <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(card)} />
-                                                        
+                                                      </div> 
                                                         {detailsCard && detailsCard.id === card.id && (
                                                         <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
                                                         )} 
@@ -1185,50 +1437,7 @@ const CardsDeckPage = () => {
                                                   </button>
                                                 </div>
                        </div> 
-                      {/*
-                        <div className='popup-cards-selected-mobile' style={{ backgroundImage: `url(${backgroundPopup})`}}>
-                            <div className='header-popup-cards-selected'>
-                              <h3>Cartes sélectionnées ({cardsSelected.length})</h3>
-                            </div>
-                            <div className='cards-selected-container-mobile'>
-                              
-
-                              <div className='button-nav-mobile'>   
-                                <IconButtonHover onClick={() => prevCard()} disabled={cardNumber === 0}
-                                icon={<MdOutlinePlayArrow className='icon-nav' style={{ transform: 'scaleX(-1)' }} />} />
-                                <IconButtonHover onClick={() => nextCard()}  disabled={cardNumber === cardsSelectedUnit.length - 1}
-                                icon={<MdOutlinePlayArrow className='icon-nav' />} />                   
-                              </div>
-                              <img className="card-selected-img-mobile"
-                                              src={cardsSelectedUnit[cardNumber].image && cardsSelectedUnit[cardNumber].image.startsWith('/uploads/') ? `http://localhost:8080${cardsSelectedUnit[cardNumber].image}` : cardsSelectedUnit[0].image} alt="Card mtg"/>
-                              <div className='cards-deck-unit-container'> 
-                                {cardsSelectedUnit.length > 0 && (
-                                  <div className="land-text-details" id='land-card' key={cardsSelectedUnit[cardNumber].id}>
-                                    { format !== "COMMANDER" && (
-                                    <div className='land-text-number'>                              
-                                      <button className="add-button-deckbuilding" style={{ backgroundColor: 'transparent', border: 'none' }} onClick={() => unselectCard(cardsSelectedUnit[cardNumber])}
-                                      disabled={lessCard(cardsSelectedUnit[cardNumber])} >
-                                     <AiOutlineMinusCircle className="icon-add-card-form" size={'2em'} color={'black'} />
-                                      </button> 
-                                      <p className='p-card-length' style={{ fontWeight: 'bold' }}> {cardsSelected.filter(cardSelected => cardSelected.id === cardsSelectedUnit[cardNumber].id).length}</p>
-                                      <button className="add-button-deckbuilding" disabled={count(cardsSelectedUnit[cardNumber]) > 3} style={{ backgroundColor: 'transparent', border: 'none'}}
-                                       onClick={() => selectCard(cardsSelectedUnit[cardNumber])} ><CgAdd className="icon-add-card-form" size={'2em'} color={'black'} />
-                                      </button> 
-                                      </div>
-                                    )}
-                                  <TiDeleteOutline className='delete-card-button-form' style={{marginTop: '2%'}}
-                                  color='red' size={'4em'} onClick={()=>unselectCards(cardsSelectedUnit[cardNumber])} />
-                                  </div>
-                                )}
-                                
-                              </div>
-                            </div>
-                            
-                              <button className='valid-popup' style={{padding : '2%'}} disabled={displayLoading}>
-                                <h4 className='valid-popup-title' onClick={() => addCards()}>Ajouter au deck</h4>
-                              </button>
-                        </div>
-                      */}
+                     
 
                       <div className='icon-close-popup-container-desktop'>
                         <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>(setDisplayPopup(false), setCardNumber(0), setCardImage(defaultImg))}/>

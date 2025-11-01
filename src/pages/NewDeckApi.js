@@ -980,7 +980,7 @@ const NewDeck = () => {
                             style={{position : "relative", marginBottom: '30px'}}
                             onClick={() => (setFilterText(textSelected))} placeholder={" Chercher le texte d'une carte"}
                             onPush={() => (setTextSelected(""), setFilterText(""))}
-                            iconStyle={{ display: displayResetText()}} />
+                            iconStyle={{ display: displayResetText()}} /> 
             </div>
 
                {/*Les filtres pour la requete de carte*/}
@@ -1260,7 +1260,7 @@ const NewDeck = () => {
                           onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                           />
                                             
-                          <AddButton style={{ backgroundColor: 'white', width:'40px', height: '40px' }} onClick={()=> selectCedh(card)}
+                          <AddButton  onClick={()=> selectCedh(card)}
                           icon={changeIcon(card.id)}/>
 
 
