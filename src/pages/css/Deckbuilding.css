@@ -290,7 +290,6 @@
 
 .set-attributs-deck {
     width: 40%;
-    margin-top: 4%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -401,8 +400,16 @@
     cursor: pointer;
 }
 
+.icon-close-popup-desktop:hover {
+    transform: scale(0.9);
+}
+
 .icon-close-popup-mobile {
     display: none;
+}
+
+.icon-close-popup-mobile:hover {
+    transform: scale(0.9);
 }
 
 @media (max-width: 700px) {

@@ -784,16 +784,17 @@ const AccountPage = () => {
                                             
                     </div>               
 
-                
+                    {/*Decks mappés*/}
                     <div className="user-attributs-container" style={{marginTop: '3%'}}>
 
                     <div className="open-buttons-container">
                         
                         {/*Mapping des decks créés*/}
-                        <TitleArrow onClick={()=>setNavDecks(!navDecks)} style={{marginTop: '0%'}}
-                                    title={`Mes decks (${deckBuilder?.decksNumber || 0})`}
-                                    icon={arrowSens}
-                        />
+                        <div style={{width: '100%'}}>
+                            <TitleArrow onClick={()=>setNavDecks(!navDecks)} style={{marginTop: '0%'}}
+                                        title={`Mes decks (${deckBuilder?.decksNumber || 0})`}
+                                        icon={arrowSens}
+                            />
 
                             {arrowUp === true && 
                             <div className='attributs-map-container'
@@ -810,7 +811,9 @@ const AccountPage = () => {
                                      style={deckPublicStyle(deck)}
                                      detailsDeck={detailsDeck} />
                                 ))} 
-                                    <div className="deck-details" >
+                                    <div className="deck-details" style={{display: 'flex', flexDirection: 'column',
+                                        justifyContent: 'center', alignItems: 'center', border: '1px solid black'
+                                    }} >
                                         <div className='new-deck-contenair'>
                                             <div className='new-deck-button-desktop'>
                                                 <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
@@ -822,14 +825,13 @@ const AccountPage = () => {
                                                 style={{ width: '100px', height: '100px', backgroundColor: '#1B1D40', marginBottom: '5%'
                                                         }}/>
                                             </div>
-                                            <h5><strong className="deck-named">Nouveau deck</strong></h5>                              
+                                            <h5><strong>Nouveau deck</strong></h5>                              
                                         </div>
-                                    <h6 className='deck-public' style={{visibility: 'hidden'}}>privé</h6>
-                                    <ButtonModif style={{visibility: 'hidden'}} />
                                     </div>  
                                 </div>                           
                             </div>
                             }
+                        </div>
 
                         {/*Mapping des cartes likées*/}
                         {/*
@@ -878,14 +880,15 @@ const AccountPage = () => {
 
                     
                     {/*Mapping des decks likés*/}
-                    <TitleArrow onClick={()=>(setArrowSens3((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>)),
-                            setArrowUp3(!arrowUp3))} 
-                                    title={`Mes decks likés (${deckBuilder?.decksLikedNumber || 0})`}
-                                    icon={arrowSens3}
-                        />
+                    <div style={{width: '100%'}} className='decks-liked-map-contenair'>
+                        <TitleArrow onClick={()=>(setArrowSens3((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>)),
+                                setArrowUp3(!arrowUp3))} 
+                                        title={`Mes decks likés (${deckBuilder?.decksLikedNumber || 0})`}
+                                        icon={arrowSens3}
+                            />
                     
-                                    {arrowUp3 === true && decksLiked.length > 0 &&
-                                    <div className="attributs-map-container" style={{ backgroundImage: `url(${BackgroundWhite})`, display: 'flex', flexDirection: 'column'}}>
+                        {arrowUp3 === true && decksLiked.length > 0 &&
+                            <div className="attributs-map-container" style={{ backgroundImage: `url(${BackgroundWhite})`, display: 'flex', flexDirection: 'column'}}>
                                         <div className='deck-liked-section'>
                                             {decksLiked.map(deck => ( 
                                                 <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
@@ -899,15 +902,16 @@ const AccountPage = () => {
                                                 detailsDeck={detailsDeck} />
                                             ))}
                                         </div>
-                                        <button className='next-page-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/decksLiked')}>Afficher en détails</button>
-                                    </div>
-                                    }
-                                    {arrowUp3 === true && decksLiked.length < 1 && (
+                                        <button className='details-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/decksLiked')}>Afficher en détails</button>
+                            </div>
+                        }
+                        {arrowUp3 === true && decksLiked.length < 1 && (
                                         <div className='p-blank-section' style={{ backgroundImage: `url(${BackgroundWhite})`}}>
                                                 <ParagraphBlank  text={"Aucun deck liké"}/>
                                         </div>
-                                                                                    )}
-                                    </div>
+                        )}
+                        </div>
+                    </div>
 
                     </div>  
 

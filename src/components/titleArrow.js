@@ -7,7 +7,7 @@
         <h1 className="titleArrow" style={props.style}
                     onClick={props.onClick}>
                     <span className="button-text">{props.title}</span>
-                    <span className="button-icon" style={{marginTop: '-2%'}}>{props.icon}</span>
+                    <span className="button-icon" style={{marginTop: '-3%'}}>{props.icon}</span>
         </h1>
                 ) 
 }

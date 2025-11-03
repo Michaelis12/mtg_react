@@ -6,6 +6,8 @@ import Card from '../model/CardApiSave';
 import backgroundPage from "../assets/background_cardsPage2.jpg"
 import backgroundHand from "../assets/background_hand.png"
 import backgroundPopup from "../assets/background_white.png"
+import BackgroundDeck from "../assets/background_deck_scelled.png"
+import BackgroundDeckAttributs from "../assets/old-paper.jpg"
 import backgroundCedh from "../assets/mtg_wallpaper.jpg"
 import white from "../assets/white-mtg.png"
 import blue from "../assets/blue-mtg.png"
@@ -493,9 +495,9 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             const openZoomPopup = (cardOrIndex) => {
                 if (cardOrIndex && cardOrIndex.image) {
 
-                    setCardImage(cardOrIndex.image);
-                    setCardID(cardOrIndex.id);
-                    if(deck.format === "commander") {
+                    
+
+                     if(deck.format === "commander") {
                         if(cardOrIndex.id === deckCedh.id) {
                         setNavigateListID([cardOrIndex.id]);
                         setListImage(cardOrIndex.image);
@@ -503,9 +505,22 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                         return
                         }
                     }
-                } else {
-                    setCardImage(null);
-                    setCardID(null);
+
+                    setCardImage(cardOrIndex.image);
+                    setCardID(cardOrIndex.id);
+
+                    console.log(cardOrIndex.types)
+
+                    const creatureIds = deckCards
+                    .filter(card => 
+                        card.types && 
+                        cardOrIndex.types && 
+                        cardOrIndex.types.some(type => card.types.includes(type))
+                    )
+                    .map(card => card.id);
+                    setNavigateListID(creatureIds);
+                   
+                } else {                    
                     setNavigateListID([]);
                 }
                 setDisplayZoomPopup(true);
@@ -521,17 +536,21 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             const [listImage, setListImage] = useState([]);
 
 
-              // Boutons navigation cartes
+            // Boutons navigation cartes
             const prevCard = () => {
-                                       const currentIndex = navigateListID.indexOf(cardID);
-                                       const currentImage = listImage.indexOf(cardImage);
-           
-                                       if (currentIndex > 0) {
-                                           setCardID(navigateListID[currentIndex - 1]);
-                                           setCardImage(listImage[currentImage - 1]);
-                                       }
-                     
-            }; 
+                const currentIndex = navigateListID.indexOf(cardID);
+
+                if (currentIndex > 0) {
+                    const prevCardId = navigateListID[currentIndex - 1];
+                    const prevCard = deckCards.find(card => card.id === prevCardId);
+
+                    if (prevCard) {
+                        setCardID(prevCard.id);
+                        setCardImage(prevCard.image);
+                    }
+                }
+            };
+
                        
                                
             useEffect(() => {
@@ -547,18 +566,21 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 desacPrevCard() }, [cardID]);
 
 
-             // Navigue vers la carte suivante dans a liste
-            const nextCard =  () => {
-                                        const currentIndex = navigateListID.indexOf(cardID);
-                                         const currentImage = listImage.indexOf(cardImage);
-                                         console.log("cc")
-            
-                                        if (currentIndex >= 0 && currentIndex < navigateListID.length - 1) {
-                                            setCardID(navigateListID[currentIndex + 1]);
-                                            setCardImage(listImage[currentImage + 1]);
-                                        }
-                        
+            // Navigue vers la carte suivante dans a liste
+            const nextCard = () => {
+                const currentIndex = navigateListID.indexOf(cardID);
+
+                if (currentIndex >= 0 && currentIndex < navigateListID.length - 1) {
+                    const nextCardId = navigateListID[currentIndex + 1];
+                    const nextCard = deckCards.find(card => card.id === nextCardId);
+
+                    if (nextCard) {
+                        setCardID(nextCard.id);
+                        setCardImage(nextCard.image);
+                    }
+                }
             };
+
       
                                 
             // Navigue vers la carte précédente dans a liste
@@ -1771,20 +1793,33 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 {popupPub && (
                     <div className='popup-bckg'>
                         
-                        <div className='set-attributs-deck'>
+                        <div className='set-attributs-deck' style={{ backgroundImage: `url(${backgroundPopup})`}}>
                             <div className='pub-title-container'>
                                 <h1 className='pub-title'>Deck publié !</h1>
                             </div> 
-                            <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
-                                                format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
-                                                className="deck-public"                                 
-                                                 para="public"
-                                                 style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)'}}
-                                                 likenumberStyle={{display: "none"}} />
-                            <button  type="button" className="valid-popup" onClick={() => {setPopupPub(false); window.location.reload();}}>
-                                            <h4 className="valid-popup-title" >Fermer</h4> 
-                                    </button>
+
+                            <div className="top-deck-details" id='decks-user'  key={deck.id} style={{ backgroundImage: `url(${BackgroundDeck})`,backgroundSize: 'cover',      // L'image couvre tout le div
+                                        backgroundPosition: 'center', 
+                                        backgroundRepeat: 'no-repeat',
+                                        marginTop: '0px'}}>
+                                <div className='deck-attributs' style={{ backgroundImage: `url(${BackgroundDeckAttributs})`}}>
+                                    <img className="top-deck-pp" src={getImageUrl(deck.image)} alt="Deck avatar" />
+                                    <h3 className="top-deck-name" style={{padding:'2%'}}><strong> {deck.name} </strong></h3>
+                                    <h6 className="deck-public" style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)'}}>public</h6>
+
+                                </div>
+                            </div>
+
                         </div>
+                        <CgCloseO className='icon-close-popup-desktop'
+                                color='white' size={'5em'} onClick={() => {setPopupPub(false); window.location.reload();}} style={{position: 'fixed',
+                                    bottom: '10'
+                                }}/> 
+
+                        <CgCloseO className='icon-close-popup-mobile'
+                                color='white' size={'3em'} onClick={() => {setPopupPub(false); window.location.reload();}} style={{position: 'fixed',
+                                    bottom: '10'
+                        }}/>
                     </div>
                 )}
 

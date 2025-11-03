@@ -75,6 +75,17 @@
 .card-page-likenumber {
     font-weight: bold;
     font-size: 1.6em;
+    padding: 2%;
+    padding-left: 4%;
+    padding-right: 4%;
+    border-radius: 5px;
+    background-color: white;
+    border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    font-family: 'MedievalSharp', cursive;
 }
 
 /* Pop-up update card*/

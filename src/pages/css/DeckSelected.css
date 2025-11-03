@@ -752,7 +752,7 @@ button:hover {
 
   .nav-card-button {
     z-index: 1000;
-
+    border-radius: 10px;
   }
 
   .nav-card-button:hover {

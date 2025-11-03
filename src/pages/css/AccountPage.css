@@ -47,6 +47,7 @@
   display: flex;
   width: 100%;
   justify-content: center;
+  align-items: center;
 }
 
 
@@ -107,6 +108,18 @@
  .input-bio {
     font-size: 0.8em;
   }
+
+  .new-deck-button-desktop {
+    display: none;
+  }
+
+  .new-deck-button-mobile {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
 }
 
 @media (max-width: 500px) {
@@ -131,16 +144,6 @@
     margin-top: -60px;
   }
 
-  .new-deck-button-desktop {
-    display: none;
-  }
-
-
-  .new-deck-button-mobile {
-    display: flex;
-     width: 100%;
-
-  }
 }
 
 
@@ -172,9 +175,16 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  border-top: 2px solid black;
-  border-bottom: 2px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 
+}
+
+@media (max-width: 500px) {
+  .attributs-map-container {
+    border-top: 0px;
+    border-bottom: 0px;
+  }
 }
 
 @media (max-width: 400px) {
@@ -191,6 +201,35 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+@media (max-width: 500px) {
+
+.open-buttons-container {
+  gap: 50px;
+}
+
+.decks-liked-map-contenair {
+  padding-top: 2%;
+  border-top: 1px solid black;
+}
+
+}
+
+.details-button {
+  background-color: #5D3B8C;
+  color: white;
+  font-size: 1.3em;
+  border-radius: 30px;
+  width: 300px;
+}
+
+@media (max-width: 500px) {
+
+.details-button {
+   font-size: 1em;
+   width: 200px;
+}
 }
 
 

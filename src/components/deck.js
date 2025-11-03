@@ -81,8 +81,8 @@ const Deck = function (props) {
                                             )}
                                         </div>                                    
                                     </div> 
-                                    <p style={props.likenumberStyle} className='card-page-likenumber'>{props.likeNumber} <FaHeart style={{marginBottom: '3px', zIndex: '1'}}
-                                                            size={'0.8em'}  color='red' /></p>
+                                    <div style={props.likenumberStyle} className='card-page-likenumber'>{props.likeNumber} <FaHeart style={{zIndex: '1'}}
+                                                            size={'0.8em'}  color='red' /></div>
                                 </div>      
     )
 }
