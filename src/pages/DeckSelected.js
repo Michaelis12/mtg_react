@@ -598,7 +598,7 @@ import FooterSection from '../components/footerSection';
                         <div className='admin-users-button'>
                         
                         {/* Afficher une main piochée dans le deck */}
-                        <button className='update-deck-container' onClick={()=>displayHand()}>
+                        <button className='update-deck-container' style={{flexDirection: "row"}} onClick={()=>displayHand()}>
                             <GiCardRandom className='icon-update-user' />
                             <h5 className='update-user-p'>Piocher une main</h5>
                         </button>
@@ -663,17 +663,11 @@ import FooterSection from '../components/footerSection';
                              {/*La carte format medium*/}   
                             <h2 className='deck-selected-card-medium-name'style={{marginTop: '2%'}}>{deck.name}</h2> 
                             <div className="deck-selected-card-medium" style={{ backgroundImage: `url(${backgroundPopup})`}}>
-                                    <div className="img-container">
+                                    <div className="img-container" style={{marginTop: '2%'}}>
                                                           <img className="new-deck-img-mobile" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8080${deck.image}` : deck.image} alt="Deck mtg"/>
                                     </div>
                                     <div className="card-medium-body" >
-                                    
-                                    {!deck.isPublic && (
-                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
-                                    )}
-                                    {deck.isPublic && (
-                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
-                                    )}
+                                
                                                                 
                                     <div className='attribut-mobile-container'>
                                                                       <h4 className='deck-selected-line-title'> Format : </h4>
@@ -691,11 +685,6 @@ import FooterSection from '../components/footerSection';
                                                                         </div>
                                                                       )}                                                      
                                     </div> 
-                
-                                    <div className='attribut-mobile-container'>              
-                                                                    <h4 className='deck-selected-line-title'> Valeur totale : </h4> 
-                                                                    <h3><strong>{deck.value} €</strong></h3>
-                                    </div>
                 
                                     <div className='attribut-mobile-container'>              
                                                                     <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
@@ -716,12 +705,6 @@ import FooterSection from '../components/footerSection';
                 
                                     <div className="deck-hover-body" >
 
-                                                {!deck.isPublic && (
-                                                    <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
-                                                )}
-                                                {deck.isPublic && (
-                                                    <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
-                                                )}
      
                                                 <div className='attribut-mobile-container'>                        
                                                                     <h4 className='attribut-line-title' style={{marginTop: "2px"}}> Couleurs : </h4> 
@@ -737,11 +720,6 @@ import FooterSection from '../components/footerSection';
                                                 <div className='attribut-mobile-container'>              
                                                                     <h4 className='attribut-line-title' style={{marginTop: "4px"}}> Format : </h4> 
                                                                     <h4 className='card-format' style={{ backgroundColor: 'green'}}>{deck.format}</h4>
-                                                </div>
-
-                                                <div className='attribut-mobile-container'>              
-                                                                    <h4 className='attribut-line-title'> Valeur totale : </h4> 
-                                                                    <h4 className='card-value'>{deck.value} €</h4>
                                                 </div>
 
                                                 <div className='attribut-mobile-container'>              
@@ -855,7 +833,7 @@ import FooterSection from '../components/footerSection';
                                     {card.name}
                                 </h5>
                                 {card.types.includes("Basic") && (
-                                    <p style={{marginTop: '17px'}} className="p-cards-deck-length">basic land</p>
+                                    <p style={{marginTop: '0px'}} className="p-cards-deck-length">basic land</p>
                                 )}
                                 </div> 
 
@@ -1198,24 +1176,27 @@ import FooterSection from '../components/footerSection';
                             <div className='popup-bckg'> 
                                 <div className='hand-background' style={{
                                         backgroundImage:`url(${backgroundHand})`,
-                                        backgroundSize: "120%",        
                                         backgroundPosition: "center",   
                                         backgroundRepeat: "no-repeat"}}>
-                                    {hand.map((card, index) => ( 
-                                        <div className="cards-hand-details" key={index}>
-                                            <img className="cards-draw-img" src={getImageUrl(card.image)} alt="Card-image"
-                                            onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
-                                            onClick={() => openZoomPopup(card)}
-                                            />
-                                            
-                                        </div>
-                                    
-                                    ))}
+                                     <div className='hand-mapping'>
+                                        {hand.map((card, index) => ( 
+                                            <div className="cards-hand-details" key={index}>
+                                                <img className="cards-draw-img" src={getImageUrl(card.image)} alt="Card-image"
+                                                onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
+                                                onClick={() => openZoomPopup(card)}
+                                                />
+                                                
+                                            </div>
+                                        
+                                        ))}
+                                    </div>
+                                <button className='update-deck-container' style={{flexDirection: 'row'}} onClick={()=>displayHand()}>
+                                    <GiCardRandom className='icon-update-user' />
+                                    <h5 className='update-user-p'>Piocher une main</h5>
+                                </button>
                                    
                                 </div>
-                                 <button className='refresh-hand-button' onClick={()=>displayHand()} >
-                                    <h5 style={{color: 'white', position: 'relative', top: '2px', fontFamily: 'MedievalSharp, cursive'}}> Pioche</h5> 
-                                <SlRefresh color='white' size={"1.5em"}/></button>
+                                 
 
                                 <CgCloseO className='icon-close-popup-desktop'
                                 color='white' size={'5em'} onClick={()=> {setPopupHand(false); setHand([])}} style={{position: 'fixed',
@@ -1223,7 +1204,7 @@ import FooterSection from '../components/footerSection';
                                 }}/> 
 
                                 <CgCloseO className='icon-close-popup-mobile'
-                                color='white' size={'3em'} onClick={()=> {setPopupHand(false); setHand([])}} style={{position: 'fixed',
+                                color='white' size={'5em'} onClick={()=> {setPopupHand(false); setHand([])}} style={{position: 'fixed',
                                     bottom: '10'
                                 }}/>
                             </div>

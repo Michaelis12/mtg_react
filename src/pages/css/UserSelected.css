@@ -547,6 +547,7 @@
 @media (max-width: 500px) {
   .update-user-p {
   font-size: 0.8em;
+  margin-bottom: 0px;
 
   }
 
@@ -690,10 +691,6 @@
   flex-direction: row;
 }
 
-.textarea-container {
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
-}
 
 .checkout-days {
   display: flex;

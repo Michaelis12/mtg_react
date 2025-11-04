@@ -672,13 +672,13 @@ const DecksPage = () => {
             <img src={backgroundCardsPage} className="background-image" alt="background" />
 
             {/* Searchbar desktop*/}
-            <div className="search-line">            
-              <SearchBar value={name} placeholder={" Chercher un deck"}
+            <SearchBar value={name} placeholder={" Chercher un deck"}
                 onClick={() => (setFilterName(name))}
+                filter={filterName}  
+                prompt={name}                        
                 onChange={(event) => (setName(event.target.value))}
                 onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName() }}
                 style={{marginBottom: '30px'}} />
-            </div>
             
 
             {/* Bouton ouverture des filtres*/}
@@ -807,8 +807,14 @@ const DecksPage = () => {
               {displayFilters && (
                     <div className="filters-line-mobile">
                       <div className='filter-mobile-container' style={{ backgroundImage: `url(${backgroundWhite})`}} >
-                        <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} 
-                        placeholder={"Chercher un deck"} style={{marginTop: '20px'}} />
+
+                         <SearchBar value={name} placeholder={" Chercher un deck"}
+                            onClick={() => (setFilterName(name))}
+                            filter={filterName}  
+                            prompt={name}                        
+                            onChange={(event) => (setName(event.target.value))}
+                            onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName() }}
+                            style={{marginTop: '20px'}} />
  
                         <div className="filter-manaCost-container">
                           <OpenButton text="Filtrer par cout en mana" icon={arrowManaCostSens} onClick={OpenFilterManaCost} />

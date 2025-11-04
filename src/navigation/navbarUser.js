@@ -198,7 +198,6 @@ const NavbarUser = function () {
                     { userCards && (
                         <div className="hv-card-nav">
                             <button className="btn-navbar" onClick={()=>{navigate(`/cards`); sessionStorage.clear();} }>Recherche avancée</button>
-                            <button className="btn-navbar" onClick={()=>{navigate(`/mySpace`, { state: { arrowUp2: true } }); sessionStorage.clear();}}>Cartes likées</button>
                         </div>
                     )}
                 </div>

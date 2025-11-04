@@ -28,7 +28,7 @@ import Contact from './pages/Contact';
 // Pages admin
 import NewRule from './pages/NewRule';
 import CardsPageAdmin from './pages/CardsPageAdmin';
-import UsersList from './pages/UsersList'; 
+import UsersList from './pages/UsersPage'; 
 import NewAdmin from './pages/NewAdmin';
 
 

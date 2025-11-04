@@ -828,7 +828,8 @@ const AccountPage = () => {
                                             <h5><strong>Nouveau deck</strong></h5>                              
                                         </div>
                                     </div>  
-                                </div>                           
+                                </div>   
+                                <button className='details-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/decksCreate')}>Afficher en détails</button>                        
                             </div>
                             }
                         </div>

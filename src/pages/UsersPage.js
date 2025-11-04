@@ -25,12 +25,14 @@ import { getAvatarUrl } from '../utils/imageUtils';
 const UsersList = () => {
 
     const [users, setUsers] = React.useState([])
-    const [activities, setActivities] = React.useState([])
+    const [activities, setActivities] = React.useState(["PUBLISHER", "CREATOR", "VIEWVER", "INACTIVE", "BANNED"])
     const navigate = useNavigate();
     const [displayLoading, setDisplayLoading] = useState(false);
 
     // Filtre Users
+    const [name, setName] = React.useState("")
     const [filterName, setFilterName] = React.useState("")
+    const [email, setEmail] = React.useState("")
     const [filterEmail, setFilterEmail] = React.useState("")
     const [filterActivities, setFilterActivities] = React.useState([])
     
@@ -116,6 +118,20 @@ const UsersList = () => {
         }
     }
 
+    // Affiche le bouton de la searchbar name
+    const displayResetName = () => {
+               if(filterName === "") {
+                 return 'none'
+               }
+    }
+
+    // Affiche le bouton de la searchbar email
+    const displayResetEmail = () => {
+               if(filterEmail === "") {
+                 return 'none'
+               }
+    }
+
     const callActivities = useRef(false);
                     
     // Récupère les formats dans le storage si l'user vient de cardSelected
@@ -141,27 +157,6 @@ const UsersList = () => {
      };
 
 
-    // Map toutes les activités
-        useEffect(() => {
-            const getActivities = async () => {
-                try {
-                    setDisplayLoading(true);
-                    const request = await axiosInstance.get('/f_all/getActivities');
-    
-                    const response = request.data
-        
-                    setActivities(response)
-                    recupStorageActivity(response)
-                    setDisplayLoading(false);
-                }   
-                catch (error) {
-                    setDisplayLoading(false);
-                    console.log(error);
-                }
-            }
-            getActivities();
-            }, []);
-
     // Permet de sélectionner une activité
     const selectActivities = (newActivity) => {
         setFilterActivities(prevActivities => {
@@ -178,7 +173,7 @@ const UsersList = () => {
       
       // Permet de retirer la sélection des activités
       const removeActivities = () => { 
-        setFilterActivities(activities)
+        setFilterActivities([])
       } 
 
      // Affichage de couleur d'arrière-plan en fonction de l'activité
@@ -270,9 +265,20 @@ const UsersList = () => {
 
              {/* Searchbar desktop*/}
             <div className="search-line">
-                <SearchBar value={filterName} onChange={(event) => (setFilterName(event.target.value))} placeholder={" Chercher un pseudonyme"}/>
-                <SearchBar value={filterEmail} onChange={(event) => (setFilterEmail(event.target.value))} placeholder={" Chercher un email"}
+                <SearchBar value={name} onChange={(event) => (setName(event.target.value))}  onClick={() => (setFilterName(name))}
+                 placeholder={" Chercher un pseudonyme"}
+                 filter={filterName}  
+                 prompt={name}                        
+                 onPush={() => (setName(""), setFilterName(""))} iconStyle={{ display: displayResetName() }}/>
+
+                <SearchBar value={email} onChange={(event) => (setEmail(event.target.value))} onClick={() => (setFilterEmail(email))}
+                placeholder={" Chercher un email"}
+                filter={filterEmail}  
+                prompt={email} 
+                onPush={() => (setEmail(""), setFilterEmail(""))} 
+                iconStyle={{ display: displayResetEmail() }} 
                 style={{marginBottom: '30px'}}/>
+
             </div>
 
             {/* Bouton ouverture des filtres*/}

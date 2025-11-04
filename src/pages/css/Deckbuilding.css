@@ -53,13 +53,14 @@
 
 .deck-card-public {
   color: white;
-  border-radius: 10px;
+  border-radius: 30px;
   padding-top: 2%;
   padding-bottom: 2%;
   padding-left: 5%;
   padding-right: 5%;
   text-align: center;
   font-size: 1.5em;
+  min-width: 100px;
 }
 
 
@@ -292,7 +293,7 @@
     width: 40%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     border-radius: 30px;
     border: 1px solid #000000;
@@ -320,12 +321,13 @@
     }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
     .set-attributs-deck {
-    width: 100%;
-    border-radius: 0px;
+        height: 55%;
     }
 }
+
+
 
 .update-deck-buttons-container {
     width: 100%;
@@ -356,22 +358,36 @@
 }
 
   .hand-background {
-    position: fixed;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 30px;
-    height: 80%;
-    width: 100%;
+    gap: 60px;
+    height: 70%;
+    width: 90%;
     overflow: hidden;
     border-radius: 30px;
     border: 2px solid white;
   }
 
+
+  .hand-mapping {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+  }
+
+  @media (max-width: 1250px) {
+    .hand-background {
+        width: 100%;
+        margin-left: -1%;
+    }
+  }
+
   .refresh-hand-button {
-    position: fixed;
-    bottom: 15%;
     height: 80px;
     width: 200px;
     border-radius: 30px;
@@ -393,8 +409,12 @@
 
 .cards-draw-img {
         height: 15vw;
+        cursor: pointer;
 }
 
+.cards-draw-img:hover {
+    transform: scale(1.05);
+}
 .icon-close-popup-desktop {
     z-index: 1;
     cursor: pointer;
@@ -413,16 +433,15 @@
 }
 
 @media (max-width: 700px) {
-    .hand-background {
+    .hand-mapping {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 0px;
         background-size: 200% !important;
     }
-    .hand-background {
+    .hand-mapping {
         flex-direction: column;
         height: 75%;
-        overflow-y: scroll;
     }
 
     .cards-draw-img {
@@ -1101,7 +1120,7 @@
 
 @media (max-width: 500px) {
     .card-format {
-            font-size: 0.5em;
+            font-size: 0.6em;
             margin: 0%;
         }
 }
@@ -1131,12 +1150,17 @@
   border: 2px solid black;
   border-radius: 10px;
   gap: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 } 
 
 @media (max-width: 760px) {
 
     .update-deck-container, .pub-deck-container, .pv-deck-container {
         width: 60%;
+        flex-direction: row;
     }
 
 }
@@ -1172,7 +1196,13 @@
   display: flex;
   gap: 5px;
 } 
-
+@media (max-width: 360px) {
+    .pub-deck-text-container {
+     flex-direction: column;
+     align-items: center;
+     gap: 0px;
+    } 
+}
 
 .container-pub {
     display: flex;

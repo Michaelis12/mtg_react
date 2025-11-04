@@ -899,20 +899,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             setDeckSignal(!deckSignal)
         } 
 
-        const updateCardText = () => {
-
-
-            if (cardsSelected.length < 1) {
-                return `${cardsUnselected.length} cartes retirées ` 
-            }
-            if (cardsUnselected.length < 1) {
-                return `+ ${cardsSelected.length} cartes ajoutées` 
-            }
-
-            return `${cardsSelected.length} cartes ajoutées , ${cardsUnselected.length} cartes retirées `
-
-        }
-
         // Masque les cartes si elles ont été retirées de la liste
         const maskCard = (id) => {
             const deckCardsid = deckCards.map(card => card.id);
@@ -970,7 +956,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                     <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
                                                                     <h3><strong>{cmc}</strong></h3>
                                                                 </div>
-                                                            {/*
                                                                 <div className='card-line-attribut'>              
                                                                     <h4 className='deck-selected-line-title'> Statut : </h4> 
                                                                     {!deck.isPublic && (
@@ -979,9 +964,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                     {deck.isPublic && (
                                                                         <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
                                                                     )} 
-                                                                </div>
-                                                            */}
-                
+                                                                </div>                
                                                               </div>
                                                                   
                                                           </div>  
@@ -994,15 +977,22 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                              {/*La carte format medium*/}   
                             <h2 className='deck-selected-card-medium-name'style={{marginTop: '2%'}}>{deck.name}</h2> 
                             <div className="deck-selected-card-medium" style={{ backgroundImage: `url(${backgroundPopup})`}}>
-                                    <div className="img-container">
+                                    <div className="img-container" style={{marginTop: '2%'}}>
                                                           <img className="new-deck-img-mobile" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8080${deck.image}` : deck.image} alt="Deck mtg"/>
                                     </div>
                                     <div className="card-medium-body" >
+
+                                    {!deck.isPublic && (
+                                                    <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
+                                                )}
+                                    {deck.isPublic && (
+                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
+                                     )}
                                     
                                                                 
                                     <div className='attribut-mobile-container'>
                                                                       <h4 className='deck-selected-line-title'> Format : </h4>
-                                                                      <p className='deck-selected-format' style={{marginTop: '-5px'}}>{deck.format} </p>
+                                                                      <p className='deck-selected-format' style={{marginTop: '-8px'}}>{deck.format} </p>
                                     </div>  
                                 
                                     <div className='attribut-mobile-container'>
@@ -1011,7 +1001,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                         <div className='new-deck-colors-mapping' >
                                                                           {deck.colors.map((color, index)  => (
                                                                           <img key={index} src={getColors(color)} className="deck-selected-colors-imgs"
-                                                                            style={{display:(displayColor(colors, color)), marginTop: '-5px'}} alt={color}/>                                
+                                                                            style={{display:(displayColor(colors, color)), marginTop: '-3px'}} alt={color}/>                                
                                                                           ))}
                                                                         </div>
                                                                       )}                                                      
@@ -1061,13 +1051,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 </div>
 
                                                 <div className='attribut-mobile-container'>              
-                                                                    <h4 className='attribut-line-title'> Valeur totale : </h4> 
-                                                                    <h4 className='card-value'>{deck.value} €</h4>
-                                                </div>
-
-                                                <div className='attribut-mobile-container'>              
                                                                     <h4 className='attribut-line-title'> Cout en mana moyen : </h4> 
-                                                                    <h4  className='card-manacost'>{cmc}</h4>
+                                                                    <h3  className='card-manacost' style={{marginTop: '13px'}}>{cmc}</h3>
                                                 </div>
                 
                                                                 
@@ -1080,14 +1065,13 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                      <div className='set-attributs-deck' style={{ backgroundImage: `url(${backgroundPopup})`}}>
                                 <div className='textarea-container'>
                                     <textarea className="input-name" id="deck-name" name="deck-name" rows="3" cols="33" 
-                                            style={{marginBottom:'5%'}}
+                                            style={{margin:'0%'}}
                                             maxLength={25} onChange={(e) => setNewName(e.target.value)} >
                                                 {deck.name}
                                     </textarea>
                                 </div>
                                 <input 
-                                className='input-deck-img'
-                                style={{position:'absolute', marginTop:'-5%'}}
+                                className='input-image'
                                 type="file"
                                 accept="image/*" 
                                 onChange={(e) => selectImage(e)}
@@ -1253,7 +1237,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 {card.name}
                             </h5>
                             {card.types.includes("Basic") && (
-                                <p style={{marginTop: '17px'}} className="p-cards-deck-length">basic land</p>
+                                <p style={{marginTop: '0px'}} className="p-cards-deck-length">basic land</p>
                             )}
                             </div> 
 
@@ -1316,9 +1300,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
             })()}
         </div>
 
-
-
-        
         {/*Graphiques*/}
         <div className='stats-conatainer' >
                 <Title title={`Statistiques`} />       
@@ -1634,24 +1615,27 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             <div className='popup-bckg'> 
                                 <div className='hand-background' style={{
                                         backgroundImage:`url(${backgroundHand})`,
-                                        backgroundSize: "120%",        
                                         backgroundPosition: "center",   
                                         backgroundRepeat: "no-repeat"}}>
-                                    {hand.map((card, index) => ( 
-                                        <div className="cards-hand-details" key={index}>
-                                            <img className="cards-draw-img" src={getImageUrl(card.image)} alt="Card-image"
-                                            onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
-                                            onClick={() => openZoomPopup(card)}
-                                            />
-                                            
-                                        </div>
-                                    
-                                    ))}
+                                     <div className='hand-mapping'>
+                                        {hand.map((card, index) => ( 
+                                            <div className="cards-hand-details" key={index}>
+                                                <img className="cards-draw-img" src={getImageUrl(card.image)} alt="Card-image"
+                                                onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
+                                                onClick={() => openZoomPopup(card)}
+                                                />
+                                                
+                                            </div>
+                                        
+                                        ))}
+                                    </div>
+                                <button className='update-deck-container' style={{flexDirection: 'row'}} onClick={()=>displayHand()}>
+                                    <GiCardRandom className='icon-update-user' />
+                                    <h5 className='update-user-p'>Piocher une main</h5>
+                                </button>
                                    
                                 </div>
-                                 <button className='refresh-hand-button' onClick={()=>displayHand()} >
-                                    <h5 style={{color: 'white', position: 'relative', top: '2px', fontFamily: 'MedievalSharp, cursive'}}> Pioche</h5> 
-                                <SlRefresh color='white' size={"1.5em"}/></button>
+                                 
 
                                 <CgCloseO className='icon-close-popup-desktop'
                                 color='white' size={'5em'} onClick={()=> {setPopupHand(false); setHand([])}} style={{position: 'fixed',
@@ -1659,7 +1643,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 }}/> 
 
                                 <CgCloseO className='icon-close-popup-mobile'
-                                color='white' size={'3em'} onClick={()=> {setPopupHand(false); setHand([])}} style={{position: 'fixed',
+                                color='white' size={'5em'} onClick={()=> {setPopupHand(false); setHand([])}} style={{position: 'fixed',
                                     bottom: '10'
                                 }}/>
                             </div>

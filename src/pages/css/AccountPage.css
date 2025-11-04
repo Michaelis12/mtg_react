@@ -222,6 +222,13 @@
   font-size: 1.3em;
   border-radius: 30px;
   width: 300px;
+  margin-top: 20px;
+}
+
+.details-button:hover {
+  transition: transform 0.3s ease;
+  transform: translateY(-3px);
+  filter: brightness(1.1);
 }
 
 @media (max-width: 500px) {

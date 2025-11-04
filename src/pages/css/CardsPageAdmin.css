@@ -121,13 +121,22 @@
 
 .textarea-container {
     width: 100%;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
     background-color: #5D3B8C;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 3%;
+     padding: 5%;
+}
 
+@media (max-width: 500px) {
 
+    .textarea-container {
+        padding: 6%;
+    }
+
+    
 }
 
 .input-card-text {
