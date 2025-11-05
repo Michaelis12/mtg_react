@@ -345,10 +345,8 @@ const SignPage = function () {
         { displayLoading && (
         <img src={loading} className="loading-img" alt="Image 1" />
         )}
-        
-        {/* Form d'inscription */}
-        {!activeAccount && !existingAccount && (
-            <div className="login-container" style={{backgroundImage: `url(${backgroundForm})`}}>
+
+        {/*<div className="login-container" style={{backgroundImage: `url(${backgroundForm})`}}>
             <h1 className="title-log">Inscription</h1>
 
             <div className="alert-send-error-container">
@@ -358,6 +356,7 @@ const SignPage = function () {
             <form className="login-form" onSubmit={signUp}> 
 
                 <div className="input-groups-container">
+
                     <div className="input-group">
                         <label className="sign-label">Pseudo :</label>                    
                         <input className="sign-input" type="pseudo" id="pseudo" name="pseudo" placeholder="ex : MagicPlayer1"
@@ -394,6 +393,56 @@ const SignPage = function () {
             
             
             </div>
+ */}
+        
+        {/* Form d'inscription */}
+        {!activeAccount && !existingAccount && (
+            <div className="login-container" style={{ backgroundImage: `url(${backgroundForm})`}}>
+                <h1 className="title-log">Inscription</h1>
+                <div className="alert-send-error-container">
+                        <h6 className="alert-send-error-auth">{errorContent}</h6>
+                    </div>
+                <form className="login-form" onSubmit={logIn} style={{ width: "100%", height: '100%' }}> 
+
+                   <div className="input-form-container">
+                    <div className="input-group">
+                        <div className="label-instruction-container">
+                            <label className="sign-label">Pseudo :</label>    
+                            <p className="instruction-para">(entre 5 et 15 caractères)</p>  
+                        </div>              
+                        <input className="sign-input" type="pseudo" id="pseudo" name="pseudo" placeholder="ex : MagicPlayer1"
+                        onChange={(e) => setPseudo(e.target.value)} style={{borderColor: pseudoStyle()}}/>
+                    </div>
+
+                    <div className="input-group" >
+                        <label className="sign-label" >E-mail :</label>
+                        <input className="sign-input" type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)}
+                        style={{borderColor: emailStyle()}}  required/>
+                    </div>
+                    
+                    <div className="input-group" >
+                        <div className="label-instruction-container">
+                            <label className="sign-label">Mot de passe :</label>    
+                            <p className="instruction-para">(entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial)</p>  
+                        </div> 
+                        <input className="sign-input" type="password" id="password" onChange={(e) => setPassword(e.target.value)}
+                        placeholder="entre 8 et 20 caractères avec au moins une majuscule et un caractère spécial"
+                        style={{borderColor: passwordStyle()}} required/>
+                    </div>
+                    <div className="input-group" >
+                        <label className="sign-label">Confirmation du mot de passe :</label>
+                        <input className="sign-input" type="password" id="password" onChange={(e) => setConfirmPassword(e.target.value)}
+                        style={{borderColor: passwordStyle()}} required/>
+                    </div> 
+                    </div> 
+                     <div className="link-group">
+                    <button className="valid-popup" type="submit" disabled={displayLoading || !completeState}
+                    >   <h4>S'inscrire</h4></button>
+                    <button className="nav-form" onClick={()=>switchForm()}><p>Se connecter</p></button>
+                </div>               
+                </form>
+            </div>  
+            
             )}
 
          {/* Form validation de l'inscription */}
@@ -413,7 +462,7 @@ const SignPage = function () {
                     </div>
 
                     <div className="link-group">
-                        <button className="valid-form" type="submit" disabled={displayLoading || verificationCode === ""} ><h4>Valider</h4></button>
+                        <button className="valid-popup" type="submit" disabled={displayLoading || verificationCode === ""} ><h4>Valider</h4></button>
                     </div>
                     
                 </form>
@@ -435,7 +484,7 @@ const SignPage = function () {
                 <div className="alert-send-error-container">
                         <h6 className="alert-send-error-auth">{errorContent}</h6>
                     </div>
-                <form className="login-form" onSubmit={logIn} style={{width : `100%`}}> 
+                <form className="login-form" style={{ width: "100%"}} onSubmit={logIn}> 
                     
                     <div className="input-group">
                         <label className="sign-label" >E-mail :</label>
@@ -452,8 +501,7 @@ const SignPage = function () {
                             <h4>Se connecter</h4></button>
                         <button className="nav-form" style={{padding:'1%'}} onClick={()=>switchForm()}>S'inscrire</button>
                         <button className="nav-form" onClick={()=>(setForgotPassword(true), 
-                        setErrorContent(null), setEmail(""))}>Mot de passe oublié</button>
-                                        
+                        setErrorContent(null), setEmail(""))}>Mot de passe oublié</button>                                    
                     </div>               
                 </form>
             </div>       
@@ -481,7 +529,7 @@ const SignPage = function () {
                     </div>
                     
                     <div className="link-group">
-                        <button className="valid-form" type="submit"  disabled={displayLoading || email === ""} ><h4>Valider</h4></button>
+                        <button className="valid-popup" type="submit"  disabled={displayLoading || email === ""} ><h4>Valider</h4></button>
                     </div>
                     
                     
@@ -516,7 +564,7 @@ const SignPage = function () {
                     </div>
 
                     <div className="link-group">
-                        <button className="valid-form" type="submit" disabled={displayLoading || verificationCode === ""} ><h4>Valider</h4></button>
+                        <button className="valid-popup" type="submit" disabled={displayLoading || verificationCode === ""} ><h4>Valider</h4></button>
                         <button className="nav-form" type="button"  onClick={()=>sendLinkPassword()}>Renvoyer un code</button>
 
                         { avertCodeSend &&(
@@ -560,7 +608,7 @@ const SignPage = function () {
                       className="sign-input" style={{borderColor: passwordStyle()}} required/>
                 </div> 
                 <div className="link-group">
-                        <button className="valid-form" disabled={displayLoading} type="submit" ><h4>Valider</h4></button>
+                        <button className="valid-popup" disabled={displayLoading} type="submit" ><h4>Valider</h4></button>
                     </div>
                 </form>
                 <div className="back-icon-container">

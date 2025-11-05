@@ -267,9 +267,9 @@ const NavbarAdmin = function () {
                 { adminCards && (        
                     <div className="hv-card-nav" onMouseLeave={()=> setAdminCards(!adminCards)}>
                         <button className="btn-navbar" onClick={()=>{navigate(`/cards`); sessionStorage.clear();} }>Recherche avancée</button>
-                        <button className="btn-navbar" onClick={()=>{navigate(`admin/cards`); sessionStorage.clear();}}>Recherche avancée admin</button>
+                       {/* <button className="btn-navbar" onClick={()=>{navigate(`admin/cards`); sessionStorage.clear();}}>Recherche avancée admin</button>
                         <button className="btn-navbar" onClick={()=>{navigate(`/cardsLiked`); sessionStorage.clear();}}>Cartes likées</button>
-                        <button className="btn-navbar" onClick={()=>{navigate(`admin/addCard`); sessionStorage.clear();}}>Créer une carte</button>
+                        <button className="btn-navbar" onClick={()=>{navigate(`admin/addCard`); sessionStorage.clear();}}>Créer une carte</button>*/}
                     </div>
                 )}
             </div>

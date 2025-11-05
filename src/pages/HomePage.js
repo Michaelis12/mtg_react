@@ -389,7 +389,7 @@ const navNewDeck = () => {
                     <div className="top3_cards-img-container">
                         <img className="top3_cards-img" src={getImageUrl(card.image)} alt="Card-image" 
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard()} 
-                        onClick={() => chooseCard(card.apiID)}/>
+                         onClick={() => chooseCard(card.apiID)}/>
                     </div>
                         <br/>
                         <h2 className="top-card-likeNumber" >dans {card.decksNumber} decks</h2>
@@ -400,6 +400,7 @@ const navNewDeck = () => {
                     )
                   )}
                 <MdOutlinePlayArrow className='icon-nav-mapping' onClick={()=>navigate('/cardsSave', { state: { order: "deck" }})}/>
+                
             </div>
           </div>  
 

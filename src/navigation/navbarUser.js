@@ -188,7 +188,7 @@ const NavbarUser = function () {
 
     return ( 
 
-        <div>
+        <div> 
             <nav className="nav-container" onMouseLeave={resetAll}>
                 <div className="nav-item" onMouseLeave={resetAll}>
                     <strong className="p-navbar" onClick={()=>{navigate(`/rules`); sessionStorage.clear();}}>Règles du jeu</strong>
@@ -206,8 +206,8 @@ const NavbarUser = function () {
                     { userDecks && (
                         <div className="hv-user-nav">
                             <button className="btn-navbar" onClick={()=> {navigate('/decks', { state: { order: 'date' } }); sessionStorage.clear();}}>Recherche avancée</button>
-                            <button className="btn-navbar" onClick={()=>{navigate(`/mySpace`, { state: { arrowUp: true } }); sessionStorage.clear();}}>Decks créés</button>
-                            <button className="btn-navbar" onClick={()=>{navigate(`/mySpace`, { state: { arrowUp3: true } }); sessionStorage.clear();}}>Decks likées</button>
+                            <button className="btn-navbar" onClick={()=>{navigate(`/decksCreate`); sessionStorage.clear();}}>Decks créés</button>
+                            <button className="btn-navbar" onClick={()=>{navigate(`/decksLiked`); sessionStorage.clear();}}>Decks likés</button>
                             <button className="btn-navbar" onClick={()=>{navigate(`addDeck`); sessionStorage.clear();}}>Créer un deck</button>
                         </div>
                     )}
