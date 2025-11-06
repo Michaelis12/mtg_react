@@ -7,6 +7,7 @@ import axiosInstance from "../api/axiosInstance";
 import { LuRefreshCw } from "react-icons/lu";
 import { IoSettingsOutline } from "react-icons/io5";
 import Section from '../components/section';
+import ButtonValidForm from "../components/buttonValidForm";
 import PopupDelete from "../components/popupDelete";
 import ButtonValidPopup from "../components/buttonValidPopup";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -341,7 +342,7 @@ const SettingPage = function () {
             {displayResetPassword && ( 
                 <div className="popup-bckg">
                              
-                            <div className="login-container" style={{ backgroundImage: `url(${backgroundWhite})`, marginTop: '0%'}}>
+                            <div className="signup-container" style={{ backgroundImage: `url(${backgroundWhite})`, marginTop: '0%'}}>
                                 <h2 className="title-log">Modifier le mot de passe</h2>
                                 <div className="alert-send-error-container">
                                         <h6 className="alert-send-error-auth">{errorContent}</h6>
@@ -349,39 +350,45 @@ const SettingPage = function () {
                                 <div className="alert-send-error-container">
                                         <h6 className="alert-send-error-auth" style={{color: 'green'}}>{succesContent}</h6>
                                 </div>
-                                <form className="login-form" onSubmit={updatePassword} style={{width : `100%`}}> 
-
-                                <div className="input-group">
-                                    <label className="sign-label">Mot de passe actuel :</label>
-                                    <input type="password" id="password" onChange={(e) => setPassword(e.target.value)} 
-                                     className="sign-input" style={{borderColor: passwordStyle()}} required/>
-                                </div>
-                                    
-                                <div className="input-group">
-                                    <label className="sign-label">Nouveau Mot de passe :</label>
-                                    <input type="password" id="newPassword" onChange={(e) => setNewPassword(e.target.value)} placeholder="ex : M@agicPlayer12"
-                                     className="sign-input" style={{borderColor: passwordStyle()}} required/>
-                                    <p className="instruction-para">  doit contenir entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial  </p>
-                                </div>
-                                
-                                
-                                <div className="input-group">      
-                                    <label className="sign-label">Confirmation du nouveau mot de passe :</label>
-                                    <input type="password" id="confirmPassword" onChange={(e) => setConfirmNewPassword(e.target.value)}
-                                     className="sign-input" style={{borderColor: passwordStyle()}} required/>
-                                </div> 
+                                <form className="login-form" onSubmit={updatePassword} style={{width : `100%`, marginTop: '-4%'}}> 
+                                   <div className="input-form-container">
+                                        <div className="input-group">
+                                            <label className="sign-label">Mot de passe actuel :</label>
+                                            <input type="password" id="password" onChange={(e) => setPassword(e.target.value)} 
+                                            className="sign-input" style={{borderColor: passwordStyle()}} required/>
+                                        </div>
+                                            
+                                        <div className="input-group">
+                                            <div className="label-instruction-container-password">
+                                                <label className="sign-label">Nouveau Mot de passe :</label>    
+                                                <p className="instruction-para-password">(entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial)</p>  
+                                            </div>
+                                            <input type="password" id="newPassword" onChange={(e) => setNewPassword(e.target.value)} placeholder="ex : M@agicPlayer12"
+                                            className="sign-input" style={{borderColor: passwordStyle()}} required/>
+                                        </div>
+                                        
+                                        <div className="input-group">      
+                                            <label className="sign-label">Confirmation du nouveau mot de passe :</label>
+                                            <input type="password" id="confirmPassword" onChange={(e) => setConfirmNewPassword(e.target.value)}
+                                            className="sign-input" style={{borderColor: passwordStyle()}} required/>
+                                        </div> 
+                                    </div> 
                                 <div className="link-group">
-                                        <button className="valid-popup" 
-                                        disabled={password === "" || newPassword === "" || confirmNewPassword ==="" && displayLoading} type="submit" 
-                                        ><h4 className="valid-popup-title" >Valider</h4></button>
+                                        <ButtonValidForm disabled={password === "" || newPassword === "" || confirmNewPassword ==="" && displayLoading} 
+                                        style={{marginBottom: '3%'}}
+                                        text="Valider"  type="submit"/>
                                     </div>
                                 </form>                             
                             </div>
                             
 
                              
-                        
+                        <div className='setting-icon-close-container'>
                         <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>{setDisplayResetPassword(false); setErrorContent(null); 
+                            setPassword("");  setNewPassword(""); setConfirmNewPassword("")}}/>
+                        </div>
+
+                        <CgCloseO className='icon-close-popup-absolute' color='white' size={'5em'}  onClick={()=>{setDisplayResetPassword(false); setErrorContent(null); 
                             setPassword("");  setNewPassword(""); setConfirmNewPassword("")}}/>
                 </div>
             )}

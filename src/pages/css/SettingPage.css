@@ -350,6 +350,28 @@ td {
   }
 }
 
+.icon-close-popup-absolute {
+  display: none;
+}
+
+@media (max-width: 500px) {
+  .setting-icon-close-container {
+   display: none;
+}
+
+.icon-close-popup-absolute {
+  display: flex;
+  position: absolute;
+  top: 10%;
+  cursor: pointer;
+}
+
+ .icon-close-popup:hover {
+    transform: scale(0.95);
+  }
+
+}
+
 
 @media (max-width: 450px) {
   .table-attributes {

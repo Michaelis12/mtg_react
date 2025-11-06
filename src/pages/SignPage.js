@@ -1,4 +1,5 @@
-import BackgroundMTG from "../assets/background_cardsPage2.jpg"
+import Background from "../assets/background_cardsPage.jpg"
+import BackgroundMobile from "../assets/mobile_background_cardsPage.png"
 import defaultImg from "../assets/default_avatar.jpg"
 import loading from "../assets/loading.gif"
 import React from 'react';
@@ -9,6 +10,8 @@ import { AuthContext } from "../context/authContext"
 import axiosInstance, { setCsrfToken, setJwtToken } from "../api/axiosInstance"; 
 import backgroundForm from "../assets/background_white.png"
 import Section from "../components/section";
+import ButtonValidForm from "../components/buttonValidForm";
+import ButtonReturn from "../components/buttonReturn";
 import { IoIosArrowDropleft } from "react-icons/io";
 
 
@@ -158,6 +161,7 @@ const SignPage = function () {
 
             
     const [avertCodeSend, setAvertCodeSend] = React.useState(false);
+
     // Form envoie code pour password oublié
     const sendLinkPassword = async (e) => {
 
@@ -229,13 +233,15 @@ const SignPage = function () {
         e.preventDefault();
         setDisplayLoading(true)
 
-    
+        const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,20}$/;
+        if(regex.test(newPassword)) {
             try{  
                 setErrorContent(null)
 
                 const params = {
                     email: email,
                     newPassword: newPassword,
+                    confirmPassword: confirmNewPassword,
                     code: verificationCode,
                     
                 };
@@ -260,8 +266,13 @@ const SignPage = function () {
             }catch (e) {
                 setErrorContent("Les mots de passe ne correspondent pas")
                 setDisplayLoading(false)
-
-            }}
+            }
+        }
+        else {
+            setErrorContent("Le mot de passe ne respecte pas les instructions")
+            setDisplayLoading(false)
+        }
+    }
 
     const logStyle = () => {
         if(errorContent !== null) {
@@ -341,68 +352,21 @@ const SignPage = function () {
     return ( 
     <Section> 
         <div className="sign-container">
-        <img src={BackgroundMTG} className="background-image" alt="Image 1" />
+        <img src={Background} className="background-image" alt="Image 1" />
+        <img src={BackgroundMobile} className="background-image-mobile" alt="Image 1" />
         { displayLoading && (
         <img src={loading} className="loading-img" alt="Image 1" />
         )}
 
-        {/*<div className="login-container" style={{backgroundImage: `url(${backgroundForm})`}}>
-            <h1 className="title-log">Inscription</h1>
-
-            <div className="alert-send-error-container">
-                    <h6 className="alert-send-error-auth">{errorContent}</h6>
-                </div>
-            
-            <form className="login-form" onSubmit={signUp}> 
-
-                <div className="input-groups-container">
-
-                    <div className="input-group">
-                        <label className="sign-label">Pseudo :</label>                    
-                        <input className="sign-input" type="pseudo" id="pseudo" name="pseudo" placeholder="ex : MagicPlayer1"
-                        onChange={(e) => setPseudo(e.target.value)} style={{borderColor: pseudoStyle()}}/>
-                        <p className="instruction-para">  doit faire entre 5 et 15 caractères</p>
-                    </div>
-
-                    <div className="input-group">
-                        <label className="sign-label" >E-mail :</label>
-                        <input className="sign-input" type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)}
-                        style={{borderColor: emailStyle()}}  required/>
-                    </div>
-                    
-                    <div className="input-group">
-                        <label className="sign-label" >Mot de passe :</label>
-                        <input className="sign-input" type="password" id="password" onChange={(e) => setPassword(e.target.value)}
-                        placeholder="entre 8 et 20 caractères avec au moins une majuscule et un caractère spécial"
-                        style={{borderColor: passwordStyle()}} required/>
-                        <p className="instruction-para">  doit contenir entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial  </p>
-                    </div>
-                    <div className="input-group">
-                        <label className="sign-label">Confirmation du mot de passe :</label>
-                        <input className="sign-input" type="password" id="password" onChange={(e) => setConfirmPassword(e.target.value)}
-                        style={{borderColor: passwordStyle()}} required/>
-                    </div> 
-                </div>
-                <div className="link-group">
-                    <button className="valid-popup" type="submit" disabled={displayLoading || !completeState}
-                    ><h4>S'inscrire</h4></button>
-                    <button className="nav-form" onClick={()=>switchForm()}><p>Se connecter</p></button>
-                </div>
-                
-            </form> 
-            
-            
-            </div>
- */}
         
         {/* Form d'inscription */}
         {!activeAccount && !existingAccount && (
-            <div className="login-container" style={{ backgroundImage: `url(${backgroundForm})`}}>
+            <div className="signup-container" style={{ backgroundImage: `url(${backgroundForm})`}}>
                 <h1 className="title-log">Inscription</h1>
                 <div className="alert-send-error-container">
-                        <h6 className="alert-send-error-auth">{errorContent}</h6>
+                        <h6 className="alert-send-error-auth" style={{marginTop: "-1%"}}>{errorContent}</h6>
                     </div>
-                <form className="login-form" onSubmit={logIn} style={{ width: "100%", height: '100%' }}> 
+                <form className="login-form" onSubmit={signUp} style={{ width: "100%", height: '100%'}}> 
 
                    <div className="input-form-container">
                     <div className="input-group">
@@ -421,9 +385,9 @@ const SignPage = function () {
                     </div>
                     
                     <div className="input-group" >
-                        <div className="label-instruction-container">
+                        <div className="label-instruction-container-password">
                             <label className="sign-label">Mot de passe :</label>    
-                            <p className="instruction-para">(entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial)</p>  
+                            <p className="instruction-para-password">(entre 8 et 20 caractères, au moins une majuscule, au moins un caractère spécial)</p>  
                         </div> 
                         <input className="sign-input" type="password" id="password" onChange={(e) => setPassword(e.target.value)}
                         placeholder="entre 8 et 20 caractères avec au moins une majuscule et un caractère spécial"
@@ -436,8 +400,7 @@ const SignPage = function () {
                     </div> 
                     </div> 
                      <div className="link-group">
-                    <button className="valid-popup" type="submit" disabled={displayLoading || !completeState}
-                    >   <h4>S'inscrire</h4></button>
+                        <ButtonValidForm disabled={displayLoading || !completeState} text="S'inscrire"  type="submit"/>
                     <button className="nav-form" onClick={()=>switchForm()}><p>Se connecter</p></button>
                 </div>               
                 </form>
@@ -447,33 +410,36 @@ const SignPage = function () {
 
          {/* Form validation de l'inscription */}
         { !activeAccount && existingAccount && (
-            <div className="login-container" style={{backgroundImage: `url(${backgroundForm})`}} >
+            <div className="login-container" style={{ backgroundImage: `url(${backgroundForm})`}}>
                 <h1 className="title-log">Validation</h1>
+
+                <h4 className="p-tutorial"><strong>Entrez le code d'activation reçu par mail</strong></h4>
                 <div className="alert-send-error-container">
                         <h6 className="alert-send-error-auth">{errorContent}</h6>
                 </div>
+
+
                 <form className="login-form" onSubmit={verifyUser} style={{width : `100%`}}> 
                     
                     <div className="input-group">
-                        <label >Code de vérification :</label>
-                        <input type="text" id="code" name="code" onChange={(e) => setVerificationCode(e.target.value)}
-                        style={{borderColor: logStyle()}} required/>
-                        <p className="p-tutorial">Un code d'activation a été envoyé sur votre adresse mail, veuillez l'entrer</p>
+                        <label className="sign-label" >Code :</label>
+                        <input  type="text" id="text" name="text" onChange={(e) => setVerificationCode(e.target.value)} placeholder="XXXXXXX"
+                          className="sign-input" style={{borderColor: logStyle()}} required/>
                     </div>
 
                     <div className="link-group">
-                        <button className="valid-popup" type="submit" disabled={displayLoading || verificationCode === ""} ><h4>Valider</h4></button>
-                    </div>
-                    
-                </form>
-                 <button className="nav-form" type="button"  onClick={()=>sendLinkPassword()}>Renvoyer un code</button>
-                 { avertCodeSend &&(
+                        <ButtonValidForm disabled={displayLoading || verificationCode === ""} text="Valider"  type="submit"/>
+                        <button style={{paddingTop:'1%', paddingBottom: "0%", marginBottom: '0%'}} className="nav-form" type="submit">Renvoyer un code</button>
+                        <button style={{padding:'1%'}} className="nav-form" onClick={()=>(setExistingAccount(false), setErrorContent(null))}>Retour à l'inscription</button>
+        
+
+                        { avertCodeSend &&(
                         <h6 style={{color:'green'}}>Code envoyé avec succès !</h6>
                         )}
-                
-                <div className="back-icon-container">
-                    <IoIosArrowDropleft className="back-icon" size={'5em'} onClick={()=>quitActiveAccount()} />
-                </div>
+                    </div>
+                     
+                    
+                </form>
             </div>
         )}
 
@@ -497,8 +463,7 @@ const SignPage = function () {
                         style={{borderColor: logStyle()}} required/>
                     </div>
                     <div className="link-group">
-                        <button className="valid-popup" type="submit" disabled={displayLoading || email === "" || password === ""} >
-                            <h4>Se connecter</h4></button>
+                        <ButtonValidForm disabled={displayLoading || email === "" || password === ""} text="Se connecter"  type="submit"/>
                         <button className="nav-form" style={{padding:'1%'}} onClick={()=>switchForm()}>S'inscrire</button>
                         <button className="nav-form" onClick={()=>(setForgotPassword(true), 
                         setErrorContent(null), setEmail(""))}>Mot de passe oublié</button>                                    
@@ -529,17 +494,14 @@ const SignPage = function () {
                     </div>
                     
                     <div className="link-group">
-                        <button className="valid-popup" type="submit"  disabled={displayLoading || email === ""} ><h4>Valider</h4></button>
+                        <ButtonValidForm disabled={displayLoading || email === ""} text="Valider"  type="submit"/>
+                        <button style={{padding:'1%'}} className="nav-form" onClick={()=>(setForgotPassword(false), 
+                        setErrorContent(null), setEmail(""))}><p style={{margin:"0%"}}>Se connecter</p></button>
+                        <button className="nav-form" onClick={()=>switchForm()}>S'inscrire</button> 
                     </div>
                     
                     
-                </form>
-                
-                <div className="back-icon-container">
-                    <IoIosArrowDropleft className="back-icon" size={'5em'} onClick={()=>quitForgotPassword()} />
-                </div>
-
-            
+                </form>          
 
             </div>
         )}
@@ -564,8 +526,8 @@ const SignPage = function () {
                     </div>
 
                     <div className="link-group">
-                        <button className="valid-popup" type="submit" disabled={displayLoading || verificationCode === ""} ><h4>Valider</h4></button>
-                        <button className="nav-form" type="button"  onClick={()=>sendLinkPassword()}>Renvoyer un code</button>
+                        <ButtonValidForm disabled={displayLoading || verificationCode === ""} text="Valider"  type="submit"/>
+                        <button style={{padding:'2%'}} className="nav-form" type="button"  onClick={()=>sendLinkPassword()}>Renvoyer un code</button>
 
                         { avertCodeSend &&(
                         <h6 style={{color:'green'}}>Code envoyé avec succès !</h6>
@@ -574,13 +536,6 @@ const SignPage = function () {
                      
                     
                 </form>
-                
-               
-                <div className="back-icon-container">
-                    <IoIosArrowDropleft className="back-icon" size={'5em'} onClick={()=>quitSendCode()} />
-                </div>
-                
-                
             </div>
         )}
 
@@ -589,8 +544,8 @@ const SignPage = function () {
             <div className="login-container" style={{ backgroundImage: `url(${backgroundForm})`}}>
                 <h1 className="title-log">Mot de passe oublié</h1>
                 <h4 className="p-tutorial"><strong>Choisissez votre nouveau mot de passe</strong></h4>
-                <div className="alert-send-error-container">
-                        <h6 className="alert-send-error-auth">{errorContent}</h6>
+                <div className="alert-send-error-container" >
+                        <h6 className="alert-send-error-reset">{errorContent}</h6>
                 </div>
                 <form className="login-form" onSubmit={resetPassword} style={{width : `100%`}}> 
                     
@@ -607,13 +562,11 @@ const SignPage = function () {
                     <input type="password" id="password" onChange={(e) => setConfirmNewPassword(e.target.value)}
                       className="sign-input" style={{borderColor: passwordStyle()}} required/>
                 </div> 
-                <div className="link-group">
-                        <button className="valid-popup" disabled={displayLoading} type="submit" ><h4>Valider</h4></button>
+                <div className="link-group" style={{marginBottom:'2%'}}>
+                         <ButtonValidForm disabled={displayLoading || newPassword === "" || confirmNewPassword === ""} text="Valider"  type="submit"/>
                     </div>
                 </form>
-                <div className="back-icon-container">
-                    <IoIosArrowDropleft className="back-icon" size={'5em'} onClick={()=>quitChangePassword()} />
-                </div>
+                
                 
             </div>
         )}

@@ -37,6 +37,19 @@
     max-height: 600px;
 } 
 
+.signup-container {
+    display: flex;
+    flex-direction: column;
+    border-radius: 30px;
+    background-color: rgba(255, 255, 255, 0.9);
+    overflow: hidden; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid #000000; 
+    width: 50%;  
+    max-height: 620px;
+} 
+
  
 
 
@@ -136,6 +149,9 @@ button {
     font-size: 1.2em;
     padding: 0%;
     padding-bottom: 1%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .nav-form:hover {
@@ -157,17 +173,43 @@ button:hover {
 
 .alert-send-error-container {
     margin-top: 2%;
+    margin-bottom: 2%;
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
+
 .alert-send-error-auth {
     position: absolute;
     color: red;
     text-align: center;
-    font-size: 1.3em;
+    font-size: 1.1em;
 
+}
+
+.alert-send-error-reset {
+    position: absolute;
+    color: red;
+    text-align: center;
+    font-size: 1.1em;
+    margin-top: -1%;
+}
+
+
+@media (max-width: 500px) {
+    .alert-send-error-container {
+        padding: 2%;
+    }
+    .alert-send-error-auth {
+        margin-top: -2%;
+         font-size: 0.8em;
+    }
+
+    .alert-send-error-reset {
+        margin-top: -7%;
+         font-size: 0.9em;
+    }
 }
 
  .login-form {
@@ -195,22 +237,18 @@ button:hover {
 
 @media (max-width: 1000px) {
 
-    .nav-form, .sign-label, .alert-send-error-auth {
+    .nav-form, .sign-label {
         font-size: 1.1em;
     }
 
     .sign-input{
-        font-size: 1.1em;
         height: 40px;
+        font-size: 0.8em;
     }
 
 }
 
-@media (max-width: 500px) {
-    .alert-send-error-auth {
-        font-size: 1em;
-    }
-}
+
 
 .instruction-form-container {
     width: 100%;
@@ -227,6 +265,7 @@ button:hover {
     text-align: center;
     margin-top: 2%;
     color: rgba(0, 0, 0, 0.8);
+    font-size: 1.2em;
 }
 
 .password-rules {
@@ -252,6 +291,16 @@ button:hover {
     margin-bottom: 0%;
 }
 
+
+.instruction-para-password {
+    color: gray;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1em;
+    text-align: start;
+    margin-bottom: 0%;
+}
+
 .instruction-para-sign {
     color: gray;
     font-style: italic;
@@ -267,16 +316,30 @@ button:hover {
     gap: 1.5rem;
 }
 
-.label-instruction-container {
+.label-instruction-container, .label-instruction-container-password {
     width: 100%;
     display: flex;
     align-items: center;
+    justify-content: start;
     gap: 10px;
+}
+
+@media (max-width: 1000px) {
+  .label-instruction-container-password {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: start;
+        gap: 0px;
+    }
+
+    .instruction-para-password {
+        margin-top: -5px;
+    }
 }
 
 @media (max-width: 1650px) {
 
-    .login-container {
+    .login-container, .signup-container  {
         width: 60%;
     }
 
@@ -284,15 +347,17 @@ button:hover {
 
 @media (max-width: 1300px) {
 
-    .login-container {
+    .login-container, .signup-container  {
         width: 80%;
     }
 
 }
 
+
+
 @media (max-width: 850px) {
 
-    .login-container {
+    .login-container, .signup-container  {
         width: 90%;
     }
 
@@ -307,12 +372,22 @@ button:hover {
         font-size: 0.8em;
     }
 
+
+    .instruction-para-password {
+        text-align: start;
+        margin-top: -8px;
+        margin-bottom: 1%;
+        font-size: 0.8em;
+    }
+
 }
 
 @media (max-width: 450px) {
 
-    .login-container {
+    .login-container, .signup-container  {
         width: 100%;
+        position: absolute;
+        bottom: 0%;
     }
 
     .instruction-form-container {
@@ -320,8 +395,8 @@ button:hover {
     }
 
     .login-form {
-        margin-top: 15%;
-        border: 1px solid black;
+        border: none;
+        gap: 1rem;
     }
 
 
@@ -338,7 +413,7 @@ button:hover {
 
     }
 
-    .login-container { 
+    .login-container, .signup-container { 
         display: flex;
         flex-grow: 1;
         border-bottom-left-radius: 0%;
