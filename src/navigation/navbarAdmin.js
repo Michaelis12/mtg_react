@@ -84,7 +84,7 @@ const NavbarAdmin = function () {
     const displayNotifs =  async () => {
 
         const response = await getNotifs()
-        setNotifications(response)
+        setNotifications(response || [])
     }
     useEffect(() => {
             displayNotifs();

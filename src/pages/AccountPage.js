@@ -40,7 +40,7 @@ import { getImageUrl } from '../utils/imageUtils';
 const AccountPage = () => {
     const navigate = useNavigate();
     const { getCookie, isAuthenticated } = useContext(AuthContext); 
-    const [deckBuilder, setDeckBuilder] = useState(null);
+    const [deckBuilder, setDeckBuilder] = useState([]);
     const [updateProfil, setUpdateProfil] = useState(false);
     const [activeProfil, setActiveProfil] = useState(false);
     const [userDecks, setUserDecks] = useState([])
