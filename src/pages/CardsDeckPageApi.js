@@ -1401,7 +1401,7 @@ const CardsDeckPage = () => {
                                                   <h2><strong>Cartes sélectionnées ({cardsSelected.length})</strong></h2>
                                               </div>
                                               <div className='cards-selected-container'>
-                                                <img className='card-add-img' src={cardImage && cardImage.startsWith('/uploads/') ? `http://localhost:8080${cardImage}` : cardImage} alt="deck-img" />
+                                                <img className='card-add-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cardImage}` : cardImage} alt="deck-img" />
                                                 <div className='cards-deck-unit-container'> 
 
                                                   {cardsSelectedUnit.map(card => ( 
@@ -1424,7 +1424,7 @@ const CardsDeckPage = () => {
                                                         <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(card)} />
                                                       </div> 
                                                         {detailsCard && detailsCard.id === card.id && (
-                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
+                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image"/>
                                                         )} 
                                                     </div>
                                             

@@ -502,14 +502,14 @@ const AccountPage = () => {
                 if(avatar === "") {
                     // Si pas d'avatar sélectionné, afficher l'avatar existant
                     if(deckBuilder.avatar && deckBuilder.avatar.startsWith('/uploads/')) {
-                        return `http://localhost:8080${deckBuilder.avatar}`;
+                        return `https://mtg-spring.onrender.com${deckBuilder.avatar}`;
                     }
                     return deckBuilder.avatar;
                 }
                 else {
                     // Si un nouvel avatar a été sélectionné
                     if(avatar.startsWith('/uploads/')) {
-                        return `http://localhost:8080${avatar}`;
+                        return `https://mtg-spring.onrender.com${avatar}`;
                     }
                     return avatar;
                 }
@@ -817,12 +817,12 @@ const AccountPage = () => {
                                         <div className='new-deck-contenair'>
                                             <div className='new-deck-button-desktop'>
                                                 <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
-                                                style={{ width: '120px', height: '120px', backgroundColor: '#1B1D40', marginBottom: '5%'
+                                                style={{ width: '120px', height: '120px', backgroundColor: '#5D3B8C', marginBottom: '5%'
                                                         }}/>
                                             </div>
                                             <div className='new-deck-button-mobile'>
                                                 <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
-                                                style={{ width: '100px', height: '100px', backgroundColor: '#1B1D40', marginBottom: '5%'
+                                                style={{ width: '100px', height: '100px', backgroundColor: '#5D3B8C', marginBottom: '5%'
                                                         }}/>
                                             </div>
                                             <h5><strong>Nouveau deck</strong></h5>                              

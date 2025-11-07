@@ -11,7 +11,7 @@ export const getImageUrl = (imagePath) => {
     
     // Vérifier si c'est un chemin uploads
     if (decodedPath.startsWith('/uploads/')) {
-        return `http://localhost:8080${decodedPath}`;
+        return `https://mtg-spring.onrender.com${decodedPath}`;
     }
     
     // Sinon retourner le chemin tel quel (pour les images locales ou base64)
@@ -28,7 +28,7 @@ export const getAvatarUrl = (avatarPath) => {
     
     // Vérifier si c'est un chemin uploads
     if (avatarPath.startsWith('/uploads/')) {
-        return `http://localhost:8080${avatarPath}`;
+        return `https://mtg-spring.onrender.com${avatarPath}`;
     }
     
     // Sinon retourner le chemin tel quel (pour les images locales ou base64)
@@ -45,7 +45,7 @@ export const getDeckImageUrl = (deckImagePath) => {
     
     // Vérifier si c'est un chemin uploads
     if (deckImagePath.startsWith('/uploads/')) {
-        return `http://localhost:8080${deckImagePath}`;
+        return `https://mtg-spring.onrender.com${deckImagePath}`;
     }
     
     // Sinon retourner le chemin tel quel (pour les images locales ou base64)

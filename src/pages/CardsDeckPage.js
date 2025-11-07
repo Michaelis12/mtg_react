@@ -501,7 +501,7 @@ const CardsDeckPage = () => {
     const getBgDate= () => {
       
                      if(displayCardsOrder ==="id") {
-                       return '#1B1D40'
+                       return '#5D3B8C'
                      } 
                      else {
                        return '#D3D3D3'
@@ -511,7 +511,7 @@ const CardsDeckPage = () => {
          
     const getBgTop= () => {
                      if(displayCardsOrder ==="like") {
-                       return '#1B1D40'
+                       return '#5D3B8C'
                      }
                      else {
                        return '#D3D3D3'
@@ -520,7 +520,7 @@ const CardsDeckPage = () => {
 
     const getBgLike= () => {
                      if(displayCards==="liked") {
-                       return '#1B1D40'
+                       return '#5D3B8C'
                      }
                      else {
                        return '#D3D3D3'
@@ -1335,7 +1335,7 @@ const CardsDeckPage = () => {
 
                       { deck.format === "commander" && ( 
                       <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
+                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         style={{opacity: desacCardsCedh(card.id)}} />                
                         <AddButton onClick={() => selectCardCedh(card)} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }}
@@ -1346,7 +1346,7 @@ const CardsDeckPage = () => {
                       { deck.format !== "commander" && (   
                                       
                       <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
+                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         style={{opacity: desacCardsDeck(card.id)}} />
 
@@ -1388,7 +1388,7 @@ const CardsDeckPage = () => {
                     <p className='card-page-likenumber'>{card.likeNumber} <FaHeart style={{position:'relative', marginBottom: '3px'}} size={'0.9em'}  color='red' /></p>
 
                     {detailsCard && detailsCard.id === card.id && (
-                    <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
+                    <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image"/>
                     )}  
                 </div>
                 ))}
@@ -1413,7 +1413,7 @@ const CardsDeckPage = () => {
 
                       { deck.format === "commander" && ( 
                       <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navTopCard(card.id)}
+                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image" onClick={() => navTopCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         style={{opacity: desacCardsCedh(card.id)}} />                
                         <AddButton onClick={() => selectCardCedh(card)} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }}
@@ -1423,7 +1423,7 @@ const CardsDeckPage = () => {
 
                       { deck.format !== "commander" && (                 
                       <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navTopCard(card.id)}
+                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image" onClick={() => navTopCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         style={{opacity: desacCardsDeck(card.id)}} />
 
@@ -1465,7 +1465,7 @@ const CardsDeckPage = () => {
                     <p className='card-page-likenumber'>{card.likeNumber} <FaHeart style={{position:'relative', marginBottom: '3px'}} size={'0.9em'}  color='red' /></p>
 
                     {detailsCard && detailsCard.id === card.id && (
-                    <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
+                    <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image"/>
                     )}  
                 </div> 
                 ))}
@@ -1487,7 +1487,7 @@ const CardsDeckPage = () => {
 
                       { deck.format === "commander" && ( 
                       <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
+                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         style={{opacity: desacCardsCedh(card.id)}} />                
                         <AddButton onClick={() => selectCardCedh(card)} style={{ backgroundColor: 'white', margin : '2%', border: 'none' }}
@@ -1497,7 +1497,7 @@ const CardsDeckPage = () => {
 
                       { deck.format !== "commander" && (                 
                       <div className='classic-formats-deck-details'>
-                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
+                        <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
                         onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                         style={{opacity: desacCardsDeck(card.id)}} />
 
@@ -1539,7 +1539,7 @@ const CardsDeckPage = () => {
                     <p className='card-page-likenumber'>{card.likeNumber} <FaHeart style={{position:'relative', marginBottom: '3px'}} size={'0.9em'}  color='red' /></p>
 
                     {detailsCard && detailsCard.id === card.id && (
-                    <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
+                    <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image"/>
                     )}  
                 </div>
                 ))}
@@ -1563,7 +1563,7 @@ const CardsDeckPage = () => {
                                                   <h2><strong>Cartes sélectionnées ({cardsSelected.length})</strong></h2>
                                               </div>
                                               <div className='cards-selected-container'>
-                                                <img className='card-add-img' src={cardImage && cardImage.startsWith('/uploads/') ? `http://localhost:8080${cardImage}` : cardImage} alt="deck-img" />
+                                                <img className='card-add-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cardImage}` : cardImage} alt="deck-img" />
                                                 <div className='cards-deck-unit-container'> 
                                                   {cardsSelectedUnit.map(card => ( 
                                                     <div className="land-text-details" id='land-card'  key={card.id}>
@@ -1582,7 +1582,7 @@ const CardsDeckPage = () => {
                                                         <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(card)} />
                                                         
                                                         {detailsCard && detailsCard.id === card.id && (
-                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
+                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image"/>
                                                         )} 
                                                     </div>
                                             
@@ -1610,7 +1610,7 @@ const CardsDeckPage = () => {
                                 icon={<MdOutlinePlayArrow className='icon-nav' />} />                   
                               </div>
                               <img className="card-selected-img-mobile"
-                                              src={cardsSelectedUnit[cardNumber].image && cardsSelectedUnit[cardNumber].image.startsWith('/uploads/') ? `http://localhost:8080${cardsSelectedUnit[cardNumber].image}` : cardsSelectedUnit[0].image} alt="Card mtg"/>
+                                              src={cardsSelectedUnit[cardNumber].image && cardsSelectedUnit[cardNumber].image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cardsSelectedUnit[cardNumber].image}` : cardsSelectedUnit[0].image} alt="Card mtg"/>
                               <div className='cards-deck-unit-container'> 
                                 {cardsSelectedUnit.length > 0 && (
                                   <div className="land-text-details" id='land-card' key={cardsSelectedUnit[cardNumber].id}>

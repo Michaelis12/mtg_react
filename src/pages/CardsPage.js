@@ -321,7 +321,7 @@ const CardsPage = () => {
          
                    const getBgDate= () => {
                      if(displayCards==="id") {
-                       return '#1B1D40'
+                       return '#5D3B8C'
                      } 
                      else {
                        return '#D3D3D3'
@@ -330,7 +330,7 @@ const CardsPage = () => {
          
                     const getBgTop= () => {
                      if(displayCards==="popularity") {
-                       return '#1B1D40'
+                       return '#5D3B8C'
                      }
                      else {
                        return '#D3D3D3'

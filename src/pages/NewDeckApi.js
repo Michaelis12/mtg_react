@@ -73,10 +73,6 @@ const NewDeck = () => {
 
     const [editions, setEditions] = React.useState([])
 
-
-
-
-
       // N'affiche pas INCOLORE dans le 1er checkout
       const displayColor = (value) => {
         if(value === "INCOLORE") {
@@ -202,30 +198,6 @@ const NewDeck = () => {
               colors
             }
 
-            
-/*
-            const cardsId = [];
-
-            if (colors.includes("w")) {
-                          cardsId.push(1);  
-                        }
-
-            if (colors.includes("u")) {
-              cardsId.push(2);  
-            }
-
-            if (colors.includes("b")) {
-              cardsId.push(3); 
-            }
-
-            if (colors.includes("r")) {
-              cardsId.push(4);  
-            }
-
-            if (colors.includes("g")) {
-              cardsId.push(5);  
-            }
-*/
             const response = await axiosInstance.post('/f_user/addDeck', deckRegister, { withCredentials: true}); 
             const responseData = response.data
 
@@ -237,6 +209,7 @@ const NewDeck = () => {
 
         } catch (e) {
             setDisplayLoading(false);
+            navigate("/signPage");
         }     
     }
 
@@ -822,38 +795,12 @@ const NewDeck = () => {
             const response = await axiosInstance.post('/f_user/addCedh', deckRegister, { withCredentials: true}); 
             const responseData = response.data
 
-           /* 
-            const cardsId = []; 
-
-            if (colors.includes("BLANC")) {
-              cardsId.push(1);  
-            }
-
-            if (colors.includes("BLEU")) {
-              cardsId.push(2);  
-            }
-
-            if (colors.includes("NOIR")) {
-              cardsId.push(3); 
-            }
-
-            if (colors.includes("ROUGE")) {
-              cardsId.push(4);  
-            }
-
-            if (colors.includes("VERT")) {
-              cardsId.push(5);  
-            }
-
-            cardsId.push(6);
-
-            const request = await axiosInstance.post(`f_user/addCardsOnDeck?cardId=${cardsId}&deckId=${responseData}`, null, { withCredentials: true });
-            */
             navigate(`/deckbuilding`, { state: { deckID: responseData }}) 
 
             setDisplayLoading(false);
         } catch (e) {
             setDisplayLoading(false);
+            navigate("/signPage");
             console.log(e)
         }     
     }
@@ -915,7 +862,7 @@ const NewDeck = () => {
       <div className='new-deck-attributes'>
             {cedhID !== "" && image === "" && (
               <div>
-                <img className="new-cedh-image" src={cedh.image && cedh.image.startsWith('/uploads/') ? `http://localhost:8080${cedh.image}` : cedh.image} alt="Cedh mtg" onMouseEnter={()=>setDetailsCedh(true)} 
+                <img className="new-cedh-image" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cedh.image}` : cedh.image} alt="Cedh mtg" onMouseEnter={()=>setDetailsCedh(true)} 
                 onMouseLeave={()=>setDetailsCedh(false)} />
               </div>
             )}
@@ -939,7 +886,7 @@ const NewDeck = () => {
         {format.length === 0 && (
             <div className='formats-group'>
                   <div className='pipeline-container'>
-                    <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#1B1D40', color: '#ffffff', zIndex: '0', fontFamily: 'MedievalSharp, cursive' }} text={"Format"}/>
+                    <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#5D3B8C', color: '#ffffff', zIndex: '0', fontFamily: 'MedievalSharp, cursive' }} text={"Format"}/>
                     <Pipeline style={{ backgroundColor: '#D3D3D3', color:'#000000', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>                 
                     <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
                   </div>
@@ -1294,7 +1241,7 @@ const NewDeck = () => {
           <div className='color-group'>
                 <div className='pipeline-container'>
                     <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '0', fontFamily: 'MedievalSharp, cursive'  }}  text={"Format"}/>
-                    <Pipeline style={{ backgroundColor: '#1B1D40', color:'#ffffff', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>
+                    <Pipeline style={{ backgroundColor: '#5D3B8C', color:'#ffffff', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>
                     <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
                 </div> 
                 <div className='pipeline-container-mobile'>
@@ -1335,7 +1282,7 @@ const NewDeck = () => {
               <div className='pipeline-container'>
                   <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '0', fontFamily: 'MedievalSharp, cursive' }} text={"Format"}/>
                   <Pipeline style={{backgroundColor: '#D3D3D3', color:'#000000', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>
-                  <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#1B1D40', color: '#ffffff', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
+                  <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#5D3B8C', color: '#ffffff', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
               </div>
               <div className='title-container-mobile'>
 
@@ -1401,7 +1348,7 @@ const NewDeck = () => {
                           <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-10px'}}/></h1>
   
                           <div className="deck-content">
-                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${image}` : image} alt="Deck mtg"/>
 
                               <div className="deck-selected-attributs" >
                                 
@@ -1435,7 +1382,7 @@ const NewDeck = () => {
                 <h2 className='deck-card-mobile-name'>{name} <ButtonModif onClick={() => returnName()} /></h2>
                 <div className="deck-card-mobile">
                                     <div className="img-container">
-                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${image}` : image} alt="Deck mtg"/>
                                     </div>
           
                 
@@ -1480,7 +1427,7 @@ const NewDeck = () => {
                           <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-10px'}}/></h1>
   
                           <div className="deck-content">
-                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${image}` : image} alt="Deck mtg"/>
 
                               <div className="deck-selected-attributs" >
 
@@ -1490,7 +1437,7 @@ const NewDeck = () => {
                                         > {cedh.name}<ButtonModif onClick={() => returnCedh()} 
                                         style={{marginTop: '-20px'}}  /> </h3>
                                       {detailsCard && detailsCard.id === cedh.id && (
-                                            <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `http://localhost:8080${cedh.image}` : cedh.image} alt="Card-image"/>
+                                            <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cedh.image}` : cedh.image} alt="Card-image"/>
                                         )} 
                                 </div> 
                                 
@@ -1522,7 +1469,7 @@ const NewDeck = () => {
               <h2 className='deck-card-mobile-name'>{name} <ButtonModif onClick={() => returnName()} style={{marginLeft : '10px', marginTop : '5px'}} /></h2>
               <div className="deck-card-mobile" >
                                   <div className="img-container">
-                                                        <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                                                        <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${image}` : image} alt="Deck mtg"/>
                                   </div>
           
               

@@ -261,7 +261,7 @@ const DecksPage = () => {
 
           const getBgDate= () => {
             if(displayDecks==="date") {
-              return '#1B1D40'
+              return '#5D3B8C'
             } 
             else {
               return '#D3D3D3'
@@ -270,7 +270,7 @@ const DecksPage = () => {
 
            const getBgTop= () => {
             if(displayDecks==="popularity") {
-              return '#1B1D40'
+              return '#5D3B8C'
             }
             else {
               return '#D3D3D3'

@@ -1,5 +1,5 @@
 import "./css/header.css"
-import LogoMTG from "../assets/LogoMTG.png"
+import Logo from "../assets/logo_site.png"
 
 const Header = function (props) {
     
@@ -8,7 +8,7 @@ const Header = function (props) {
     return (    
 
         <header className="header">
-            <a href="/" className="link-home"><img src={LogoMTG} className="logo-site" alt="logo-mtg"/></a>
+            <a href="/" className="link-home"><img src={Logo} className="logo-site" alt="logo-mtg"/></a>
             <div className="nav-bar">{props.child}</div>
             
         </header>       

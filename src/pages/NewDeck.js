@@ -638,7 +638,7 @@ const NewDeck = () => {
          
     const getBgDate= () => {
                      if(displayCards==="id") {
-                       return '#1B1D40'
+                       return '#5D3B8C'
                      } 
                      else {
                        return '#D3D3D3'
@@ -647,7 +647,7 @@ const NewDeck = () => {
          
     const getBgTop= () => {
                      if(displayCards==="popularity") {
-                       return '#1B1D40'
+                       return '#5D3B8C'
                      }
                      else {
                        return '#D3D3D3'
@@ -1042,7 +1042,7 @@ const NewDeck = () => {
       <div className='new-deck-attributes'>
             {cedhID !== "" && image === "" &&(
               <div>
-                <img className="new-cedh-image" src={cedh.image && cedh.image.startsWith('/uploads/') ? `http://localhost:8080${cedh.image}` : cedh.image} alt="Cedh mtg" onMouseEnter={()=>setDetailsCedh(true)} 
+                <img className="new-cedh-image" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cedh.image}` : cedh.image} alt="Cedh mtg" onMouseEnter={()=>setDetailsCedh(true)} 
                 onMouseLeave={()=>setDetailsCedh(false)} />
               </div>
             )}
@@ -1066,7 +1066,7 @@ const NewDeck = () => {
         {format === "" && (
             <div className='formats-group'>
                   <div className='pipeline-container'>
-                    <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#1B1D40', color: '#ffffff', zIndex: '0', fontFamily: 'MedievalSharp, cursive' }} text={"Format"}/>
+                    <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#5D3B8C', color: '#ffffff', zIndex: '0', fontFamily: 'MedievalSharp, cursive' }} text={"Format"}/>
                     <Pipeline style={{ backgroundColor: '#D3D3D3', color:'#000000', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>                 
                     <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
                   </div>
@@ -1257,7 +1257,7 @@ const NewDeck = () => {
                     </div>
                   {cards.map(card => ( 
                       <div className="cards-details" key={card.id}>
-                          <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
+                          <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image" onClick={() => navCard(card.id)}
                           onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                           />
                                             
@@ -1270,7 +1270,7 @@ const NewDeck = () => {
 
 
                       {detailsCard && detailsCard.id === card.id && (
-                      <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
+                      <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image"/>
                       )}  
                   </div>
                   ))}
@@ -1292,7 +1292,7 @@ const NewDeck = () => {
                     </div>
                   {topCards.map(card => ( 
                       <div className="cards-details" key={card.id}>
-                          <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image" 
+                          <img className="cards-img" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image" 
                           onClick={() => navTopCard(card.id)}
                           onMouseEnter={() => hoveredCard(card.id) } onMouseOut={() => hoveredCard() }
                           />
@@ -1306,7 +1306,7 @@ const NewDeck = () => {
 
 
                       {detailsCard && detailsCard.id === card.id && (
-                      <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8080${card.image}` : card.image} alt="Card-image"/>
+                      <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image"/>
                       )}  
                   </div>
                   ))}
@@ -1331,7 +1331,7 @@ const NewDeck = () => {
           <div className='color-group'>
                 <div className='pipeline-container'>
                     <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '0', fontFamily: 'MedievalSharp, cursive'  }}  text={"Format"}/>
-                    <Pipeline style={{ backgroundColor: '#1B1D40', color:'#ffffff', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>
+                    <Pipeline style={{ backgroundColor: '#5D3B8C', color:'#ffffff', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>
                     <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
                 </div> 
                 <div className='title-container-mobile'>
@@ -1375,7 +1375,7 @@ const NewDeck = () => {
               <div className='pipeline-container'>
                   <Pipeline style={{borderTopLeftRadius: '15px', borderBottomLeftRadius: '15px', backgroundColor: '#D3D3D3', color: '#000000', zIndex: '0', fontFamily: 'MedievalSharp, cursive' }} text={"Format"}/>
                   <Pipeline style={{backgroundColor: '#D3D3D3', color:'#000000', zIndex: '1', fontFamily: 'MedievalSharp, cursive' }} text={"Couleurs"}/>
-                  <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#1B1D40', color: '#ffffff', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
+                  <Pipeline style={{borderTopRightRadius: '15px', borderBottomRightRadius: '15px', backgroundColor: '#5D3B8C', color: '#ffffff', zIndex: '-1', fontFamily: 'MedievalSharp, cursive'}} text={"Attributs"}/>
               </div>
               <div className='title-container-mobile'>
 
@@ -1431,7 +1431,7 @@ const NewDeck = () => {
                           <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-20px'}}/></h1>
   
                           <div className="deck-content">
-                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${image}` : image} alt="Deck mtg"/>
 
                               <div className="deck-selected-attributs" >
                                 
@@ -1466,7 +1466,7 @@ const NewDeck = () => {
                 <h2 className='deck-card-medium-name'>{name} <ButtonModif onClick={() => returnName()} /></h2>
                 <div className="deck-card-medium">
                                     <div className="img-container">
-                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${image}` : image} alt="Deck mtg"/>
                                     </div>
           
                 
@@ -1501,7 +1501,7 @@ const NewDeck = () => {
                 <h2 className='deck-card-mobile-name'>{name} <ButtonModif onClick={() => returnName()} /></h2>
                 <div className="deck-card-mobile">
                                     <div className="img-container">
-                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${image}` : image} alt="Deck mtg"/>
                                     </div>
           
                 
@@ -1556,7 +1556,7 @@ const NewDeck = () => {
                           <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-20px'}}/></h1>
   
                           <div className="deck-content">
-                              <img className="deck-selected-img" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                              <img className="deck-selected-img" src={image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${image}` : image} alt="Deck mtg"/>
 
                               <div className="deck-selected-attributs" >
 
@@ -1566,7 +1566,7 @@ const NewDeck = () => {
                                         > {cedh.name}<ButtonModif onClick={() => returnCedh()} 
                                         style={{marginTop: '-20px'}}  /> </h3>
                                       {detailsCard && detailsCard.id === cedh.id && (
-                                            <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `http://localhost:8080${cedh.image}` : cedh.image} alt="Card-image"/>
+                                            <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cedh.image}` : cedh.image} alt="Card-image"/>
                                         )} 
                                 </div> 
                                 
@@ -1601,7 +1601,7 @@ const NewDeck = () => {
               <h2 className='deck-card-medium-name'>{name} <ButtonModif onClick={() => returnName()} /></h2>
                 <div className="deck-card-medium">
                                     <div className="img-container">
-                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${image}` : image} alt="Deck mtg"/>
                                     </div>
           
                 
@@ -1614,7 +1614,7 @@ const NewDeck = () => {
                                         > {cedh.name}<ButtonModif onClick={() => returnCedh()} 
                                         style={{marginTop: '-20px'}}  /> </h3>
                                       {detailsCard && detailsCard.id === cedh.id && (
-                                            <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `http://localhost:8080${cedh.image}` : cedh.image} alt="Card-image"/>
+                                            <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cedh.image}` : cedh.image} alt="Card-image"/>
                                         )} 
                                 </div> 
                                                               
@@ -1646,7 +1646,7 @@ const NewDeck = () => {
               <h2 className='deck-card-mobile-name'>{name} <ButtonModif onClick={() => returnName()} style={{marginLeft : '10px'}} /></h2>
               <div className="deck-card-mobile" >
                                   <div className="img-container">
-                                                        <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `http://localhost:8080${image}` : image} alt="Deck mtg"/>
+                                                        <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${image}` : image} alt="Deck mtg"/>
                                   </div>
           
               

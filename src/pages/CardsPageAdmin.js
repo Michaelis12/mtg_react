@@ -343,7 +343,7 @@ const CardsPageAdmin = () => {
          
     const getBgDate= () => {
                      if(displayCards==="id") {
-                       return '#1B1D40'
+                       return '#5D3B8C'
                      } 
                      else {
                        return '#D3D3D3'
@@ -352,7 +352,7 @@ const CardsPageAdmin = () => {
          
     const getBgTop= () => {
                      if(displayCards==="like") {
-                       return '#1B1D40'
+                       return '#5D3B8C'
                      }
                      else {
                        return '#D3D3D3'
@@ -1494,7 +1494,7 @@ const CardsPageAdmin = () => {
                   accept="image/*"
                   onChange={(e) => changeImage(e)}
                 />
-                <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `http://localhost:8080${cardImage}` : cardImage} alt="deck-img" />
+                <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cardImage}` : cardImage} alt="deck-img" />
               </div>
               <div className='setAttributs-card-checkout'>
               
@@ -1599,7 +1599,7 @@ const CardsPageAdmin = () => {
               accept="image/*"
               onChange={(e) => changeImage(e)}
             />
-            <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `http://localhost:8080${cardImage}` : cardImage} alt="deck-img" />
+            <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cardImage}` : cardImage} alt="deck-img" />
           </div>
           <div className='setAttributs-card-img-checkout-mobile'>
 
@@ -1707,7 +1707,7 @@ const CardsPageAdmin = () => {
               accept="image/*"
               onChange={(e) => changeImage(e)}
             />
-            <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `http://localhost:8080${cardImage}` : cardImage} alt="deck-img" />
+            <img className='card-selected-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cardImage}` : cardImage} alt="deck-img" />
           </div>
           <div className='setAttributs-card-img-checkout-mobile'>
 
