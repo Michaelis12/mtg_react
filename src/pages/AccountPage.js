@@ -622,7 +622,7 @@ const AccountPage = () => {
                     
                                                             <div className="user-line-bio">
                                                             <h4 className="user-title-bio">Bio :</h4>
-                                                            {deckBuilder.bio ? (
+                                                            {deckBuilder?.bio ? (
                                                                 <h3 className='user-bio'>{deckBuilder.bio}</h3>
                                                             ) : (
                                                                 <h3 className='user-bio'>Deckbuilder Magic en formation</h3>
@@ -660,7 +660,7 @@ const AccountPage = () => {
                                                                 <IoSettingsOutline className='icon-update-user' />
                                                                 <h5 className='update-user-p'>Paramètres du compte</h5>
                                                         </button> 
-                                            </div>
+                                            </div> 
 
                                             <div className="card-user-mobile"> 
                                                             <div className="header-card" style={{backgroundImage:`url(${BackgroundGif})`}}>
@@ -670,11 +670,10 @@ const AccountPage = () => {
                     
                                                             <div className='user-bio-container'>
                                                                 <h4 className="user-title-bio" >Bio : </h4>                  
-                                                                { deckBuilder.bio !== null && (                   
-                                                                    <h3 className="user-bio">{deckBuilder.bio}</h3>
-                                                                )}
-                                                                { deckBuilder.bio === null && (                   
-                                                                    <p className="user-bio" >Deckbuilder Magic en formation</p>
+                                                                {deckBuilder?.bio ? (
+                                                                <h3 className='user-bio'>{deckBuilder.bio}</h3>
+                                                                ) : (
+                                                                    <h3 className='user-bio'>Deckbuilder Magic en formation</h3>
                                                                 )}
                                                             </div>
                     
