@@ -40,7 +40,7 @@ import { getImageUrl } from '../utils/imageUtils';
 const AccountPage = () => {
     const navigate = useNavigate();
     const { getCookie, isAuthenticated } = useContext(AuthContext); 
-    const [deckBuilder, setDeckBuilder] = useState([]);
+    const [deckBuilder, setDeckBuilder] = useState(null);
     const [updateProfil, setUpdateProfil] = useState(false);
     const [activeProfil, setActiveProfil] = useState(false);
     const [userDecks, setUserDecks] = useState([])
@@ -788,94 +788,94 @@ const AccountPage = () => {
                     </div>               
 
                     {/*Decks mappés*/}
+                    { deckBuilder && (
+                        <div className="user-attributs-container" style={{marginTop: '3%'}}>
 
-                    {/*
-                    <div className="user-attributs-container" style={{marginTop: '3%'}}>
+                        <div className="open-buttons-container">
+                            
+                            <div style={{width: '100%'}}>
+                                <TitleArrow onClick={()=>setNavDecks(!navDecks)} style={{marginTop: '0%'}}
+                                            title={`Mes decks (${deckBuilder?.decksNumber || 0})`}
+                                            icon={arrowSens}
+                                />
 
-                    <div className="open-buttons-container">
+                                {arrowUp === true && 
+                                <div className='attributs-map-container'
+                                    style={{ backgroundImage: `url(${BackgroundWhite})`, display: 'flex', flexDirection: 'column'}}>
+                                    <div className='deck-created-section'>
+                                    {decks.map(deck => (  
+                                        <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
+                                        format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
+                                        onClick={() => newDeck(deck.id)}
+                                        onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } 
+                                        onMouseOut={() => hoveredDeck()}
+                                        className="deck-public"                                 
+                                        para={isDeckPublic(deck)}
+                                        style={deckPublicStyle(deck)}
+                                        detailsDeck={detailsDeck} />
+                                    ))} 
+                                        <div className="deck-details" style={{display: 'flex', flexDirection: 'column',
+                                            justifyContent: 'center', alignItems: 'center', border: '1px solid black'
+                                        }} >
+                                            <div className='new-deck-contenair'>
+                                                <div className='new-deck-button-desktop'>
+                                                    <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
+                                                    style={{ width: '120px', height: '120px', backgroundColor: '#5D3B8C', marginBottom: '5%'
+                                                            }}/>
+                                                </div>
+                                                <div className='new-deck-button-mobile'>
+                                                    <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
+                                                    style={{ width: '100px', height: '100px', backgroundColor: '#5D3B8C', marginBottom: '5%'
+                                                            }}/>
+                                                </div>
+                                                <h5><strong>Nouveau deck</strong></h5>                              
+                                            </div>
+                                        </div>  
+                                    </div>   
+                                    <button className='details-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/decksCreate')}>Afficher en détails</button>                        
+                                </div>
+                                }
+                            </div>
+
                         
-                        <div style={{width: '100%'}}>
-                            <TitleArrow onClick={()=>setNavDecks(!navDecks)} style={{marginTop: '0%'}}
-                                        title={`Mes decks (${deckBuilder?.decksNumber || 0})`}
-                                        icon={arrowSens}
-                            />
 
-                            {arrowUp === true && 
-                            <div className='attributs-map-container'
-                                style={{ backgroundImage: `url(${BackgroundWhite})`, display: 'flex', flexDirection: 'column'}}>
-                                <div className='deck-created-section'>
-                                {decks.map(deck => (  
-                                    <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
-                                    format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
-                                     onClick={() => newDeck(deck.id)}
-                                     onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } 
-                                     onMouseOut={() => hoveredDeck()}
-                                     className="deck-public"                                 
-                                     para={isDeckPublic(deck)}
-                                     style={deckPublicStyle(deck)}
-                                     detailsDeck={detailsDeck} />
-                                ))} 
-                                    <div className="deck-details" style={{display: 'flex', flexDirection: 'column',
-                                        justifyContent: 'center', alignItems: 'center', border: '1px solid black'
-                                    }} >
-                                        <div className='new-deck-contenair'>
-                                            <div className='new-deck-button-desktop'>
-                                                <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
-                                                style={{ width: '120px', height: '120px', backgroundColor: '#5D3B8C', marginBottom: '5%'
-                                                        }}/>
+
+                        <div style={{width: '100%'}} className='decks-liked-map-contenair'>
+                            <TitleArrow onClick={()=>(setArrowSens3((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>)),
+                                    setArrowUp3(!arrowUp3))} 
+                                            title={`Mes decks likés (${deckBuilder?.decksLikedNumber || 0})`}
+                                            icon={arrowSens3}
+                                />
+                        
+                            {arrowUp3 === true && decksLiked.length > 0 &&
+                                <div className="attributs-map-container" style={{ backgroundImage: `url(${BackgroundWhite})`, display: 'flex', flexDirection: 'column'}}>
+                                            <div className='deck-liked-section'>
+                                                {decksLiked.map(deck => ( 
+                                                    <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
+                                                    format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
+                                                    onClick={() => newDeck(deck.id)}
+                                                    onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } 
+                                                    onMouseOut={() => hoveredDeck()}
+                                                    paraOnClick={()=>chooseUser(deck.id)}
+                                                    className="deck-db"                                 
+                                                    para={deck.deckBuilderName}
+                                                    detailsDeck={detailsDeck} />
+                                                ))}
                                             </div>
-                                            <div className='new-deck-button-mobile'>
-                                                <IconButtonHover onClick={() => navNewDeck()} icon={<FaPlus size={'4em'} color='white'/>} 
-                                                style={{ width: '100px', height: '100px', backgroundColor: '#5D3B8C', marginBottom: '5%'
-                                                        }}/>
-                                            </div>
-                                            <h5><strong>Nouveau deck</strong></h5>                              
-                                        </div>
-                                    </div>  
-                                </div>   
-                                <button className='details-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/decksCreate')}>Afficher en détails</button>                        
-                            </div>
+                                            <button className='details-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/decksLiked')}>Afficher en détails</button>
+                                </div>
                             }
-                        </div>
-
-                    
-
-
-                    <div style={{width: '100%'}} className='decks-liked-map-contenair'>
-                        <TitleArrow onClick={()=>(setArrowSens3((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>)),
-                                setArrowUp3(!arrowUp3))} 
-                                        title={`Mes decks likés (${deckBuilder?.decksLikedNumber || 0})`}
-                                        icon={arrowSens3}
-                            />
-                    
-                        {arrowUp3 === true && decksLiked.length > 0 &&
-                            <div className="attributs-map-container" style={{ backgroundImage: `url(${BackgroundWhite})`, display: 'flex', flexDirection: 'column'}}>
-                                        <div className='deck-liked-section'>
-                                            {decksLiked.map(deck => ( 
-                                                <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
-                                                format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
-                                                onClick={() => newDeck(deck.id)}
-                                                onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } 
-                                                onMouseOut={() => hoveredDeck()}
-                                                paraOnClick={()=>chooseUser(deck.id)}
-                                                className="deck-db"                                 
-                                                para={deck.deckBuilderName}
-                                                detailsDeck={detailsDeck} />
-                                            ))}
-                                        </div>
-                                        <button className='details-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/decksLiked')}>Afficher en détails</button>
+                            {arrowUp3 === true && decksLiked.length < 1 && (
+                                            <div className='p-blank-section' style={{ backgroundImage: `url(${BackgroundWhite})`}}>
+                                                    <ParagraphBlank  text={"Aucun deck liké"}/>
+                                            </div>
+                            )}
                             </div>
-                        }
-                        {arrowUp3 === true && decksLiked.length < 1 && (
-                                        <div className='p-blank-section' style={{ backgroundImage: `url(${BackgroundWhite})`}}>
-                                                <ParagraphBlank  text={"Aucun deck liké"}/>
-                                        </div>
-                        )}
                         </div>
-                    </div>
 
-                    </div> 
-                    */} 
+                        </div> 
+                    )}
+
                 <FooterSection/>   
                 
             </Section> 
