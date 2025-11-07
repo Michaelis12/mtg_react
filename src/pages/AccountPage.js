@@ -788,11 +788,12 @@ const AccountPage = () => {
                     </div>               
 
                     {/*Decks mappés*/}
+
+                    {/*
                     <div className="user-attributs-container" style={{marginTop: '3%'}}>
 
                     <div className="open-buttons-container">
                         
-                        {/*Mapping des decks créés*/}
                         <div style={{width: '100%'}}>
                             <TitleArrow onClick={()=>setNavDecks(!navDecks)} style={{marginTop: '0%'}}
                                         title={`Mes decks (${deckBuilder?.decksNumber || 0})`}
@@ -837,53 +838,9 @@ const AccountPage = () => {
                             }
                         </div>
 
-                        {/*Mapping des cartes likées*/}
-                        {/*
-                        <TitleArrow onClick={()=>(setArrowSens2((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>)),
-                            setArrowUp2(!arrowUp2))} 
-                                    title={ `Mes cartes likées (${deckBuilder?.cardsLikedNumber || 0})`}
-                                   
-                                    icon={arrowSens2}
-                        />
-                                {arrowUp2 === true && cardsLiked.length > 0 &&
-                                <div className="attributs-map-container" style={{ backgroundImage: `url(${BackgroundWhite})`, display: 'flex', flexDirection: 'column'}}>
-                                <div className='card-liked-section'>
-                                    {cardsLiked.map(card => ( 
-                                        <div className="cards-liked-user" id='cards-liked-user' key={card.id}>
-                                            <img className="card-liked-user-image" src={getImageUrl(card.image)} alt="Card-liked-user-image" onClick={() => navCardLiked(card.id)}
-                                            onMouseEnter={() => hoveredCardLiked(card.id, card.name, card.type, card.text) } onMouseOut={() => hoveredCardLiked() } />
-                                            <IconButton 
-                                                onClick={()=> dislikeCard(card.id)} 
-                                                onMouseEnter={() => mouseEnterCard(card.id)}
-                                                onMouseLeave={() => mouseLeaveCard(card.id)}
-                                                style={{ 
-                                                    background: 'none', 
-                                                    boxShadow: 'none', 
-                                                    padding: 0, 
-                                                    border: 'none',
-                                                    position: 'relative',
-                                                    marginTop: '2%'
-                                                }} 
-                                                icon={hearthIconCard(card.id)} 
-                                            />
-                                            {detailsCardLiked && detailsCardLiked.id === card.id && (
-                                                <img className="card-img-zoom" src={getImageUrl(card.image)} alt="Card-image"/>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                                <button className='next-page-button' style={{marginBottom: '3%'}} onClick={()=>navigate('/cardsLiked')}>Afficher en détails</button>
-                                </div>
-                        }
-                        {arrowUp2 === true && cardsLiked.length < 1 && (
-                            <div className='p-blank-section' style={{ backgroundImage: `url(${BackgroundWhite})`}}>
-                                <ParagraphBlank text={"Aucune carte likée"}/>
-                            </div>
-                                                                    )}
-                        */}
-
                     
-                    {/*Mapping des decks likés*/}
+
+
                     <div style={{width: '100%'}} className='decks-liked-map-contenair'>
                         <TitleArrow onClick={()=>(setArrowSens3((prevIcon) => (prevIcon.type === SlArrowDown ? <SlArrowUp/> : <SlArrowDown/>)),
                                 setArrowUp3(!arrowUp3))} 
@@ -917,8 +874,8 @@ const AccountPage = () => {
                         </div>
                     </div>
 
-                    </div>  
-
+                    </div> 
+                    */} 
                 <FooterSection/>   
                 
             </Section> 
