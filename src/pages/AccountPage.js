@@ -499,6 +499,10 @@ const AccountPage = () => {
 
         // Afficher la pp de l'user
         const displayAvatar = () => { 
+
+            if (!deckBuilder) {
+                return "";
+            }
                 if(avatar === "") {
                     // Si pas d'avatar sélectionné, afficher l'avatar existant
                     if(deckBuilder.avatar && deckBuilder.avatar.startsWith('/uploads/')) {
@@ -614,7 +618,7 @@ const AccountPage = () => {
                                                         </div>
                     
                                                         <div className="card-user-info">
-                                                            <h1 className="user-pseudo">{deckBuilder.pseudo}</h1>
+                                                            <h1 className="user-pseudo">{deckBuilder?.pseudo}</h1>
                     
                                                             <div className="user-line-bio">
                                                             <h4 className="user-title-bio">Bio :</h4>
@@ -627,7 +631,7 @@ const AccountPage = () => {
                     
                                                             <div className="card-line-attribut">
                                                                 <h4 className="deck-selected-line-title">Date d'inscription :</h4>
-                                                                <h4 className='user-date'>{deckBuilder.dateSign}</h4>
+                                                                <h4 className='user-date'>{deckBuilder?.dateSign}</h4>
                                                             
                                                             </div>
                     
@@ -635,7 +639,7 @@ const AccountPage = () => {
                     
                                                                 <div className='user-stat'>
                                                                     <h5>Decks créés : </h5>
-                                                                    <h4>{deckBuilder.decksNumber}</h4>
+                                                                    <h4>{deckBuilder?.decksNumber}</h4>
                                                                 </div>
                                                                 <div  className='user-stat'>
                                                                     <h5>Likes obtenus : </h5>
@@ -661,7 +665,7 @@ const AccountPage = () => {
                                             <div className="card-user-mobile"> 
                                                             <div className="header-card" style={{backgroundImage:`url(${BackgroundGif})`}}>
                                                                 <img src={displayAvatar()} className="user-avatar" alt="user-pp"/>
-                                                                    <h1 className="user-pseudo">{deckBuilder.pseudo}</h1>   
+                                                                    <h1 className="user-pseudo">{deckBuilder?.pseudo}</h1>   
                                                             </div>  
                     
                                                             <div className='user-bio-container'>
@@ -676,7 +680,7 @@ const AccountPage = () => {
                     
                                                             <div className="date-user-container">
                                                                 <h4 className="user-date-line-title">Date d'inscription :</h4>
-                                                                <h4 className='user-date'>{deckBuilder.dateSign}</h4>
+                                                                <h4 className='user-date'>{deckBuilder?.dateSign}</h4>
                                                             
                                                             </div>
                     
@@ -684,7 +688,7 @@ const AccountPage = () => {
                     
                                                             <div className='user-stat'>
                                                                 <h5>Decks créés : </h5>
-                                                                <h4>{deckBuilder.decksNumber}</h4>
+                                                                <h4>{deckBuilder?.decksNumber}</h4>
                                                             </div>
                                                             <div  className='user-stat'>
                                                                 <h5>Likes obtenus : </h5>
@@ -716,7 +720,7 @@ const AccountPage = () => {
                                                             <textarea className="user-pseudo" id="pseudo" name="pseudo" rows="1"
                                                                 style={{color: 'black', backgroundColor: 'white'}}
                                                                 maxLength={25} onChange={(e) => setPseudo(e.target.value)} >
-                                                                    {deckBuilder.pseudo}
+                                                                    {deckBuilder?.pseudo}
                                                             </textarea>
 
                     
@@ -724,7 +728,7 @@ const AccountPage = () => {
                                                             <h4 className="user-title-bio">Bio :</h4>
                                                             <textarea className="input-bio" id="bio" name="bio" rows="4"
                                                                 maxLength={100} onChange={(e) => setBio(e.target.value)} >
-                                                                    {deckBuilder.bio}
+                                                                    {deckBuilder?.bio}
                                                             </textarea>
 
                                                             </div> 
@@ -751,7 +755,7 @@ const AccountPage = () => {
                                                                 <textarea className="user-input-pseudo" id="pseudo" name="pseudo" rows="1"
                                                                     style={{color: 'black', backgroundColor: 'white'}}
                                                                     maxLength={25} onChange={(e) => setPseudo(e.target.value)} >
-                                                                        {deckBuilder.pseudo}
+                                                                        {deckBuilder?.pseudo}
                                                                 </textarea>  
                                                             </div>  
                     
@@ -759,7 +763,7 @@ const AccountPage = () => {
                                                                 <h4 className="user-title-bio" >Bio : </h4>                  
                                                                 <textarea className="input-bio" id="bio" name="bio" rows="4"
                                                                     maxLength={100} onChange={(e) => setBio(e.target.value)} >
-                                                                        {deckBuilder.bio}
+                                                                        {deckBuilder?.bio}
                                                                 </textarea>
                                                             </div>
                             
