@@ -1247,10 +1247,17 @@ React.useEffect(() => {
                                           )}
 
  
-            
-            <div className='title-cards-container'>
-              <Title title='Cartes' />
-            </div> 
+            { order === "deck" && (
+              <div className='title-cards-container'>
+                <Title title='Top Cartes' />
+              </div>
+            )}
+
+            { order === "cedh" && (
+              <div className='title-cards-container'>
+                <Title title='Top Commandants' />
+              </div>
+            )} 
    
       <div className='display-objects-section'>
         
