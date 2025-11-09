@@ -55,7 +55,7 @@ const CardsPage = () => {
         
     // États pour la pagination
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(20);
+    const [pageSize, setPageSize] = useState(100);
     const [hasMore, setHasMore] = useState(true);
     const location = useLocation();
     const order = location.state?.order;
@@ -113,7 +113,7 @@ const CardsPage = () => {
           
         const listCards = response.data.content.map(cardData => Card.fromApi(cardData));
         setCards(listCards);
-        setHasMore(response.data.has_more);
+        setHasMore(!response.data.isLast);
         setPage(2);
         setDisplayLoading(false);
 
@@ -1287,9 +1287,9 @@ React.useEffect(() => {
               
       
       {/* Bouton pour afficher plus de cartes */}
-      { hasMore && !displayLoading && (
+      { hasMore && !displayLoading && cards.length > 0 && (
         <button className='next-page-button' onClick={()=>displayMoreCards()}>Afficher plus</button> 
-      )}
+      )} 
 
       </div>
 
