@@ -7,7 +7,7 @@ import { SlArrowRight, SlArrowLeft } from "react-icons/sl";
 import axiosInstance from '../api/axiosInstance';
 import Section from '../components/section';
 import IconButton from '../components/buttonIcon';
-import ParagraphLikeNumber from '../components/paragraphLikeNumber';
+import DeckMap from '../components/deck';
 import FooterSection from '../components/footerSection';
 import Deck from '../model/Deck';
 import Title from '../components/title';
@@ -423,7 +423,7 @@ const AccountPage = () => {
 
                     <div className='title-container'>
                             <Title title={"Decks"}/>
-                        </div>
+                        </div> 
 
 
                     <div className="display-objects-section">
@@ -431,55 +431,14 @@ const AccountPage = () => {
                         { decks.length > 0 && (
                         <div className='display-decks-section'>
                                 {decks.map(deck => ( 
-                                <div className="deck-details"  key={deck.id}>
-                                    <img className="deck-pp" src={getDeckImageUrl(deck.image)} alt="Deck avatar" onClick={() => chooseDeck(deck.id)}
-                                    onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } onMouseOut={() => hoveredDeck()} />
-                                    <strong className="decks-name"> {deck.name} </strong>
-
-                                    <IconButton   
-                                        onClick={()=> likeDislike(deck.id)} 
-                                        
-                                        style={{ 
-                                            background: 'none', 
-                                            boxShadow: 'none', 
-                                            paddingTop: '5%', 
-                                            border: 'none',                                       
-                                          }} 
-                                                      
-                                        icon={hearthIcon(deck.id)} 
-                                    />
-
-                                    <ParagraphLikeNumber text={deck.likeNumber} iconStyle={{position:'relative', marginBottom: '3px'}}/>
- 
-                                    {detailsDeck && detailsDeck.id === deck.id && (
-                                    <div className="hover-deck-card">
-                                          <div className="img-container">
-                                              <img className="hover-deck-card-img" src={getDeckImageUrl(deck.image)} alt="Deck mtg"/>
-                                          </div>
-                                                  <div className="deck-hover-body" >
-                                                    <div className='name-line'>
-                                                      <h1 className="hover-deck-name"> {deck.name}</h1>
-                                                    </div>
-                                                    <div className='color-line'>                        
-                                                        <h4 className='color'> Couleurs : </h4> 
-                                                        {deck.colors && deck.colors.length > 0 && (
-                                                            <div className='mapping-color'>
-                                                              {deck.colors.map((color)  => (
-                                                            <img src={getColorPics(color)} className="color-img-select" style={{display:(displayColor(color))}} alt={color}/>                                
-                                                        ))}
-                                                            </div>
-                                                        )} 
-                                                    </div>
-                                                    <div className='format-line'>              
-                                                        <h4 className='format'> Format : </h4> 
-                                                        <h4 className='card-format' style={{ backgroundColor: 'green' }}>{deck.format}</h4>
-                                                    </div>
-                                                    
-                                                </div>                                                
-                                              </div>
-                                    )}
-                </div>
-                          
+                                <DeckMap key={deck.id} id={deck.id} name={deck.name} image={deck.image} 
+                                                format={deck.format} colors={deck.colors} likeNumber={deck.likeNumber} 
+                                                onClick={() => chooseDeck(deck.id)}
+                                                onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } 
+                                                onMouseOut={() => hoveredDeck()}
+                                                className="deck-db"                                 
+                                                para={deck.deckBuilderName}
+                                                detailsDeck={detailsDeck} />                        
                             ))}
                         </div>
                         )}

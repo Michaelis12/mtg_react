@@ -509,7 +509,21 @@
 
 }
 
+.title-commandant-container {
+    width: 30%;
+}
 
+@media (max-width: 1000px) {
+    .title-commandant-container {
+    width: 50%;
+}
+}
+
+@media (max-width: 450px) {
+    .title-commandant-container {
+    width: 100%;
+}
+}
 
 
 .btn-add-card:hover, .open-hand-button:not(:disabled):hover {
@@ -1155,6 +1169,10 @@
   justify-content: center;
   align-items: center;
 } 
+
+.update-deck-container:disabled {
+    display: none;
+}
 
 @media (max-width: 760px) {
 

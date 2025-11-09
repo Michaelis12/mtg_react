@@ -15,7 +15,7 @@ import black from "../assets/black-mtg.png"
 import colorless from "../assets/incolore-mtg.webp"
 import Card from '../model/CardApiSave';
 import { GiCardRandom } from "react-icons/gi";
-import { SlRefresh } from "react-icons/sl";
+import { FaHeart, FaRegHeart  } from 'react-icons/fa';
 import { CgCloseO  } from "react-icons/cg";
 import { MdOutlinePlayArrow } from "react-icons/md";
 import { IoIosArrowDropleft } from "react-icons/io";
@@ -37,7 +37,7 @@ import FooterSection from '../components/footerSection';
        const navigate = useNavigate();
        const id = location.state?.deckID; 
        const [deck, setDeck] = React.useState([])
-       const [updateDeck, setUpdateDeck] = React.useState(false)
+       const [deckLikedId, setDeckLikedId] = React.useState([])
        const [deckCards, setDeckCards] = React.useState([])
        const [deckCardsUnit, setDeckCardsUnit] = React.useState([])
        const [deckCardsLength, setDeckCardsLength] = React.useState([])
@@ -79,7 +79,7 @@ import FooterSection from '../components/footerSection';
         
             }
             getDeckSelected();
-            }, [updateDeck, id, deckSignal]);
+            }, [id, deckSignal]);
 
 
         // N'affiche pas INCOLORE 
@@ -94,10 +94,78 @@ import FooterSection from '../components/footerSection';
             }
             
         }
+ 
 
+        // Méthode liker un deck
+            const likeDeck = async () => {
+                try {
+                    console.log(id)
+                    setDisplayLoading(true);
+                   await axiosInstance.post(`/f_user/likeDeck?deckId=${id}`, null, 
+                   { withCredentials: true });          
+                   setDeckLikedId(prevState => [...prevState, id]); 
+                   setDisplayLoading(false);
+                }   
+                catch (error) {
+                    setDisplayLoading(false);
+                    navigate(`/sign`);
+                }
+            };
 
-        const [displayPopup, setDisplayPopup] = React.useState(false)
+            // Méthode disliker un deck
+            const dislikeDeck = async () => {
+                try {
+                    setDisplayLoading(true);
+                   await axiosInstance.delete(`/f_user/dislikeDeck?deckId=${id}`, { withCredentials: true });          
+                   setDeckLikedId(prevState => prevState.filter(deckId => deckId !== id));
+                    setDisplayLoading(false);
+                    }   
+                catch (error) {
+                    setDisplayLoading(false);
+                    navigate(`/sign`);
+                }
+            };
 
+            // Renvoie les decks likés par l'user connecté
+                  useEffect(() => {
+                  const getDecksLiked = async () => {
+                    try { 
+                        setDisplayLoading(true);
+                        const response = await axiosInstance.get(`f_user/getDecksLiked`, { withCredentials: true });              
+                        
+                        const listId = response.data
+                        
+                        setDeckLikedId(listId)
+                        setDisplayLoading(false);
+                        
+                       
+                    }
+                    catch (error) { 
+                        setDisplayLoading(false);
+                        console.log(error);
+                        }
+                     }
+                    getDecksLiked();
+                       }, []); 
+
+            // Génère un like ou un dislike selon l'état de la carte
+            const likeDislike = () => {
+
+                    if (!deckLikedId.some(deckId => deckId === (id))) {
+                        likeDeck(id);
+                    }
+                    else {
+                        dislikeDeck(id);
+                    }
+            } 
+            // Modifie la couleur de l'icone coeur après un like
+            const hearthIcon = () => {
+                if(!deckLikedId.some(deckId => deckId === (id))) {
+                    return (<FaRegHeart className='deck-like-icon' />)
+                }
+                else {
+                    return (<FaHeart className='deck-like-icon' color="red"/>)
+                }}
 
         // Requete les cartes du deck et les sépare par type
         useEffect(() => {
@@ -342,80 +410,173 @@ import FooterSection from '../components/footerSection';
                 setNextButtonActive(currentCardIndex < hand.length - 1);
             }, [currentCardIndex, hand.length]);
             
-            // Ouvre le popup de zoom pour une carte de la main (index) ou un type de carte (objet)
-            const openZoomPopup = (cardOrIndex) => {
-                if (cardOrIndex && cardOrIndex.image) {
-
-                    setCardImage(cardOrIndex.image);
-                    setCardID(cardOrIndex.id);
-                    if(deck.format === "commander") {
-                        if(cardOrIndex.id === deckCedh.id) {
-                        setNavigateListID([cardOrIndex.id]);
-                        setListImage(cardOrIndex.image);
-                        setDisplayZoomPopup(true);
-                        return
+    // Ajout des états pour le zoom de la main et du land
+                const [cardImage, setCardImage] = useState(null);
+                const [cardID, setCardID] = useState(null);
+                const [cardApiID, setCardApiID] = useState(null);
+                const [navigateListID, setNavigateListID] = useState([]);
+                const [navigateListApiID, setNavigateListApiID] = useState([]);
+                const [listImage, setListImage] = useState([]);
+                
+                
+                // Gérer l'activation/désactivation des boutons de navigation
+                React.useEffect(() => {
+                    setPrevButtonActive(currentCardIndex > 0);
+                    setNextButtonActive(currentCardIndex < hand.length - 1);
+                }, [currentCardIndex, hand.length]);
+                
+                // Ouvre le popup de zoom pour une carte de la main (index) ou un type de carte (objet)
+                const openZoomPopup = (cardOrIndex) => {
+                    if (cardOrIndex && cardOrIndex.image) {
+    
+                        
+    
+                         if(deck.format === "commander") {
+                            if(cardOrIndex.id === deckCedh.id) {
+                            setNavigateListID([cardOrIndex.id]);
+                            setListImage(cardOrIndex.image);
+                            setDisplayZoomPopup(true);
+                            return
+                            }
+                        }
+    
+                        setCardImage(cardOrIndex.image);
+                        setCardID(cardOrIndex.id);
+                        setCardApiID(cardOrIndex.apiID);
+    
+                        const uniqueCardIds = new Set(deckCards.map(card => card.id));
+                        const deckCardsUnit = Array.from(uniqueCardIds).map(id => 
+                            deckCards.find(card => card.id === id)
+                        ); 
+    
+                        const cardTypesIds = deckCardsUnit
+                        .filter(card => 
+                            card.types && 
+                            cardOrIndex.types && 
+                            cardOrIndex.types.some(type => card.types.includes(type))
+                        )
+                        .map(card => card.id);
+                        setNavigateListID(cardTypesIds);
+                        console.log(cardTypesIds)
+    
+                        const cardTypesApiIds = deckCardsUnit
+                        .filter(card => 
+                            card.types && 
+                            cardOrIndex.types && 
+                            cardOrIndex.types.some(type => card.types.includes(type))
+                        )
+                        .map(card => card.apiID);
+                        setNavigateListApiID(cardTypesApiIds);
+                       
+                    } else {                    
+                        setNavigateListID([]);
+                        setNavigateListApiID([]);
+                    }
+                    setDisplayZoomPopup(true);
+                };
+        
+    
+    
+                // Boutons navigation cartes
+                const prevCard = () => {
+                    // 1. Trouver l'index de la carte actuelle dans la liste UNIQUE
+                    const currentIndex = navigateListID.indexOf(cardID); 
+    
+                    // 3. Vérifier que l'on n'est pas au début (currentIndex > 0)
+                    if (currentIndex > 0) {
+                        
+                        // 4. Utiliser la liste UNIQUE pour trouver l'ID précédent
+                        const prevCardId = navigateListID[currentIndex - 1]; 
+                        
+                        // 5. Trouver la carte correspondante
+                        const prevCard = deckCards.find(card => card.id === prevCardId);
+    
+                        if (prevCard) {
+                            setCardID(prevCard.id);
+                            setCardImage(prevCard.image);
                         }
                     }
-                } else {
-                    setCardImage(null);
-                    setCardID(null);
-                    setNavigateListID([]);
-                }
-                setDisplayZoomPopup(true);
-            };
+                };
     
-
-        // Zoom pour afficher les cartes dans la partie mobile
-
-           // Ajout des états pour le zoom de la main et du land
-            const [cardImage, setCardImage] = useState(null);
-            const [cardID, setCardID] = useState(null);
-            const [navigateListID, setNavigateListID] = useState([]);
-            const [listImage, setListImage] = useState([]);
-
-
-              // Boutons navigation cartes
-            const prevCard = () => {
-                                       const currentIndex = navigateListID.indexOf(cardID);
-                                       const currentImage = listImage.indexOf(cardImage);
-           
-                                       if (currentIndex > 0) {
-                                           setCardID(navigateListID[currentIndex - 1]);
-                                           setCardImage(listImage[currentImage - 1]);
+                           
+                                   
+                useEffect(() => {
+                    const desacPrevCard = () => {
+                                       const firstID = navigateListApiID[0];
+                                       if (cardID === firstID) {
+                                           setPrevCardButtonActive(false)
                                        }
-                     
-            }; 
-                       
-                               
-            useEffect(() => {
-                const desacPrevCard = () => {
-                                   const firstID = navigateListID[0];
-                                   if (cardID === firstID) {
-                                       setPrevCardButtonActive(false)
-                                   }
-                                   else {
-                                       setPrevCardButtonActive(true)
-                                   }
-            }
-                desacPrevCard() }, [cardID]);
-
-
-             // Navigue vers la carte suivante dans a liste
-            const nextCard =  () => {
-                                        const currentIndex = navigateListID.indexOf(cardID);
-                                         const currentImage = listImage.indexOf(cardImage);
-            
-                                        if (currentIndex >= 0 && currentIndex < navigateListID.length - 1) {
-                                            setCardID(navigateListID[currentIndex + 1]);
-                                            setCardImage(listImage[currentImage + 1]);
-                                        }
+                                       else {
+                                           setPrevCardButtonActive(true)
+                                       }
+                }
+                    desacPrevCard() }, [cardID]);
+    
+    
+                // Navigue vers la carte suivante dans a liste
+                const nextCard = () => {
+                
+                    // 1. Trouver l'index de la carte actuelle dans la liste UNIQUE
+                    const currentIndex = navigateListID.indexOf(cardID); 
+    
+                    // ATTENTION: La condition de longueur doit aussi utiliser la liste UNIQUE
+                    if (currentIndex >= 0 && currentIndex < navigateListID.length - 1) { 
                         
-            };
-      
+                        // 2. Utiliser la liste UNIQUE pour trouver l'ID suivant (CORRECTION)
+                        const nextCardId = navigateListID[currentIndex + 1]; 
+                        
+                        // 3. Trouver la carte correspondante
+                        const nextCard = deckCards.find(card => card.id === nextCardId);
+    
+                        if (nextCard) {
+                            setCardID(nextCard.id);
+                            setCardImage(nextCard.image);
+                        }
+                    }
+                };
+    
+          
+                                    
+                // Navigue vers la carte précédente dans a liste
+                 useEffect(() => {
+                    const desacNextCard = () => {
+                                                const lastID = navigateListID[navigateListApiID.length - 1];
+                
+                                                if (cardID === lastID) {
+                                                    setNextCardButtonActive(false)
+                                                }
+                                                else {
+                                                    setNextCardButtonActive(true)
+                                                }
+                    }
+                    desacNextCard() }, [cardID]);
+            
+     
+                        
+                        // Désactive le bouton si il n'y a plus de decks qui suivent     
+                        const [prevCardButtonActive, setPrevCardButtonActive] = useState(true)
                                 
-            // Navigue vers la carte précédente dans a liste
-             useEffect(() => {
-                const desacNextCard = () => {
+                        useEffect(() => {
+                            const desacPrevCard = () => {
+                                    const firstID = navigateListID[0];
+                                    if (cardID === firstID) {
+                                        setPrevCardButtonActive(false)
+                                    }
+                                    else {
+                                        setPrevCardButtonActive(true)
+                                    }
+                            }
+                            desacPrevCard() }, [cardID]);
+                    
+            
+                        
+                                
+                                // Désactive le bouton si il n'ya plus de decks qui suivent     
+                                const [nextCardButtonActive, setNextCardButtonActive] = useState(true)
+                                
+                                // Navigue vers la carte précédente dans a liste
+                                useEffect(() => {
+                                        const desacNextCard = () => {
                                             const lastID = navigateListID[navigateListID.length - 1];
             
                                             if (cardID === lastID) {
@@ -424,59 +585,20 @@ import FooterSection from '../components/footerSection';
                                             else {
                                                 setNextCardButtonActive(true)
                                             }
-                }
-                desacNextCard() }, [cardID]);
-        
- 
-                    
-                    // Désactive le bouton si il n'y a plus de decks qui suivent     
-                    const [prevCardButtonActive, setPrevCardButtonActive] = useState(true)
-                            
-                    useEffect(() => {
-                        const desacPrevCard = () => {
-                                const firstID = navigateListID[0];
-                                if (cardID === firstID) {
-                                    setPrevCardButtonActive(false)
-                                }
-                                else {
-                                    setPrevCardButtonActive(true)
-                                }
-                        }
-                        desacPrevCard() }, [cardID]);
-                
-        
-                    
-                            
-                            // Désactive le bouton si il n'ya plus de decks qui suivent     
-                            const [nextCardButtonActive, setNextCardButtonActive] = useState(true)
-                            
-                            // Navigue vers la carte précédente dans a liste
-                            useEffect(() => {
-                                    const desacNextCard = () => {
-                                        const lastID = navigateListID[navigateListID.length - 1];
-        
-                                        if (cardID === lastID) {
-                                            setNextCardButtonActive(false)
                                         }
-                                        else {
-                                            setNextCardButtonActive(true)
-                                        }
-                                    }
-                                    desacNextCard() }, [cardID]);
-        
-                     
+                                        desacNextCard() }, [cardID]);
                                     
                     // Fermer le popup de zoom
                      const closePopup =  () => {
-        
                         setCardID(null);
+                        setCardApiID(null);
                         setCardImage(null);
                         setNavigateListID([]);
+                        setNavigateListApiID([]);
                         setListImage([]);
                         setDisplayZoomPopup(false)
-                         setPrevCardButtonActive(false)
+                        setPrevCardButtonActive(false)
                         setNextCardButtonActive(false)
-                    
                     };
                     
             
@@ -639,17 +761,7 @@ import FooterSection from '../components/footerSection';
                                                                     <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
                                                                     <h3><strong>{cmc}</strong></h3>
                                                                 </div>
-                                                            {/*
-                                                                <div className='card-line-attribut'>              
-                                                                    <h4 className='deck-selected-line-title'> Statut : </h4> 
-                                                                    {!deck.isPublic && (
-                                                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
-                                                                    )} 
-                                                                    {deck.isPublic && (
-                                                                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
-                                                                    )} 
-                                                                </div>
-                                                            */}
+
                 
                                                               </div>
                                                                   
@@ -658,8 +770,7 @@ import FooterSection from '../components/footerSection';
                                 </div> 
      
                             </div>
-                
-                 
+
                              {/*La carte format medium*/}   
                             <h2 className='deck-selected-card-medium-name'style={{marginTop: '2%'}}>{deck.name}</h2> 
                             <div className="deck-selected-card-medium" style={{ backgroundImage: `url(${backgroundPopup})`}}>
@@ -690,7 +801,6 @@ import FooterSection from '../components/footerSection';
                                                                     <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
                                                                     <h3><strong>{cmc}</strong></h3>
                                     </div>
-                           
                 
                                    </div> 
                             </div>  
@@ -731,6 +841,9 @@ import FooterSection from '../components/footerSection';
                                     </div> 
                             </div>
 
+                            <button className="deck-like-button" onClick={likeDislike}>{hearthIcon()}</button>                                  
+
+
                 
 
             { format === "commander" && (
@@ -742,16 +855,18 @@ import FooterSection from '../components/footerSection';
             )}
                         
         {/*Mapping des cartes*/}
-        <div className='map-deck-cards'> 
+        <div className='map-deck-cards'>  
         
 
             {/*Affichage du commandant*/}
             { format === "commander" && ( 
             <div style={{width: '100%', display : 'flex', flexDirection: 'column', alignItems: 'center'}}>               
-                <div style={{width: '30%'}}>
+                <div className='title-commandant-container'>
                 <TitleType title={"Commandant"}/>
                 </div>
-                <div className="cedh-background" id='creature-card' style={{ backgroundImage: `url(${backgroundCedh})`}}>
+                <div className="cedh-background" id='creature-card' style={{ backgroundImage: `url(${backgroundCedh})`, 
+                backgroundSize: '100%',
+                backgroundPosition: 'center'}}>
                 <div className="cedh-details">
                     
                     <div className='card-link-desktop'>
@@ -1158,7 +1273,7 @@ import FooterSection from '../components/footerSection';
                 {displayZoomPopup && cardImage && (
                     <div className='popup-bckg'>                                
                                                                 <img className="card-selected-image-zoom" src={getImageUrl(cardImage)} alt="Card mtg"/>
-                                                                <button className='nav-card-button' onClick={()=>(navigate(`/cardSelected`, { state: { cardID: cardID, ListCard: navigateListID  }}))}>Afficher détails</button>
+                                                                <button className='nav-card-button' onClick={()=>(navigate(`/cardSelected`, { state: { cardID: cardApiID, ListCard: navigateListApiID  }}))}>Afficher détails</button>
                                                                 <div className='button-nav-mobile' style={{position : 'fixed', marginTop: '48vh', zIndex: '102', color: 'white'}} >   
                                                                     <IconButtonHover onClick={() => prevCard()} disabled={!prevCardButtonActive}
                                                                     icon={<MdOutlinePlayArrow className='icon-nav' color="white" style={{ transform: 'scaleX(-1)' }} />} />

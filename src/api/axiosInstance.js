@@ -12,6 +12,7 @@ const axiosInstance = axios.create({
 let csrfToken = null;
 
 // Interceptor pour ajouter le CSRF token si nécessaire
+/*
 axiosInstance.interceptors.request.use(
   async (config) => {
     // Si c'est une requête mutative (POST, PUT, DELETE) et qu'on n'a pas encore de token
@@ -33,5 +34,6 @@ axiosInstance.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+*/
 
 export default axiosInstance;
