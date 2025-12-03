@@ -959,7 +959,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                           <h1 className='deck-name'>{deck.name}</h1>            
                                                           <div className="deck-content">
                                                                <img className="deckbuilding-pp" 
-                                                               src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck mtg"/> 
+                                                               src={deck.image && deck.image.startsWith('/uploads/') ? `http://54.77.12.209:8081${deck.image}` : deck.image} alt="Deck mtg"/> 
                                 
                                                               <div className="deck-selected-attributs" >
                                  
@@ -1007,7 +1007,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             <h2 className='deck-selected-card-medium-name'style={{marginTop: '2%'}}>{deck.name}</h2> 
                             <div className="deck-selected-card-medium" style={{ backgroundImage: `url(${backgroundPopup})`}}>
                                     <div className="img-container" style={{marginTop: '2%'}}>
-                                                          <img className="new-deck-img-mobile" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck mtg"/>
+                                                          <img className="new-deck-img-mobile" src={deck.image && deck.image.startsWith('/uploads/') ? `http://54.77.12.209:8081${deck.image}` : deck.image} alt="Deck mtg"/>
                                     </div>
                                     <div className="card-medium-body" >
 
@@ -1051,7 +1051,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             <h2 className='deck-card-mobile-name' style={{marginTop: '2%'}}>{deck.name}</h2>
                             <div style={{ backgroundImage: `url(${backgroundPopup})`}} className="deck-card-mobile" >
                                     <div className="img-container">
-                                                          <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deck.image}` : deck.image} alt="Deck mtg"/>
+                                                          <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `http://54.77.12.209:8081${deck.image}` : deck.image} alt="Deck mtg"/>
                                     </div>
                 
                                     <div className="deck-hover-body" >
@@ -1105,7 +1105,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 accept="image/*" 
                                 onChange={(e) => selectImage(e)}
                                 />
-                                <img className='deck-selected-img' src={newImage && newImage.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${newImage}` : newImage} alt="deck-img" />
+                                <img className='deck-selected-img' src={newImage && newImage.startsWith('/uploads/') ? `http://54.77.12.209:8081${newImage}` : newImage} alt="deck-img" />
                                 
                                 <ButtonValidPopup disabled={displayLoading} onClick={()=>editDeck()}/>
                       </div>
@@ -1189,17 +1189,17 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
              <div className="cedh-details">
                 
                 <div className='card-link-desktop'>
-                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>navCedh(deckCedh.apiID)}
+                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://54.77.12.209:8081${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>navCedh(deckCedh.apiID)}
                                                 onMouseEnter={() => hoveredCard(deckCedh.id) } onMouseOut={() => hoveredCard()}/>
                 </div>
 
                 <div className='card-link-mobile'>
-                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deckCedh.image}` : deckCedh.image} alt="creature-img" 
+                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://54.77.12.209:8081${deckCedh.image}` : deckCedh.image} alt="creature-img" 
                     onClick={()=>openZoomPopup(deckCedh)} />
                 </div>
                                             
                 {detailsCard && detailsCard.id === deckCedh.id && (
-                                            <img className="card-img-zoom" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${deckCedh.image}` : deckCedh.image} alt="Card-image"
+                                            <img className="card-img-zoom" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://54.77.12.209:8081${deckCedh.image}` : deckCedh.image} alt="Card-image"
                                             />
                 )}
             </div>
@@ -1320,7 +1320,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 className="card-img-zoom"
                                 src={
                                 card.image && card.image.startsWith('/uploads/')
-                                    ? `https://mtg-spring.onrender.com${card.image}`
+                                    ? `http://54.77.12.209:8081${card.image}`
                                     : card.image
                                 }
                                 alt="Card-image"
@@ -1707,7 +1707,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 <img className='card-add-img' src={
                                                     cardImage
                                                         ? cardImage.startsWith('/uploads/')
-                                                        ? `https://mtg-spring.onrender.com${cardImage}`
+                                                        ? `http://54.77.12.209:8081${cardImage}`
                                                         : cardImage
                                                         : defaultImg
                                                     }
@@ -1725,7 +1725,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                         </div>
                                                         
                                                         {detailsCard && detailsCard.id === card.id && (
-                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image"/>
+                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://54.77.12.209:8081${card.image}` : card.image} alt="Card-image"/>
                                                         )} 
                                                     </div>
                                             
@@ -1742,7 +1742,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                             )}
                                                         </div>                                                        
                                                         {detailsCard && detailsCard.id === card.id && (
-                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${card.image}` : card.image} alt="Card-image"/>
+                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://54.77.12.209:8081${card.image}` : card.image} alt="Card-image"/>
                                                         )} 
                                                     </div>
                                             
@@ -1770,7 +1770,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 icon={<MdOutlinePlayArrow className='icon-nav' />} />                   
                               </div>
                               <img className="card-selected-img-mobile"
-                                              src={cardsSelectedUnit[cardNumber].image && cardsSelectedUnit[cardNumber].image.startsWith('/uploads/') ? `https://mtg-spring.onrender.com${cardsSelectedUnit[cardNumber].image}` : cardsSelectedUnit[0].image} alt="Card mtg"/>
+                                              src={cardsSelectedUnit[cardNumber].image && cardsSelectedUnit[cardNumber].image.startsWith('/uploads/') ? `http://54.77.12.209:8081${cardsSelectedUnit[cardNumber].image}` : cardsSelectedUnit[0].image} alt="Card mtg"/>
                               <div className='cards-deck-unit-container'> 
                                 {cardsSelectedUnit.length > 0 && (
                                   <div className="land-text-details" id='land-card' key={cardsSelectedUnit[cardNumber].id}>

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://mtg-spring.onrender.com",
+  baseURL: "http://54.77.12.209:8081",
   withCredentials: true, // indispensable pour envoyer/recevoir cookies
   timeout: 30000,
   maxContentLength: 5 * 1024 * 1024,

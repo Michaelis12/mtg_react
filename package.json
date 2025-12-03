@@ -2,6 +2,7 @@
   "name": "rout",
   "version": "0.1.0",
   "private": true,
+   "homepage": ".",
   "dependencies": {
     "@sentry/react": "^10.23.0",
     "@sentry/tracing": "^7.120.4",

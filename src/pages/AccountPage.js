@@ -506,14 +506,14 @@ const AccountPage = () => {
                 if(avatar === "") {
                     // Si pas d'avatar sélectionné, afficher l'avatar existant
                     if(deckBuilder.avatar && deckBuilder.avatar.startsWith('/uploads/')) {
-                        return `https://mtg-spring.onrender.com${deckBuilder.avatar}`;
+                        return `http://54.77.12.209:8081${deckBuilder.avatar}`;
                     }
                     return deckBuilder.avatar;
                 }
                 else {
                     // Si un nouvel avatar a été sélectionné
                     if(avatar.startsWith('/uploads/')) {
-                        return `https://mtg-spring.onrender.com${avatar}`;
+                        return `http://54.77.12.209:8081${avatar}`;
                     }
                     return avatar;
                 }
