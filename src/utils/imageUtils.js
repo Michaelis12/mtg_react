@@ -11,7 +11,7 @@ export const getImageUrl = (imagePath) => {
     
     // Vérifier si c'est un chemin uploads
     if (decodedPath.startsWith('/uploads/')) {
-        return `http://54.77.12.209:8081${decodedPath}`;
+        return `https://christian-missie-bdt-36df9a45.koyeb.app${decodedPath}`;
     }
     
     // Sinon retourner le chemin tel quel (pour les images locales ou base64)
@@ -28,7 +28,7 @@ export const getAvatarUrl = (avatarPath) => {
     
     // Vérifier si c'est un chemin uploads
     if (avatarPath.startsWith('/uploads/')) {
-        return `http://54.77.12.209:8081${avatarPath}`;
+        return `https://christian-missie-bdt-36df9a45.koyeb.app${avatarPath}`;
     }
     
     // Sinon retourner le chemin tel quel (pour les images locales ou base64)
@@ -45,7 +45,7 @@ export const getDeckImageUrl = (deckImagePath) => {
     
     // Vérifier si c'est un chemin uploads
     if (deckImagePath.startsWith('/uploads/')) {
-        return `http://54.77.12.209:8081${deckImagePath}`;
+        return `https://christian-missie-bdt-36df9a45.koyeb.app${deckImagePath}`;
     }
     
     // Sinon retourner le chemin tel quel (pour les images locales ou base64)

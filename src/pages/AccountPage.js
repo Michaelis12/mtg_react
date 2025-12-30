@@ -373,7 +373,7 @@ const AccountPage = () => {
             if (isAuthenticated) {
                 navigate('/addDeck');
             } else {
-                navigate('/signPage');
+                navigate('/sign');
             }
         }
 
@@ -506,14 +506,14 @@ const AccountPage = () => {
                 if(avatar === "") {
                     // Si pas d'avatar sélectionné, afficher l'avatar existant
                     if(deckBuilder.avatar && deckBuilder.avatar.startsWith('/uploads/')) {
-                        return `http://54.77.12.209:8081${deckBuilder.avatar}`;
+                        return `https://christian-missie-bdt-36df9a45.koyeb.app${deckBuilder.avatar}`;
                     }
                     return deckBuilder.avatar;
                 }
                 else {
                     // Si un nouvel avatar a été sélectionné
                     if(avatar.startsWith('/uploads/')) {
-                        return `http://54.77.12.209:8081${avatar}`;
+                        return `https://christian-missie-bdt-36df9a45.koyeb.app${avatar}`;
                     }
                     return avatar;
                 }

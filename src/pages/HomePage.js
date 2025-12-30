@@ -295,7 +295,7 @@ const navNewDeck = () => {
     if (isAuthenticated) {
         navigate('/addDeck');
     } else {
-        navigate('/signPage');
+        navigate('/sign');
     }
 }
 

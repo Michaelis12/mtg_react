@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://54.77.12.209:8081",
+  baseURL: "https://christian-missie-bdt-36df9a45.koyeb.app",
   withCredentials: true, // indispensable pour envoyer/recevoir cookies
   timeout: 30000,
   maxContentLength: 5 * 1024 * 1024,
