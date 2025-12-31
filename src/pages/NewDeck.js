@@ -862,7 +862,7 @@ const NewDeck = () => {
       <div className='new-deck-attributes'>
             {cedhID !== "" && image === "" && (
               <div>
-                <img className="new-cedh-image" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://christian-missie-bdt-36df9a45.koyeb.app${cedh.image}` : cedh.image} alt="Cedh mtg" onMouseEnter={()=>setDetailsCedh(true)} 
+                <img className="new-cedh-image" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${cedh.image}` : cedh.image} alt="Cedh mtg" onMouseEnter={()=>setDetailsCedh(true)} 
                 onMouseLeave={()=>setDetailsCedh(false)} />
               </div>
             )}
@@ -1348,7 +1348,7 @@ const NewDeck = () => {
                           <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-10px'}}/></h1>
   
                           <div className="deck-content">
-                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `https://christian-missie-bdt-36df9a45.koyeb.app${image}` : image} alt="Deck mtg"/>
+                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
 
                               <div className="deck-selected-attributs" >
                                 
@@ -1382,7 +1382,7 @@ const NewDeck = () => {
                 <h2 className='deck-card-mobile-name'>{name} <ButtonModif onClick={() => returnName()} /></h2>
                 <div className="deck-card-mobile">
                                     <div className="img-container">
-                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://christian-missie-bdt-36df9a45.koyeb.app${image}` : image} alt="Deck mtg"/>
+                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
                                     </div>
           
                 
@@ -1427,7 +1427,7 @@ const NewDeck = () => {
                           <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-10px'}}/></h1>
   
                           <div className="deck-content">
-                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `https://christian-missie-bdt-36df9a45.koyeb.app${image}` : image} alt="Deck mtg"/>
+                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
 
                               <div className="deck-selected-attributs" >
 
@@ -1437,7 +1437,7 @@ const NewDeck = () => {
                                         > {cedh.name}<ButtonModif onClick={() => returnCedh()} 
                                         style={{marginTop: '-20px'}}  /> </h3>
                                       {detailsCard && detailsCard.id === cedh.id && (
-                                            <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://christian-missie-bdt-36df9a45.koyeb.app${cedh.image}` : cedh.image} alt="Card-image"/>
+                                            <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${cedh.image}` : cedh.image} alt="Card-image"/>
                                         )} 
                                 </div> 
                                 
@@ -1469,7 +1469,7 @@ const NewDeck = () => {
               <h2 className='deck-card-mobile-name'>{name} <ButtonModif onClick={() => returnName()} style={{marginLeft : '10px', marginTop : '5px'}} /></h2>
               <div className="deck-card-mobile" >
                                   <div className="img-container">
-                                                        <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://christian-missie-bdt-36df9a45.koyeb.app${image}` : image} alt="Deck mtg"/>
+                                                        <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
                                   </div>
           
               

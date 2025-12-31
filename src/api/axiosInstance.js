@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://christian-missie-bdt-36df9a45.koyeb.app",
+  baseURL: "https://mtg-spring-maj.fly.dev",
   withCredentials: true, // indispensable pour envoyer/recevoir cookies
   timeout: 30000,
   maxContentLength: 5 * 1024 * 1024,

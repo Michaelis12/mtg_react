@@ -506,14 +506,14 @@ const AccountPage = () => {
                 if(avatar === "") {
                     // Si pas d'avatar sélectionné, afficher l'avatar existant
                     if(deckBuilder.avatar && deckBuilder.avatar.startsWith('/uploads/')) {
-                        return `https://christian-missie-bdt-36df9a45.koyeb.app${deckBuilder.avatar}`;
+                        return `https://mtg-spring-maj.fly.dev${deckBuilder.avatar}`;
                     }
                     return deckBuilder.avatar;
                 }
                 else {
                     // Si un nouvel avatar a été sélectionné
                     if(avatar.startsWith('/uploads/')) {
-                        return `https://christian-missie-bdt-36df9a45.koyeb.app${avatar}`;
+                        return `https://mtg-spring-maj.fly.dev${avatar}`;
                     }
                     return avatar;
                 }
