@@ -1,6 +1,19 @@
 
 
+.deck-selected-attributs-line {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 2%;
+  position: fixed;
+  width: 100%;
+  background-color: white;
+}
 
+.deck-selected-name {
+  font-size: 2em;
+  font-weight: bold;
+}
 
  .deck-card-desktop, .new-deck-card-desktop {  
     display: flex;
@@ -428,9 +441,11 @@ button:hover {
     margin-bottom: 5%;
 }
 
-.card-link-mobile {
+.card-link-mobile, .cedh-link-mobile {
     display: none;
 }
+
+
 
 
 /* Style du numéro de la carte */
@@ -670,16 +685,34 @@ button:hover {
       gap: 15px;
     }
 
+    .cedh-link-desktop {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 15px;
+      padding: 2%;
+      background-color:  #F2E4C1;
+      border-radius: 10px;
+    }
+
 /*Card du deck pour les formats mobiles*/
 
   @media (max-width: 600px) {
     
-    .card-link-desktop {
+    .card-link-desktop, .cedh-link-desktop {
         display: none;
     }
 
     .card-link-mobile {
         display: flex;
+        border-radius: 10px;
+    }
+
+    .cedh-link-mobile {
+        display: flex;
+        padding: 2%;
+        background-color:  #F2E4C1;
+        border-radius: 10px;
     }
 }
     

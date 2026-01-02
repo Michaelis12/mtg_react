@@ -450,7 +450,7 @@ const navNewDeck = () => {
                         <div className="top-deck-details" id='decks-user'  key={deck.id} style={{ backgroundImage: `url(${BackgroundDeck})`,backgroundSize: 'cover',      // L'image couvre tout le div
                                         backgroundPosition: 'center', 
                                         backgroundRepeat: 'no-repeat',
-                                        marginTop: '0px'}}>
+                                        marginTop: '0px'}}> 
                                         <div className='deck-attributs' style={{ backgroundImage: `url(${BackgroundDeckAttributs})`}}>
                                             <img className="top-deck-pp" src={getImageUrl(deck.image)} alt="Deck avatar" onClick={() => chooseDeck(deck.id)}
                                              onMouseEnter={() => hoveredDeck(deck.id, deck.name, deck.format) } onMouseOut={() => hoveredDeck()}/>

@@ -8,7 +8,7 @@ import backgroundHand from "../assets/background_hand.png"
 import backgroundPopup from "../assets/background_white.png"
 import BackgroundDeck from "../assets/background_deck_scelled.png"
 import BackgroundDeckAttributs from "../assets/old-paper.jpg"
-import backgroundCedh from "../assets/background-forest.gif"
+import backgroundCedh from "../assets/background_purple.jpg"
 import white from "../assets/white-mtg.png"
 import blue from "../assets/blue-mtg.png"
 import green from "../assets/green-mtg.png"
@@ -945,6 +945,29 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
                 )}
                 <img src={backgroundPage} className="background-image" alt="background" />
+            
+            {/*
+            <div className="deck-selected-attributs-line">
+                <h1 className='deck-selected-name'>{deck.name}</h1>            
+                 <img className="deckbuilding-pp" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8081${deck.image}` : deck.image} alt="Deck mtg"/> 
+                                
+                    <p className='deck-selected-format' style={{marginTop: '-5px'}}>{deck.format} </p>
+                    {deck.colors && deck.colors.length > 0 && (<div className='new-deck-colors-mapping' >
+                                                                          {deck.colors.map((color, index)  => (
+                                                                          <img key={index} src={getColors(color)} className="deck-selected-colors-imgs"
+                                                                            style={{display:(displayColor(colors, color)), marginTop: '-5px'}} alt={color}/>                                
+                                                                          ))}
+                                                                        </div>)}
+                    <h3><strong>{cmc} mana</strong></h3>
+                    {!deck.isPublic && (
+                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
+                    )} 
+                    {deck.isPublic && (
+                        <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>public</h4>
+                    )}                                                                   
+
+            </div>
+            */}
                 
                 {/*  Boutons d'action edit */}
             
@@ -952,16 +975,36 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 <FaPencilAlt className='edit-deckbuilding-icon' onClick={()=> setUpdateDeck(true)}/>
                 <RiDeleteBin6Line className='edit-deckbuilding-icon' onClick={()=> setDisplayPopup(true)} />
             </div>
-                
+
                             {/*La carte format desktop*/}
                             <div className='card-selected-container'> 
-                                <div className="deck-card-desktop" style={{ backgroundImage: `url(${backgroundPopup})`, marginTop: '1%'}}>
-                                                          <h1 className='deck-name'>{deck.name}</h1>            
-                                                          <div className="deck-content">
-                                                               <img className="deckbuilding-pp" 
-                                                               src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deck.image}` : deck.image} alt="Deck mtg"/> 
+                               <div className="card-user-desktop" style={{
+                                    backgroundImage: deck.image
+                                        ? `linear-gradient(to right, 
+                                            rgba(235, 235, 235, 1) 20%,    /* Gris clair opaque à gauche */
+                                            rgba(245, 245, 245, 0.4) 70%,  /* Devient plus transparent au milieu */
+                                            transparent 100%),             /* Laisse voir l'image à droite */
+                                        url(${deck.image.startsWith('/uploads/') 
+                                            ? `http://localhost:8081${deck.image}`  
+                                            : deck.image})`
+                                        : 'none',
+                                    backgroundColor: '#EBEBEB',         // Fond gris clair global
+                                    backgroundBlendMode: 'luminosity',   // L'astuce pour le noir et blanc
+                                    backgroundSize: '70%',
+                                    backgroundPosition: 'top right',
+                                    backgroundRepeat: 'no-repeat',
+                                    marginTop: '1%',
+                                    color: '#333',                       // Texte foncé pour contraster avec le gris clair
+                                    position: 'relative',
+                                    overflow: 'hidden'
+                                }}>
+                                    <div className="deck-content">
+                                                               <img className="user-avatar-desktop" 
+                                                               src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8081${deck.image}` : deck.image} alt="Deck mtg"/> 
                                 
                                                               <div className="deck-selected-attributs" >
+
+                                                                <h1 className='user-pseudo'>{deck.name}</h1>  
                                  
                                                     
                                                                   <div className='card-line-attribut'>
@@ -982,10 +1025,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                   </div> 
 
                                                                 <div className='card-line-attribut'>              
-                                                                    <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
-                                                                    <h3><strong>{cmc}</strong></h3>
-                                                                </div>
-                                                                <div className='card-line-attribut'>              
                                                                     <h4 className='deck-selected-line-title'> Statut : </h4> 
                                                                     {!deck.isPublic && (
                                                                         <h4 className='deck-card-public' style={{background: 'linear-gradient(135deg, #dc3545 0%, #e83e8c 100%)', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif'}}>privé</h4>
@@ -996,18 +1035,18 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                 </div>                
                                                               </div>
                                                                   
-                                                          </div>  
+                                    </div>  
                   
                                 </div> 
      
                             </div>
-                
-                 
+
+                           
                              {/*La carte format medium*/}   
                             <h2 className='deck-selected-card-medium-name'style={{marginTop: '2%'}}>{deck.name}</h2> 
                             <div className="deck-selected-card-medium" style={{ backgroundImage: `url(${backgroundPopup})`}}>
                                     <div className="img-container" style={{marginTop: '2%'}}>
-                                                          <img className="new-deck-img-mobile" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deck.image}` : deck.image} alt="Deck mtg"/>
+                                                          <img className="new-deck-img-mobile" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8081${deck.image}` : deck.image} alt="Deck mtg"/>
                                     </div>
                                     <div className="card-medium-body" >
 
@@ -1051,7 +1090,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                             <h2 className='deck-card-mobile-name' style={{marginTop: '2%'}}>{deck.name}</h2>
                             <div style={{ backgroundImage: `url(${backgroundPopup})`}} className="deck-card-mobile" >
                                     <div className="img-container">
-                                                          <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deck.image}` : deck.image} alt="Deck mtg"/>
+                                                          <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8081${deck.image}` : deck.image} alt="Deck mtg"/>
                                     </div>
                 
                                     <div className="deck-hover-body" >
@@ -1105,7 +1144,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 accept="image/*" 
                                 onChange={(e) => selectImage(e)}
                                 />
-                                <img className='deck-selected-img' src={newImage && newImage.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${newImage}` : newImage} alt="deck-img" />
+                                <img className='deck-selected-img' src={newImage && newImage.startsWith('/uploads/') ? `http://localhost:8081${newImage}` : newImage} alt="deck-img" />
                                 
                                 <ButtonValidPopup disabled={displayLoading} onClick={()=>editDeck()}/>
                       </div>
@@ -1178,6 +1217,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         
 
         {/*Affichage du commandant*/}
+        {/*
         { format === "commander" && (  
         <div style={{width: '100%', display : 'flex', flexDirection: 'column', alignItems: 'center'}}>               
             <div className='title-commandant-container'>
@@ -1188,28 +1228,48 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
              backgroundPosition: 'center'}}>
              <div className="cedh-details">
                 
-                <div className='card-link-desktop'>
-                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>navCedh(deckCedh.apiID)}
+                <div className='cedh-link-desktop'>
+                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8081${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>navCedh(deckCedh.apiID)}
                                                 onMouseEnter={() => hoveredCard(deckCedh.id) } onMouseOut={() => hoveredCard()}/>
                 </div>
 
-                <div className='card-link-mobile'>
-                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deckCedh.image}` : deckCedh.image} alt="creature-img" 
+                <div className='cedh-link-mobile'>
+                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8081${deckCedh.image}` : deckCedh.image} alt="creature-img" 
                     onClick={()=>openZoomPopup(deckCedh)} />
                 </div>
                                             
                 {detailsCard && detailsCard.id === deckCedh.id && (
-                                            <img className="card-img-zoom" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deckCedh.image}` : deckCedh.image} alt="Card-image"
+                                            <img className="card-img-zoom" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8081${deckCedh.image}` : deckCedh.image} alt="Card-image"
                                             />
                 )}
             </div>
             </div>
         </div>
         )} 
+        */}
 
 
         {/*Affichage des cartes par types*/}        
         <div className='decks-types-map'>
+            <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top', 
+            display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <TitleType title={"Commandant"}/>
+                <div className="cedh-details">
+                    <div className='cedh-link-desktop'>
+                        <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8081${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>navCedh(deckCedh.apiID)}
+                                                        onMouseEnter={() => hoveredCard(deckCedh.id) } onMouseOut={() => hoveredCard()}/>
+                    </div>                                    
+                    <div className='cedh-link-mobile'>
+                        <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8081${deckCedh.image}` : deckCedh.image} alt="creature-img" 
+                        onClick={()=>openZoomPopup(deckCedh)} />
+                    </div>
+                                                
+                    {detailsCard && detailsCard.id === deckCedh.id && (
+                                                <img className="card-img-zoom" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8081${deckCedh.image}` : deckCedh.image} alt="Card-image"
+                                                />
+                    )}
+                </div>
+            </div>
             {(() => {
                 // 1️⃣ Créer un mapping { type -> cartes } basé sur cardsTypes order
                 const cardsByMappedType = {};
@@ -1320,7 +1380,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 className="card-img-zoom"
                                 src={
                                 card.image && card.image.startsWith('/uploads/')
-                                    ? `https://mtg-spring-maj.fly.dev${card.image}`
+                                    ? `http://localhost:8081${card.image}`
                                     : card.image
                                 }
                                 alt="Card-image"
@@ -1707,7 +1767,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                 <img className='card-add-img' src={
                                                     cardImage
                                                         ? cardImage.startsWith('/uploads/')
-                                                        ? `https://mtg-spring-maj.fly.dev${cardImage}`
+                                                        ? `http://localhost:8081${cardImage}`
                                                         : cardImage
                                                         : defaultImg
                                                     }
@@ -1725,7 +1785,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                         </div>
                                                         
                                                         {detailsCard && detailsCard.id === card.id && (
-                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${card.image}` : card.image} alt="Card-image"/>
+                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8081${card.image}` : card.image} alt="Card-image"/>
                                                         )} 
                                                     </div>
                                             
@@ -1742,7 +1802,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                             )}
                                                         </div>                                                        
                                                         {detailsCard && detailsCard.id === card.id && (
-                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${card.image}` : card.image} alt="Card-image"/>
+                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8081${card.image}` : card.image} alt="Card-image"/>
                                                         )} 
                                                     </div>
                                             
@@ -1770,7 +1830,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 icon={<MdOutlinePlayArrow className='icon-nav' />} />                   
                               </div>
                               <img className="card-selected-img-mobile"
-                                              src={cardsSelectedUnit[cardNumber].image && cardsSelectedUnit[cardNumber].image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${cardsSelectedUnit[cardNumber].image}` : cardsSelectedUnit[0].image} alt="Card mtg"/>
+                                              src={cardsSelectedUnit[cardNumber].image && cardsSelectedUnit[cardNumber].image.startsWith('/uploads/') ? `http://localhost:8081${cardsSelectedUnit[cardNumber].image}` : cardsSelectedUnit[0].image} alt="Card mtg"/>
                               <div className='cards-deck-unit-container'> 
                                 {cardsSelectedUnit.length > 0 && (
                                   <div className="land-text-details" id='land-card' key={cardsSelectedUnit[cardNumber].id}>

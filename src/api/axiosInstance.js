@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://mtg-spring-maj.fly.dev",
+  baseURL: "http://localhost:8081",
   withCredentials: true, // indispensable pour envoyer/recevoir cookies
   timeout: 30000,
   maxContentLength: 5 * 1024 * 1024,
