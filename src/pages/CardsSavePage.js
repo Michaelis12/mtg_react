@@ -150,8 +150,6 @@ React.useEffect(() => {
                        
         const response = await axiosInstance.get('f_all/getCardsRanked', {params, cancelToken});         
         const listCards = response.data
-
-        console.log(listCards);
         setCardsID(listCards);
         setDisplayLoading(false);
 
@@ -1288,7 +1286,7 @@ React.useEffect(() => {
       
       {/* Bouton pour afficher plus de cartes */}
       { hasMore && !displayLoading && cards.length > 0 && (
-        <button className='next-page-button' onClick={()=>displayMoreCards()}>Afficher plus</button> 
+        <button className='next-page-button' disabled={!hasMore || displayLoading} onClick={()=>displayMoreCards()}>Afficher plus</button> 
       )} 
 
       </div>

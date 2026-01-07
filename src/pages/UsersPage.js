@@ -405,7 +405,7 @@ const UsersList = () => {
                 { hasMore && (
                         <button 
                             className='next-page-button' 
-                            disabled={!hasMore} 
+                             disabled={!hasMore || displayLoading}
                             onClick={()=>displayMoreUsers()}
                         >
                             Afficher plus d'utilisateurs

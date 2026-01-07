@@ -17,9 +17,11 @@ import OpenButtonLarge from '../components/openButtonLarge';
 import SearchBar from '../components/searchBar';
 import InputManaCost from '../components/inputManaCoast';
 import AddButton from '../components/addButton';
+import ButtonSelect from '../components/buttonSelect';
 import ButtonCancel from '../components/buttonCancel';
 import ButtonValid from '../components/buttonValid';
 import Card from '../model/CardApi';
+import CardSave from '../model/CardApiSave';
 import axios from "axios";
 import axiosInstance from "../api/axiosInstance";
 import "./css/CardsDeckPage.css";
@@ -38,6 +40,9 @@ import { getImageUrl } from '../utils/imageUtils';
 
 const CardsDeckPage = () => { 
     const [cards, setCards] = React.useState([])
+    const [cardsID, setCardsID] = React.useState([])
+    const [displayCards, setDisplayCards] = React.useState("all")
+    const order = "deck"
     const [detailsCard, setDetailsCard] = React.useState(null)
     const [cardsSelected, setCardsSelected] = React.useState([])
     const navigate = useNavigate();
@@ -48,6 +53,7 @@ const CardsDeckPage = () => {
     const [deckColors, setDeckColors] = React.useState([])
     const [format, setFormat] = React.useState([])
     const [editions, setEditions] = React.useState([])
+    const [pageSize, setPageSize] = useState(100);
 
     // Mobile filters toggle (inspired by CardsPage)
     const [arrowFiltersSens, setArrowFiltersSens] = React.useState(<SlArrowDown/>);
@@ -110,13 +116,64 @@ const CardsDeckPage = () => {
         }
         getDeckSelected();
         }, [id]);
+
+  
+      // Afficher les cartes dans l'ordre des plus likées
+    const displayTopCards = () => {
+                   setDisplayCards("top")
+                   setCards([])
+    }
+         
+    // Afficher les cartes dans l'ordre des plus récentes
+    const displayAllCards = () => {
+                   setDisplayCards("all")
+                   setCards([])
+    }
+         
+         
+    const getBgDate= () => {
+                     if(displayCards==="all") {
+                       return '#5D3B8C'
+                     } 
+                     else {
+                       return '#D3D3D3'
+                     }
+    }
+         
+    const getBgTop= () => {
+                     if(displayCards==="top") {
+                       return '#5D3B8C'
+                     }
+                     else {
+                       return '#D3D3D3'
+                     }
+    }
+         
+    const getColorDate= () => {
+                     if(displayCards==="all") {
+                       return 'white'
+                     } 
+                     else {
+                       return 'black'
+                     }
+    }
+         
+    const getColorTop= () => {
+                     if(displayCards==="top") {
+                       return 'white'
+                     }
+                     else {
+                       return 'black'
+                     }
+    }
  
 
 
   
-  // Récupère les cartes 
-  const getCards = async (cancelToken) => {
+    // Récupère les cartes 
+    const getCards = async (cancelToken) => {
               try {
+                /*
                   setDisplayLoading(true); 
 
                   // Contient les RequestParams de la requete
@@ -138,6 +195,84 @@ const CardsDeckPage = () => {
                   setHasMore(response.data.has_more);
                   setPage(2);
                   setDisplayLoading(false);
+                */
+
+                setDisplayLoading(true);
+
+            let params = {};
+            let listCards = [];
+
+            // Afficher toutes les cartes avec scryfall
+            if(displayCards === "all") {
+
+                params = {
+                  q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, [format], 
+                              filterRarities, filterTypes, filterLegendary, filterEditions),
+                  page: 1
+                };
+
+                const response = await axios.get('https://api.scryfall.com/cards/search', {
+                    params,
+                    cancelToken
+                });
+                listCards = response.data.data.map(cardData => Card.fromApi(cardData));
+
+                setHasMore(response.data.has_more);
+                setPage(2);
+          }
+
+          // Afficher toutes que les cartes dans la db
+          else {
+
+                params = {
+                                page: 0,
+                                size: pageSize,
+                                order : order,
+                                name: filterName,
+                                text: filterText,
+                                formats: [format],
+                                colors: filterColors,
+                                rarities : filterRarities,
+                                manaCostMin : inputManaCostMin,
+                                manaCostMax : inputManaCostMax,
+                                editions : filterEditions,
+                                types : filterTypes
+                                
+                            };
+
+                          if (filterLegendary) {
+                                  params = {
+                                    page: 0,
+                                    size: pageSize,
+                                    order : order,
+                                    name: filterName,
+                                    text: filterText,
+                                    formats:  [format],
+                                    colors: filterColors,
+                                    rarities : filterRarities,
+                                    manaCostMin : inputManaCostMin,
+                                    manaCostMax : inputManaCostMax,
+                                    editions : filterEditions,
+                                    types : filterTypes,
+                                    legendary : filterLegendary
+                                };
+                                }
+
+                const response = await axiosInstance.get('f_all/getCardsPaged', {
+                                          params,
+                                          paramsSerializer: {
+                                            indexes: null 
+                                        }, cancelToken
+                                        });
+                          
+                listCards = response.data.content.map(cardData => CardSave.fromApi(cardData));
+                
+                setHasMore(!response.data.isLast);
+                setPage(1);
+          }
+
+        setCards(listCards);
+        setDisplayLoading(false);
                   
               }   
               catch (error) {
@@ -155,41 +290,132 @@ const CardsDeckPage = () => {
           }
           React.useEffect(() => {
             getCards();
-        }, [ deck, filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, 
+        }, [ displayCards, deck, filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, 
             filterRarities, filterEditions, filterTypes, filterLegendary]);
+
+      
+      // Affiche le rang des cartes des decks
+     const getCardsRanked = async (cancelToken) => {
+            if(displayCards === "top") {
+              try {
+                  setDisplayLoading(true);
+          
+                  const params = {order : order};
+                                 
+                  const response = await axiosInstance.get('f_all/getCardsRanked', {params, cancelToken});         
+                  const listCards = response.data
+                  setCardsID(listCards);
+                  setDisplayLoading(false);
+          
+              } catch (error) {
+                  if (axios.isCancel(error)) {
+                      console.log("Request canceled:", error.message);
+                  } else {
+                      setCards([]);
+                      setHasMore(false);
+                      setDisplayLoading(false);
+                      console.log(error);
+                  }
+              }
+              };
+            }
+              React.useEffect(() => {
+              const source = axios.CancelToken.source();
+              getCardsRanked(source.token);
+          
+              return () => {
+                  source.cancel("Operation canceled due to new request.");
+              };
+              
+          }, [displayCards]);
+      
+          const getCardPosition = (cardId) => {
+            const index = cardsID.indexOf(cardId);
+            return index !== -1 ? index + 1 : null; // +1 car index commence à 0
+          };
   
       
       // Charge plus de cartes pour la pagination
   
-      const displayMoreCards = async () => {
+      const displayMoreCards = async (cancelToken) => {
    
          try {
-            setDisplayLoading(true);
+          setDisplayLoading(true);
+          
+          let params = {};
+          let listCards = [];
 
-  
-            const params = {
-                    q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, [format], 
-                                  filterRarities, filterTypes, filterLegendary, filterEditions
-                    ),
-                    page: page
-                  };
-            
-            
-  
-                  
-            const response = await axios.get('https://api.scryfall.com/cards/search', {
-                    params,
-                    paramsSerializer: {
-                      indexes: null 
-                  }
-            });
-                  
-                  
-            const listCards = response.data.data.map(cardData => Card.fromApi(cardData));
-  
-            setCards(prevCards => [...prevCards, ...listCards])
-            setHasMore(response.data.has_more);
-            setPage(page + 1)
+          // Afficher toutes les cartes avec scryfall
+          if(displayCards === "all") {
+
+              params = {
+                q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, [format], 
+                            filterRarities, filterTypes, filterLegendary, filterEditions),
+                page: page
+              };
+
+              const response = await axios.get('https://api.scryfall.com/cards/search', {
+                  params,
+                  cancelToken
+              });
+              listCards = response.data.data.map(cardData => Card.fromApi(cardData));
+
+              setHasMore(response.data.has_more);
+              setPage(page + 1);
+        }
+
+        // Afficher toutes que les cartes dans la db
+        else {
+
+              params = {
+                              page: page,
+                              size: pageSize,
+                              order : order,
+                              name: filterName,
+                              text: filterText,
+                              formats: [format],
+                              colors: filterColors,
+                              rarities : filterRarities,
+                              manaCostMin : inputManaCostMin,
+                              manaCostMax : inputManaCostMax,
+                              editions : filterEditions,
+                              types : filterTypes
+                              
+                          };
+
+                        if (filterLegendary) {
+                                params = {
+                                  page: page,
+                                  size: pageSize,
+                                  order : order,
+                                  name: filterName,
+                                  text: filterText,
+                                  formats: [format],
+                                  colors: filterColors,
+                                  rarities : filterRarities,
+                                  manaCostMin : inputManaCostMin,
+                                  manaCostMax : inputManaCostMax,
+                                  editions : filterEditions,
+                                  types : filterTypes,
+                                  legendary : filterLegendary
+                              };
+                              }
+
+              const response = await axiosInstance.get('f_all/getCardsPaged', {
+                                        params,
+                                        paramsSerializer: {
+                                          indexes: null 
+                                      }, cancelToken
+                                      });
+                        
+              listCards = response.data.content.map(cardData => CardSave.fromApi(cardData));
+              
+              setHasMore(!response.data.isLast);
+              setPage(page + 1);
+        }
+
+          setCards(prevCards => [...prevCards, ...listCards]);
+          setDisplayLoading(false);
   
         } catch (error) {
           console.error('Erreur de chargement des cartes :', error);
@@ -1290,6 +1516,13 @@ const CardsDeckPage = () => {
             <div className='title-cards-dispo-container'>
               <Title title='Cartes disponibles'/>
             </div>
+
+            <div className='cards-buttons-order-container'>
+              <ButtonSelect className={"button-date"} onClick={() => displayAllCards()} text={"Toutes les cartes"}
+              backgroundColor={getBgDate()} color={getColorDate()}/>
+              <ButtonSelect className={"button-top"} onClick={() => displayTopCards()} text={"Les plus populaires"} 
+              backgroundColor={getBgTop()} color={getColorTop()}/>
+            </div>
           
            {/*Mapping des cartes*/}
           <div className='display-objects-section'>
@@ -1306,6 +1539,10 @@ const CardsDeckPage = () => {
                           style={{opacity: desacCardsCedh(card.id)}} />                
                           <AddButton onClick={() => selectCardCedh(card)} style={{ margin : '2%', border: 'none' }}
                               icon={changeIcon(card.id)}  disabled={deckCards.includes(card.id)}/>
+
+                          {displayCards === "top" && (
+                          <p className="p-cards-deck-length" style={{marginTop: '-5px'}}>dans {card.decksNumber} decks</p>
+                        )}
                         </div>
                         )}
 
@@ -1391,7 +1628,7 @@ const CardsDeckPage = () => {
              
               {/*Bouton + de cartes*/} 
               { hasMore && (
-              <button className='next-page-button' disabled={!hasMore} onClick={()=>displayMoreCards()}>Afficher plus</button> 
+              <button className='next-page-button' disabled={!hasMore || displayLoading} onClick={()=>displayMoreCards()}>Afficher plus</button> 
               )}
 
             {/*Popup ajout de cartes*/}  

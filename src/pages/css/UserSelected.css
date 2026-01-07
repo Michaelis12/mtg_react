@@ -10,7 +10,7 @@
   align-items: center;
 }
 
-.card-user-desktop {
+.card-user-desktop, .card-deck-desktop {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -19,14 +19,15 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   width: 60%;
-  min-height: 300px;            
+  min-height: 300px;
+  max-height: 450px;            
   margin: 20px auto;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   z-index: 100;
   padding: 2%;
 } 
 
-.card-user-desktop:hover {
+.card-user-desktop:hover, .card-deck-desktop:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
   border-color: #667eea;
@@ -62,7 +63,7 @@
   max-width: 65%;
 }
 
-.user-pseudo {
+.user-pseudo, .deck-name-desktop {
   font-size: 2.5em;
   margin-bottom: 15px;
   color: white;
@@ -71,6 +72,10 @@
   border: 2px solid #000;
   display: inline-block;
   text-align: center;
+}
+
+.deck-name-medium { 
+  display: none;
 }
 
 
@@ -136,7 +141,7 @@
 
 @media (max-width: 1600px) {
 
-   .card-user-desktop {
+   .card-user-desktop, .card-deck-desktop {
     width: 70%;
    }
 
@@ -144,7 +149,7 @@
 
 @media (max-width: 1300px) {
 
-   .card-user-desktop {
+   .card-user-desktop, .card-deck-desktop {
     width: 80%;
    }
 
@@ -152,8 +157,12 @@
 
 @media (max-width: 1050px) {
 
-  .card-user-desktop {
+  .card-user-desktop, .card-deck-desktop {
     min-height: 300px;
+   }
+
+   .card-deck-desktop {
+    flex-direction: column;
    }
 
    .user-bio {
@@ -166,7 +175,7 @@
 @media (max-width: 1150px) {
 
 
-  .card-user-desktop {
+  .card-user-desktop, .card-deck-desktop {
     min-height: 400px;
   }
 
@@ -175,7 +184,7 @@
     height: 250px;
    }
 
-   .user-pseudo {
+   .user-pseudo, .deck-name-desktop {
     font-size: 2rem;
    }
 
@@ -195,8 +204,18 @@
 
   }
 
-@media (max-width: 1000px) {
+@media (max-width: 1000px) { 
   .card-user-desktop {
+    display: none;
+  }
+
+  .card-deck-desktop {
+    width: 90%;
+  }
+}
+
+@media (max-width: 700px) { 
+  .card-deck-desktop {
     display: none;
   }
 }
@@ -252,7 +271,8 @@
     margin-top: 25px;
     }
 
-  .user-pseudo { 
+  .user-pseudo, .deck-name-medium { 
+  display: inline-block;
   background-color: #5D3B8C;
   color: white;
   border: 3px solid #000000;
@@ -262,6 +282,10 @@
   padding-right: 5%;
   text-align: center;
   font-size: 2.5em;
+}
+
+.deck-name-desktop {
+  display: none;
 }
 
  .user-avatar {

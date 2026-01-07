@@ -444,7 +444,7 @@ const AccountPage = () => {
                         )}
 
                         {hasMore && (
-                            <button className='next-page-button' disabled={!hasMore}
+                            <button className='next-page-button'  disabled={!hasMore || displayLoading}
                             onClick={()=>displayMoreDecks()}>Afficher plus</button>
                         )}
                         

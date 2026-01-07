@@ -533,7 +533,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                     )
                     .map(card => card.id);
                     setNavigateListID(cardTypesIds);
-                    console.log(cardTypesIds)
 
                     const cardTypesApiIds = deckCardsUnit
                     .filter(card => 
@@ -978,35 +977,38 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
 
                             {/*La carte format desktop*/}
                             <div className='card-selected-container'> 
-                               <div className="card-user-desktop" style={{
+                              <div className="card-deck-desktop"
+                                style={{
                                     backgroundImage: deck.image
-                                        ? `linear-gradient(to right, 
-                                            rgba(235, 235, 235, 1) 20%,    /* Gris clair opaque à gauche */
-                                            rgba(245, 245, 245, 0.4) 70%,  /* Devient plus transparent au milieu */
-                                            transparent 100%),             /* Laisse voir l'image à droite */
-                                        url(${deck.image.startsWith('/uploads/') 
-                                            ? `http://localhost:8081${deck.image}`  
-                                            : deck.image})`
-                                        : 'none',
-                                    backgroundColor: '#EBEBEB',         // Fond gris clair global
-                                    backgroundBlendMode: 'luminosity',   // L'astuce pour le noir et blanc
-                                    backgroundSize: '70%',
+                                    ? `
+                                        linear-gradient(to top, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 100%),
+                                        linear-gradient(to right, rgba(235,235,235,1) 20%, rgba(245,245,245,0.4) 70%, transparent 100%),
+                                        url(${deck.image.startsWith('/uploads/')
+                                        ? `http://localhost:8081${deck.image}`
+                                        : deck.image})
+                                    `
+                                    : 'none',
+                                    backgroundColor: '#EBEBEB',
+                                    backgroundBlendMode: 'normal, luminosity, luminosity',
+                                    backgroundSize: 'cover',
                                     backgroundPosition: 'top right',
                                     backgroundRepeat: 'no-repeat',
                                     marginTop: '1%',
-                                    color: '#333',                       // Texte foncé pour contraster avec le gris clair
+                                    color: '#333',
                                     position: 'relative',
-                                    overflow: 'hidden'
-                                }}>
+                                    overflow: 'hidden',
+                                }}
+                                >   
+                                    <h1 className='deck-name-medium'>{deck.name}</h1> 
+
                                     <div className="deck-content">
-                                                               <img className="user-avatar-desktop" 
+                                                               <img className="user-avatar-desktop" style={{backgroundColor: 'white'}}
                                                                src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8081${deck.image}` : deck.image} alt="Deck mtg"/> 
                                 
-                                                              <div className="deck-selected-attributs" >
+                                                              <div className="deck-selected-attributs" style={{minWidth: '70%'}} >
 
-                                                                <h1 className='user-pseudo'>{deck.name}</h1>  
-                                 
-                                                    
+                                                                <h1 className='deck-name-desktop'>{deck.name}</h1>
+
                                                                   <div className='card-line-attribut'>
                                                                       <h4 className='deck-selected-line-title'> Format : </h4>
                                                                       <p className='deck-selected-format' style={{marginTop: '-5px'}}>{deck.format} </p>
@@ -1037,14 +1039,41 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                                                   
                                     </div>  
                   
-                                </div> 
+                              </div> 
      
                             </div>
 
                            
                              {/*La carte format medium*/}   
                             <h2 className='deck-selected-card-medium-name'style={{marginTop: '2%'}}>{deck.name}</h2> 
-                            <div className="deck-selected-card-medium" style={{ backgroundImage: `url(${backgroundPopup})`}}>
+                            <div className="deck-selected-card-medium" style={{
+                                backgroundImage: deck.image
+                                    ? `
+                                        linear-gradient(
+                                            to top,
+                                            rgba(255,255,255,0.7) 0%,
+                                            rgba(255,255,255,0.3) 100%
+                                        ),
+                                        linear-gradient(
+                                            rgba(255,255,255,0.35),
+                                            rgba(255,255,255,0.35)
+                                        ),
+                                        url(${
+                                            deck.image.startsWith('/uploads/')
+                                                ? `http://localhost:8081${deck.image}`
+                                                : deck.image
+                                        })
+                                    `
+                                    : 'none',
+                                backgroundColor: '#EBEBEB',
+                                backgroundBlendMode: 'normal, normal, luminosity',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                                color: '#333',
+                                position: 'relative',
+                                overflow: 'hidden',
+                            }}>
                                     <div className="img-container" style={{marginTop: '2%'}}>
                                                           <img className="new-deck-img-mobile" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8081${deck.image}` : deck.image} alt="Deck mtg"/>
                                     </div>
@@ -1088,7 +1117,35 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                 
                             {/*La carte format mobile*/}
                             <h2 className='deck-card-mobile-name' style={{marginTop: '2%'}}>{deck.name}</h2>
-                            <div style={{ backgroundImage: `url(${backgroundPopup})`}} className="deck-card-mobile" >
+                            <div style={{
+                                backgroundImage: deck.image
+                                    ? `
+                                        linear-gradient(
+                                            to top,
+                                            rgba(255,255,255,0.7) 0%,
+                                            rgba(255,255,255,0.3) 100%
+                                        ),
+                                        linear-gradient(
+                                            rgba(255,255,255,0.35),
+                                            rgba(255,255,255,0.35)
+                                        ),
+                                        url(${
+                                            deck.image.startsWith('/uploads/')
+                                                ? `http://localhost:8081${deck.image}`
+                                                : deck.image
+                                        })
+                                    `
+                                    : 'none',
+                                backgroundColor: '#EBEBEB',
+                                backgroundBlendMode: 'normal, normal, luminosity',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                                color: '#333',
+                                position: 'relative',
+                                overflow: 'hidden',
+                            }}
+                            className="deck-card-mobile" >
                                     <div className="img-container">
                                                           <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8081${deck.image}` : deck.image} alt="Deck mtg"/>
                                     </div>
@@ -1146,7 +1203,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 />
                                 <img className='deck-selected-img' src={newImage && newImage.startsWith('/uploads/') ? `http://localhost:8081${newImage}` : newImage} alt="deck-img" />
                                 
-                                <ButtonValidPopup disabled={displayLoading} onClick={()=>editDeck()}/>
+                                <ButtonValidPopup disabled={displayLoading || (newName === "" && !isImageUpdate)} onClick={()=>editDeck()}/>
                       </div>
                      <CgCloseO className='icon-close-popup' color='white' size={'5em'}  onClick={()=>cancelEdit()}/> 
                     </div>

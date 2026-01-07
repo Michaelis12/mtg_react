@@ -105,8 +105,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding-left: 6%;
     padding: 2%;
+    width: 100%;
 
 }
 
@@ -210,7 +210,7 @@
   .deck-selected-line-title {
       font-style: italic;
       font-size: 1.3em;
-      color: grey;
+      color: black;
     }
 
 

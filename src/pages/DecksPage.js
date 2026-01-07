@@ -876,7 +876,7 @@ const DecksPage = () => {
                                    
             </div>   
           { hasMore && (
-            <button className='next-page-button' disabled={!hasMore}
+            <button className='next-page-button'  disabled={!hasMore || displayLoading}
             onClick={()=>displayMoreDecks()}>Afficher plus</button> 
           )}
 
@@ -900,7 +900,7 @@ const DecksPage = () => {
               )}  
 
               { displayDecks === "popularity" && topDecks.length > 0 && hasMore && (
-                            <button className='next-page-button' disabled={!hasMore} 
+                            <button className='next-page-button'  disabled={!hasMore || displayLoading}
                                 onClick={()=>displayMoreDecksByLikes()}>Afficher plus</button> 
                         )} 
           </div>   
