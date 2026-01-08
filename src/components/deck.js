@@ -52,7 +52,7 @@ const Deck = function (props) {
                                             <h6 className={props.className} onClick={props.paraOnClick} style={props.style}>{props.para}</h6>
 
                                             {props.detailsDeck && props.detailsDeck.id === props.id && (
-                                                <div className="hover-deck-card" style={{ backgroundImage: `url(${BackgroundDeckAttributs})`, zIndex: '1'}}>
+                                                <div className="hover-deck-card" style={{ backgroundImage: `url(${BackgroundDeckAttributs})`, zIndex: '10'}}>
                                                     <div className="img-container">
                                                         <img className="hover-deck-card-img" src={getImageUrl(props.image)} alt="Deck mtg"/>
                                                     </div>
@@ -81,7 +81,7 @@ const Deck = function (props) {
                                             )}
                                         </div>                                    
                                     </div> 
-                                    <div style={props.likenumberStyle} className='card-page-likenumber'>{props.likeNumber} <FaHeart style={{zIndex: '1'}}
+                                    <div style={props.likenumberStyle} className='card-page-likenumber'>{props.likeNumber} <FaHeart
                                                             size={'0.8em'}  color='red' /></div>
                                 </div>      
     )

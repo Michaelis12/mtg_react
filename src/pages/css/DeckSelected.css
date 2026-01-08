@@ -138,7 +138,13 @@
 
 
 .deck-selected-db {
+    font-size: 2em;
+    font-weight: bold;
     text-decoration: underline;
+    background-color: white;
+    padding: 1%;
+    border-radius: 10px;
+    border: 1px solid black;
 }
 
 
@@ -339,6 +345,13 @@
 
   .icon-like-object-selected {
     margin-top: -18px;
+  }
+
+  .deck-selected-db {
+    font-size: 1em;
+    max-width: 150px;
+    padding: 3%;
+    overflow: hidden;
   }
 
 }
@@ -567,7 +580,7 @@ button:hover {
 
 
 .deck-like-icon {
-    font-size: 3em;    
+    font-size: 1.6em;    
 } 
 
 .deck-like-icon:hover {
@@ -737,6 +750,7 @@ button:hover {
         gap: 5px;
         border-bottom: 1px solid #ccc;
         padding: 10px;
+        min-width: 50%;
     }
 
       
@@ -848,7 +862,7 @@ button:hover {
     .attribut-line-title {
       font-style: italic;
       font-size: 1.2em;
-      color: grey;
+      color: black;
       margin-top: 15px;
   }
 
@@ -875,7 +889,7 @@ button:hover {
     .attribut-line-title {
       font-style: italic;
       font-size: 0.8rem;
-      color: grey;
+      color: black;
       margin-top: 15px;
   }
 

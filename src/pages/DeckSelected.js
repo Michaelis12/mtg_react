@@ -176,8 +176,6 @@ import FooterSection from '../components/footerSection';
 
                     const listCards = request.data.map(cardData => Card.fromApi(cardData));
 
-                    console.log(listCards)
-
                     setDeckCards(listCards)
                      const uniqueCards = Array.from(
                         new Map(listCards.map(card => [card.id, card])).values()
@@ -203,6 +201,22 @@ import FooterSection from '../components/footerSection';
             }
             getCardsDeck();
             }, [ deckSignal ]);
+
+        // Naviguer vers un user
+        const chooseUser = async (deckID) => {
+        
+          try {
+            setDisplayLoading(true);
+            const response = await axiosInstance.get(`/f_all/getDeckUser?deckID=${deckID}` );
+        
+            navigate(`/userSelected`, { state: { userID: response.data, ListUsers : [1] }})
+            setDisplayLoading(false);
+            } 
+          catch (error) {
+            setDisplayLoading(false);
+            console.log(error);
+          }
+        }
 
             
         const [deckCedh, setDeckCedh] = useState([])
@@ -244,8 +258,6 @@ import FooterSection from '../components/footerSection';
             if (deckCards.length > 0) {
 
             const validCards = deckCards.filter(card => !card.types.includes("Land"));
-
-            console.log("validCards : " + validCards.length)
 
             // Calcule la somme des cmc
             const totalCmc = validCards.reduce((sum, card) => sum + card.cmc, 0);
@@ -724,6 +736,20 @@ import FooterSection from '../components/footerSection';
                             <GiCardRandom className='icon-update-user' />
                             <h5 className='update-user-p'>Piocher une main</h5>
                         </button>
+
+                        {!deckLikedId.some(deckId => deckId === (id)) && (
+                        <button className='update-deck-container' style={{flexDirection: "row"}} onClick={likeDislike}>
+                            <FaRegHeart className='deck-like-icon' />
+                            <h5 className='update-user-p'>Liker le deck</h5>
+                        </button>
+                        )}
+
+                         {deckLikedId.some(deckId => deckId === (id)) && (
+                            <button className='update-deck-container' style={{flexDirection: "row"}} onClick={likeDislike}>
+                                <FaHeart color="red" className='deck-like-icon' />
+                                <h5 className='update-user-p'>Disliker le deck</h5>
+                            </button>
+                         )}
                         
                         </div>
                     </div>
@@ -731,15 +757,43 @@ import FooterSection from '../components/footerSection';
                 
                             {/*La carte format desktop*/}
                             <div className='card-selected-container'> 
-                                <div className="deck-card-desktop" style={{ backgroundImage: `url(${backgroundPopup})`, marginTop: '1%'}}>
-                                                          <h1 className='deck-name'>{deck.name}</h1>            
-                                                          <div className="deck-content">
-                                                               <img className="deckbuilding-pp" 
-                                                               src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8081${deck.image}` : deck.image} alt="Deck mtg"/> 
+                              <div className="card-deck-desktop"
+                                style={{
+                                    backgroundImage: deck.image
+                                    ? `
+                                        linear-gradient(to top, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 100%),
+                                        linear-gradient(to right, rgba(235,235,235,1) 20%, rgba(245,245,245,0.4) 70%, transparent 100%),
+                                        url(${deck.image.startsWith('/uploads/')
+                                        ? `https://mtg-spring-maj.fly.dev${deck.image}`
+                                        : deck.image})
+                                    `
+                                    : 'none',
+                                    backgroundColor: '#EBEBEB',
+                                    backgroundBlendMode: 'normal, luminosity, luminosity',
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'top right',
+                                    backgroundRepeat: 'no-repeat',
+                                    marginTop: '1%',
+                                    color: '#333',
+                                    position: 'relative',
+                                    overflow: 'hidden',
+                                }}
+                                >   
+                                    <h1 className='deck-name-medium'>{deck.name}</h1> 
+
+                                    <div className="deck-content">
+                                                               <img className="user-avatar-desktop" style={{backgroundColor: 'white'}}
+                                                               src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deck.image}` : deck.image} alt="Deck mtg"/> 
                                 
-                                                              <div className="deck-selected-attributs" >
-                                 
-                                                    
+                                                              <div className="deck-selected-attributs" style={{minWidth: '70%'}} >
+
+                                                                <h1 className='deck-name-desktop'>{deck.name}</h1>
+
+                                                                  <div className='card-line-attribut'>
+                                                                      <h4 className='deck-selected-line-title'> Auteur : </h4>
+                                                                      <h3 className='deck-selected-db' onClick={()=>chooseUser(deck.id)} >{deck.deckBuilderName} </h3>
+                                                                  </div>  
+
                                                                   <div className='card-line-attribut'>
                                                                       <h4 className='deck-selected-line-title'> Format : </h4>
                                                                       <p className='deck-selected-format' style={{marginTop: '-5px'}}>{deck.format} </p>
@@ -755,52 +809,71 @@ import FooterSection from '../components/footerSection';
                                                                           ))}
                                                                         </div>
                                                                       )}                                                      
-                                                                  </div> 
-
-                                                                <div className='card-line-attribut'>              
-                                                                    <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
-                                                                    <h3><strong>{cmc}</strong></h3>
-                                                                </div>
-
-                
+                                                                  </div>               
                                                               </div>
                                                                   
-                                                          </div>  
+                                    </div>  
                   
-                                </div> 
-     
+                              </div> 
                             </div>
 
-                             {/*La carte format medium*/}   
+                            {/*La carte format medium*/}   
                             <h2 className='deck-selected-card-medium-name'style={{marginTop: '2%'}}>{deck.name}</h2> 
-                            <div className="deck-selected-card-medium" style={{ backgroundImage: `url(${backgroundPopup})`}}>
+                            <div className="deck-selected-card-medium" style={{
+                                backgroundImage: deck.image
+                                    ? `
+                                        linear-gradient(
+                                            to top,
+                                            rgba(255,255,255,0.7) 0%,
+                                            rgba(255,255,255,0.3) 100%
+                                        ),
+                                        linear-gradient(
+                                            rgba(255,255,255,0.35),
+                                            rgba(255,255,255,0.35)
+                                        ),
+                                        url(${
+                                            deck.image.startsWith('/uploads/')
+                                                ? `https://mtg-spring-maj.fly.dev${deck.image}`
+                                                : deck.image
+                                        })
+                                    `
+                                    : 'none',
+                                backgroundColor: '#EBEBEB',
+                                backgroundBlendMode: 'normal, normal, luminosity',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                                color: '#333',
+                                position: 'relative',
+                                overflow: 'hidden',
+                            }}>
                                     <div className="img-container" style={{marginTop: '2%'}}>
-                                                          <img className="new-deck-img-mobile" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8081${deck.image}` : deck.image} alt="Deck mtg"/>
+                                                          <img className="new-deck-img-mobile" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deck.image}` : deck.image} alt="Deck mtg"/>
                                     </div>
                                     <div className="card-medium-body" >
+
+                                        <div className='card-line-attribut'>
+                                            <h4 className='deck-selected-line-title'> Auteur : </h4>
+                                            <h3 className='deck-selected-db' onClick={()=>chooseUser(deck.id)} >{deck.deckBuilderName} </h3>
+                                        </div>                                    
                                 
                                                                 
-                                    <div className='attribut-mobile-container'>
-                                                                      <h4 className='deck-selected-line-title'> Format : </h4>
-                                                                      <p className='deck-selected-format' style={{marginTop: '-5px'}}>{deck.format} </p>
-                                    </div>  
-                                
-                                    <div className='attribut-mobile-container'>
-                                                                      <h4 className='deck-selected-line-title' > Couleurs : </h4> 
-                                                                      {deck.colors && deck.colors.length > 0 && (
-                                                                        <div className='new-deck-colors-mapping' >
-                                                                          {deck.colors.map((color, index)  => (
-                                                                          <img key={index} src={getColors(color)} className="deck-selected-colors-imgs"
-                                                                            style={{display:(displayColor(colors, color)), marginTop: '-5px'}} alt={color}/>                                
-                                                                          ))}
-                                                                        </div>
-                                                                      )}                                                      
-                                    </div> 
-                
-                                    <div className='attribut-mobile-container'>              
-                                                                    <h4 className='deck-selected-line-title'> Cout en mana moyen : </h4> 
-                                                                    <h3><strong>{cmc}</strong></h3>
-                                    </div>
+                                        <div className='attribut-mobile-container'>
+                                                                        <h4 className='deck-selected-line-title'> Format : </h4>
+                                                                        <p className='deck-selected-format' style={{marginTop: '-5px'}}>{deck.format} </p>
+                                        </div>  
+                                    
+                                        <div className='attribut-mobile-container'>
+                                                                        <h4 className='deck-selected-line-title' > Couleurs : </h4> 
+                                                                        {deck.colors && deck.colors.length > 0 && (
+                                                                            <div className='new-deck-colors-mapping' >
+                                                                            {deck.colors.map((color, index)  => (
+                                                                            <img key={index} src={getColors(color)} className="deck-selected-colors-imgs"
+                                                                                style={{display:(displayColor(colors, color)), marginTop: '-5px'}} alt={color}/>                                
+                                                                            ))}
+                                                                            </div>
+                                                                        )}                                                      
+                                        </div> 
                 
                                    </div> 
                             </div>  
@@ -808,12 +881,46 @@ import FooterSection from '../components/footerSection';
                 
                             {/*La carte format mobile*/}
                             <h2 className='deck-card-mobile-name' style={{marginTop: '2%'}}>{deck.name}</h2>
-                            <div style={{ backgroundImage: `url(${backgroundPopup})`}} className="deck-card-mobile" >
+                            <div style={{
+                                backgroundImage: deck.image
+                                    ? `
+                                        linear-gradient(
+                                            to top,
+                                            rgba(255,255,255,0.7) 0%,
+                                            rgba(255,255,255,0.3) 100%
+                                        ),
+                                        linear-gradient(
+                                            rgba(255,255,255,0.35),
+                                            rgba(255,255,255,0.35)
+                                        ),
+                                        url(${
+                                            deck.image.startsWith('/uploads/')
+                                                ? `https://mtg-spring-maj.fly.dev${deck.image}`
+                                                : deck.image
+                                        })
+                                    `
+                                    : 'none',
+                                backgroundColor: '#EBEBEB',
+                                backgroundBlendMode: 'normal, normal, luminosity',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                                color: '#333',
+                                position: 'relative',
+                                overflow: 'hidden',
+                            }} className="deck-card-mobile" >
                                     <div className="img-container">
-                                                          <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `http://localhost:8081${deck.image}` : deck.image} alt="Deck mtg"/>
+                                                          <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deck.image}` : deck.image} alt="Deck mtg"/>
                                     </div>
                 
                                     <div className="deck-hover-body" >
+
+
+                                                <div className='attribut-mobile-container'>
+                                                    <h4 className='attribut-line-title'> Auteur : </h4>
+                                                    <h3 className='deck-selected-db' style={{marginTop: '7px'}} onClick={()=>chooseUser(deck.id)} >{deck.deckBuilderName} </h3>
+                                                </div>                                    
+                                
 
      
                                                 <div className='attribut-mobile-container'>                        
@@ -831,23 +938,17 @@ import FooterSection from '../components/footerSection';
                                                                     <h4 className='attribut-line-title' style={{marginTop: "4px"}}> Format : </h4> 
                                                                     <h4 className='card-format' style={{ backgroundColor: 'green'}}>{deck.format}</h4>
                                                 </div>
-
-                                                <div className='attribut-mobile-container'>              
-                                                                    <h4 className='attribut-line-title'> Cout en mana moyen : </h4> 
-                                                                    <h4  className='card-manacost'>{cmc}</h4>
-                                                </div>
                 
                                                                 
                                     </div> 
                             </div>
 
-                            <button className="deck-like-button" onClick={likeDislike}>{hearthIcon()}</button>                                  
 
 
                 
 
             { format === "commander" && (
-                <Title title={`Cartes du deck (${deckCards.length + 1} / ${cardsNumber()})`}/>
+                <Title title={`Cartes du deck (${deckCards.length + 1})`}/>
             )}
 
             { format !== "commander" && (
@@ -858,39 +959,31 @@ import FooterSection from '../components/footerSection';
         <div className='map-deck-cards'>  
         
 
-            {/*Affichage du commandant*/}
-            { format === "commander" && ( 
-            <div style={{width: '100%', display : 'flex', flexDirection: 'column', alignItems: 'center'}}>               
-                <div className='title-commandant-container'>
-                <TitleType title={"Commandant"}/>
-                </div>
-                <div className="cedh-background" id='creature-card' style={{ backgroundImage: `url(${backgroundCedh})`, 
-                backgroundSize: '100%',
-                backgroundPosition: 'center'}}>
-                <div className="cedh-details">
-                    
-                    <div className='card-link-desktop'>
-                        <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8081${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>navCedh(deckCedh.apiID)}
-                                                    onMouseEnter={() => hoveredCard(deckCedh.id) } onMouseOut={() => hoveredCard()}/>
-                    </div>
-
-                    <div className='card-link-mobile'>
-                        <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8081${deckCedh.image}` : deckCedh.image} alt="creature-img" 
-                        onClick={()=>openZoomPopup(deckCedh)} />
-                    </div>
-                                                
-                    {detailsCard && detailsCard.id === deckCedh.id && (
-                                                <img className="card-img-zoom" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `http://localhost:8081${deckCedh.image}` : deckCedh.image} alt="Card-image"
-                                                />
-                    )}
-                </div>
-                </div>
-            </div>
-            )} 
-
-
             {/*Affichage des cartes par types*/}        
             <div className='decks-types-map'>
+
+                { format === "commander" && (
+                    <div className='decks-type-map' style={{ backgroundImage: `url(${backgroundPopup})`, backgroundPosition: 'top', 
+                                display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    <TitleType title={"Commandant"}/>
+                                    <div className="cedh-details">
+                                        <div className='cedh-link-desktop'>
+                                            <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>navCedh(deckCedh.apiID)}
+                                                                            onMouseEnter={() => hoveredCard(deckCedh.id) } onMouseOut={() => hoveredCard()}/>
+                                        </div>                                    
+                                        <div className='cedh-link-mobile'>
+                                            <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deckCedh.image}` : deckCedh.image} alt="creature-img" 
+                                            onClick={()=>openZoomPopup(deckCedh)} />
+                                        </div>
+                                                                    
+                                        {detailsCard && detailsCard.id === deckCedh.id && (
+                                                                    <img className="card-img-zoom" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deckCedh.image}` : deckCedh.image} alt="Card-image"
+                                                                    />
+                                        )}
+                                    </div>
+                    </div>
+                )}
+
                 {(() => {
                     // 1️⃣ Créer un mapping { type -> cartes } basé sur cardsTypes order
                     const cardsByMappedType = {};
@@ -956,22 +1049,36 @@ import FooterSection from '../components/footerSection';
                                 <h5 className='land-text-name' onClick={() => openZoomPopup(card)}>
                                     {card.name}
                                 </h5>
-                                </div>
+                                </div> 
+
+                                <div className='deckbuilding-number-container'>
+                                                            {
+                                                                (format !== "commander" && !card.legendary) || 
+                                                                (Array.isArray(card.types) && card.types.includes("Basic")) 
+                                                                ? (
+                                                                    <div className='deckbuilding-text-number'>
+                                                                    
+                                                                        <p className='p-card-length' style={{margin: '0px'}}>x {count(card.id)}</p>
+                                
+                                                                    </div>
+                                                                ) : null 
+                                                                }
+                                
+                                                            
+                                                            </div>
 
                                 {detailsCard && detailsCard.id === card.id && (
                                 <img
                                     className="card-img-zoom"
                                     src={
                                     card.image && card.image.startsWith('/uploads/')
-                                        ? `http://localhost:8081${card.image}`
+                                        ? `https://mtg-spring-maj.fly.dev${card.image}`
                                         : card.image
                                     }
                                     alt="Card-image"
                                 />
                                 )}
-                                {format !== "commander" && (
-                                    <p className='p-card-length'>{count(card.id)}</p>
-                                )}
+
                             </div>
                             ))}
                         </div>
@@ -1264,7 +1371,6 @@ import FooterSection from '../components/footerSection';
                     </div>
 
             </div>
-            <IoIosArrowDropleft className='icon-close-popup' size={'5em'}  onClick={()=>navigate(-1)}/>      
     
         </div>
                                           

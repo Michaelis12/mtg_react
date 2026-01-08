@@ -67,7 +67,7 @@
     padding-top: 4%;
     padding-bottom: 4%;
     overflow: hidden;
-    z-index: 2;
+    z-index: 1;
     animation: zoomFadeIn 0.2s ease-out forwards;
 } 
 

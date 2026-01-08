@@ -126,6 +126,7 @@
 
  .deck-db {
     overflow: hidden;
+    max-width: 120px;
     text-align: center;
     padding: 5%;
     border: 2px solid black;

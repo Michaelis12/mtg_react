@@ -207,7 +207,7 @@ const CardsDeckPage = () => {
 
                 params = {
                   q: buildQuery(filterName, filterText, inputManaCostMin, inputManaCostMax, filterColors, [format], 
-                              filterRarities, filterTypes, filterLegendary, filterEditions),
+                              filterRarities, filterTypes, filterLegendary, filterEditions, deckColors),
                   page: 1
                 };
 
@@ -224,39 +224,24 @@ const CardsDeckPage = () => {
           // Afficher toutes que les cartes dans la db
           else {
 
-                params = {
-                                page: 0,
-                                size: pageSize,
-                                order : order,
-                                name: filterName,
-                                text: filterText,
-                                formats: [format],
-                                colors: filterColors,
-                                rarities : filterRarities,
-                                manaCostMin : inputManaCostMin,
-                                manaCostMax : inputManaCostMax,
-                                editions : filterEditions,
-                                types : filterTypes
-                                
-                            };
+            const dbColors = [...deckColors, 'colorless'];
 
-                          if (filterLegendary) {
-                                  params = {
-                                    page: 0,
-                                    size: pageSize,
-                                    order : order,
-                                    name: filterName,
-                                    text: filterText,
-                                    formats:  [format],
-                                    colors: filterColors,
-                                    rarities : filterRarities,
-                                    manaCostMin : inputManaCostMin,
-                                    manaCostMax : inputManaCostMax,
-                                    editions : filterEditions,
-                                    types : filterTypes,
-                                    legendary : filterLegendary
-                                };
-                                }
+                const params = {
+                  page: 0,
+                  size: pageSize,
+                  order: order,
+                  name: filterName,
+                  text: filterText,
+                  formats: [format],
+                  colors: filterColors.length > 0 ? filterColors : dbColors,
+                  rarities: filterRarities,
+                  manaCostMin: inputManaCostMin,
+                  manaCostMax: inputManaCostMax,
+                  editions: filterEditions,
+                  types: filterTypes,
+                  ...(filterLegendary && { legendary: filterLegendary })
+              };
+
 
                 const response = await axiosInstance.get('f_all/getCardsPaged', {
                                           params,
@@ -1086,7 +1071,7 @@ const CardsDeckPage = () => {
                                   )}
                 </div>
               
-              {!deckColors.includes("colorless") &&(
+              {!(deckColors.length === 1 && deckColors[0] === "colorless") && (
                 <div className="filter-colors-container">
                 <OpenButton text="Filtrer par couleur" icon={arrowColorSens} onClick={OpenFilterColor} />
                   {displayFilterColors && (
@@ -1639,7 +1624,7 @@ const CardsDeckPage = () => {
                                                   <h2><strong>Cartes sélectionnées ({cardsSelected.length})</strong></h2>
                                               </div>
                                               <div className='cards-selected-container'>
-                                                <img className='card-add-img' src={cardImage && cardImage.startsWith('/uploads/') ? `http://localhost:8081${cardImage}` : cardImage} alt="deck-img" />
+                                                <img className='card-add-img' src={cardImage && cardImage.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${cardImage}` : cardImage} alt="deck-img" />
                                                 <div className='cards-deck-unit-container'> 
 
                                                   {cardsSelectedUnit.map(card => ( 
@@ -1662,7 +1647,7 @@ const CardsDeckPage = () => {
                                                         <TiDeleteOutline className='delete-card-button' color='red' size={'3em'} onClick={()=>unselectCards(card)} />
                                                       </div> 
                                                         {detailsCard && detailsCard.id === card.id && (
-                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `http://localhost:8081${card.image}` : card.image} alt="Card-image"/>
+                                                        <img className="card-img-zoom" src={card.image && card.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${card.image}` : card.image} alt="Card-image"/>
                                                         )} 
                                                     </div>
                                             
