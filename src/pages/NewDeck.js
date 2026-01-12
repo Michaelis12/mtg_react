@@ -1027,6 +1027,8 @@ const NewDeck = () => {
     recupStorage();
 }, []);
 
+  const [displayZoomPopup, setDisplayZoomPopup] = React.useState(false)
+
 
                
  
@@ -1036,6 +1038,7 @@ const NewDeck = () => {
                 <img src={loading} className="loading-img" alt="Chargement..." style={{position:'fixed', top:'50%', left:'50%', transform:'translate(-50%, -50%)', zIndex:1000}} />
             )}
       <img src={backgroundCardsPage} className="background-image" alt="background" />
+      <img src={backgroundCardsPage} className="background-image-mobile" alt="background" />
 
       <div className='new-deck-attributes'>
             {cedhID !== "" && image === "" && (
@@ -1538,7 +1541,6 @@ const NewDeck = () => {
             */}
             
                {/*La carte finale format desktop*/}
-
                 <div className="card-deck-desktop"
                                 style={{
                                     backgroundImage: image
@@ -1602,11 +1604,9 @@ const NewDeck = () => {
                                                                   
                                     </div>   
                   
-                </div>
+                </div> 
 
-                {/*La carte format medium*/}   
-                <h2 className='deck-selected-card-medium-name'style={{marginTop: '2%'}}>{name}</h2>
-                <ButtonModif onClick={() => returnName()} style={{marginTop: '-10px'}}/> 
+                {/*La carte format medium*/}            
                 <div className="deck-selected-card-medium" style={{
                                 backgroundImage: image
                                     ? `
@@ -1635,11 +1635,24 @@ const NewDeck = () => {
                                 position: 'relative',
                                 overflow: 'hidden',
                                 marginTop: '-3%'
-                            }}>
+                            }}>      
+                            <ButtonModif style={{
+                                        position: "absolute",
+                                        left: "85%",      
+                                        top: "55%",
+                                        transform: "translateY(-50%)",
+                                      }} onClick={() => returnName()} />
                                     <div className="img-container" style={{marginTop: '2%'}}>
-                                                          <img className="new-deck-img-mobile" src={image && image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
+                                                          <img className="new-deck-img-mobile" style={{backgroundColor: 'white'}} 
+                                                          src={image && image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
                                     </div>
                                     <div className="card-medium-body" >
+
+                                      <div className='deck-selected-card-medium-name-container'>
+                                        <h2 className='deck-selected-card-medium-name'>{name} 
+                                        </h2>
+                                         
+                                      </div> 
                                                                 
                                         <div className='attribut-mobile-container'>
                                                                         <h4 className='deck-selected-line-title'> Format : </h4>
@@ -1660,14 +1673,11 @@ const NewDeck = () => {
                                         </div> 
                 
                                    </div> 
-                </div>  
-                            
+                </div>
                 
                 {/*La carte format mobile*/}
-                {/*
-                <h2 className='deck-card-mobile-name' style={{marginTop: '2%'}}>{deck.name}</h2>
                 <div style={{
-                                backgroundImage: deck.image
+                                backgroundImage: image
                                     ? `
                                         linear-gradient(
                                             to top,
@@ -1679,9 +1689,9 @@ const NewDeck = () => {
                                             rgba(255,255,255,0.35)
                                         ),
                                         url(${
-                                            deck.image.startsWith('/uploads/')
-                                                ? `https://mtg-spring-maj.fly.dev${deck.image}`
-                                                : deck.image
+                                            image.startsWith('/uploads/')
+                                                ? `https://mtg-spring-maj.fly.dev${image}`
+                                                : image
                                         })
                                     `
                                     : 'none',
@@ -1694,119 +1704,50 @@ const NewDeck = () => {
                                 position: 'relative',
                                 overflow: 'hidden',
                             }} className="deck-card-mobile" >
+                                    <ButtonModif style={{
+                                        position: "absolute",
+                                        left: "85%",      
+                                        top: "55%",
+                                        transform: "translateY(-50%)",
+                                      }} onClick={() => returnName()} />
                                     <div className="img-container">
-                                                          <img className="hover-deck-card-img" src={deck.image && deck.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deck.image}` : deck.image} alt="Deck mtg"/>
+                                                          <img className="hover-deck-card-img" src={image && image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
                                     </div>
                 
-                                    <div className="deck-hover-body" >
+                                    <div className="deck-hover-body" style={{marginTop: '10px'}}>
 
-
-                                                <div className='attribut-mobile-container'>
-                                                    <h4 className='attribut-line-title'> Auteur : </h4>
-                                                    <h3 className='deck-selected-db' style={{marginTop: '7px'}} onClick={()=>chooseUser(deck.id)} >{deck.deckBuilderName} </h3>
-                                                </div>                                    
-                                
-
+                                                <h2 className='deck-selected-card-medium-name'>{name} 
+                                              </h2>
      
                                                 <div className='attribut-mobile-container'>                        
                                                                     <h4 className='attribut-line-title' style={{marginTop: "2px"}}> Couleurs : </h4> 
-                                                                    {deck.colors && deck.colors.length > 0 && (
+                                                                    {colors && colors.length > 0 && (
                                                                         <div className='mapping-color'>
-                                                                          {deck.colors.map((color, index)  => (
-                                                                        <img key={index} src={getColors(color)} className="color-img-select" style={{display:(displayColor(colors, color))}} alt={color}/>                                
+                                                                          {colors.map((color, index)  => (
+                                                                        <img key={index} src={getColorPics(color)} className="color-img-select" style={{display:(displayColor(colors, color))}} alt={color}/>                                
                                                                     ))}
                                                                         </div>
                                                                     )} 
+                                                                     <ButtonModif onClick={() => returnColors()} />
                                                 </div> 
 
                                                 <div className='attribut-mobile-container'>              
                                                                     <h4 className='attribut-line-title' style={{marginTop: "4px"}}> Format : </h4> 
-                                                                    <h4 className='card-format' style={{ backgroundColor: 'green'}}>{deck.format}</h4>
+                                                                    <h4 className='card-format' style={{ backgroundColor: 'green'}}>{format}</h4>
+                                                                     <ButtonModif onClick={() => returnFormat()} />
                                                 </div>
                 
                                                                 
                                     </div> 
-                </div>
-                */}            
+                </div>  
+                            
+                          
 
 
                <div className='valid-form-container' style={{padding: '0%'}}>      
                   <button className='valid-popup' style={{border: '3px solid white'}} disabled={displayLoading} onClick={() => createDeck()}><h4>Créer le deck</h4></button> 
               </div>
-              
-              {/*
-                <div className="new-deck-card-desktop" style={{ backgroundImage: `url(${backgroundPopup})`, marginTop: '0%'}} >
-                          <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-10px'}}/></h1>
-  
-                          <div className="deck-content">
-                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
-
-                              <div className="deck-selected-attributs" >
-                                
-                                  <div className='card-line-attribut'>
-                                      <h4 className='new-deck-line-title'> Format : </h4>
-                                      <p className='new-deck-format'>{format} </p>
-                                      <ButtonModif onClick={() => returnFormat()} /> 
-                                  </div>  
-
-                                  <div className='card-line-attribut'>
-                                      <h4 className='new-deck-line-title' > Couleurs : </h4> 
-                                      {colors && colors.length > 0 && (
-                                        <div className='new-deck-colors-mapping' >
-                                          {colors.map((color, index)  => (
-                                          <img key={index} src={getColorPics(color)} className="new-deck-colors-imgs" alt={color}/>                                
-                                          ))}
-                                           <ButtonModif onClick={() => returnColors()} /> 
-                                        </div>
-                                      )}
-                                     
-                                  </div> 
-                                </div>
-                                  
-                          </div>  
-                        <div className='valid-form-container'>      
-                          <button className='valid-popup' disabled={displayLoading} onClick={() => createDeck()}><h4>Créer le deck</h4></button> 
-                        </div>    
-                </div> 
-              */}
-                
-                {/*La carte finale format mobile*/}                                         
-                <h2 className='deck-card-mobile-name'>{name} <ButtonModif onClick={() => returnName()} /></h2>
-                <div className="deck-card-mobile">
-                                    <div className="img-container">
-                                                          <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
-                                    </div>
-          
-                
-                  <div className="new-deck-body-mobile" style={{ backgroundImage: `url(${backgroundPopup})`}} >
-                                                              
-                    <div className='card-line-attribut'>                        
-                                                    <h4 className='new-deck-line-title'> Couleurs : </h4> 
-
-                                                    <div className='color-modif'>
-                                                      {colors && colors.length > 0 && (
-                                                          <div className='mapping-color'>
-                                                            {colors.map((color, index)  => (
-                                                          <img key={index} src={getColorPics(color)} className="color-img-new-deck" alt={color}/>                                
-                                                      ))}
-                                                          </div>
-                                                      )} 
-                                                      <ButtonModif onClick={() => returnColors()} />
-                                                    </div>
-                      </div>
-                      <div className='card-line-attribut'>              
-                                                                    <h4 className='new-deck-line-title'> Format : </h4> 
-                                                                    <p className='new-deck-format' >{format}</p>
-                                                                    <ButtonModif onClick={() => returnFormat()} />
-                      </div>
-                                                                                                      
-                      <button style={{marginBottom: '5%', marginTop: '5%', paddingLeft: '2%', paddingRight: '2%', fontWeight: 'bold'}} className='valid-popup' 
-                       disabled={displayLoading} onClick={() => createDeck()} >Créer le deck</button>                                          
-                    </div> 
-                </div> 
-              
-
-              
+        
           </div>
 
         )}
@@ -1815,83 +1756,256 @@ const NewDeck = () => {
         {colors.length !== 0 && format === "commander" && cedhID !== "" && name !== "" && image !== "" && (
           <div className="final-card-group">
 
-              <div className="new-deck-card-desktop" style={{ backgroundImage: `url(${backgroundPopup})`}} >
-                          <h1 className='deck-name'>{name}  <ButtonModif onClick={() => returnName()} style={{marginTop: '-10px'}}/></h1>
-  
-                          <div className="deck-content">
-                              <img className="new-deck-img" src={image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
+            {/*La carte format desktop*/}
+            <div className="card-deck-desktop"
+                                style={{
+                                    backgroundImage: image
+                                    ? `
+                                        linear-gradient(to top, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 100%),
+                                        linear-gradient(to right, rgba(235,235,235,1) 20%, rgba(245,245,245,0.4) 70%, transparent 100%),
+                                        url(${image.startsWith('/uploads/')
+                                        ? `https://mtg-spring-maj.fly.dev${image}`
+                                        : image})
+                                    `
+                                    : 'none',
+                                    backgroundColor: '#EBEBEB',
+                                    backgroundBlendMode: 'normal, luminosity, luminosity',
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'top right',
+                                    backgroundRepeat: 'no-repeat',
+                                    marginTop: '1%',
+                                    color: '#333',
+                                    position: 'relative',
+                                    overflow: 'hidden'
+                                }}
+                                >   
+                                    
+                                    <div className='button-modif-name-container-medium'>
+                                      <h1 className='deck-name-medium'>{name}</h1> 
+                                      <ButtonModif onClick={() => returnName()} style={{marginTop: '-10px'}}/>
+                                    </div>
 
-                              <div className="deck-selected-attributs" >
-
-                                  <div className='card-line-cedh-attribut'>
-                                      <h4 className='new-deck-line-title' > Commandant : </h4>
-                                      <h3 className='new-deck-cedh' onMouseEnter={() => hoveredCard(cedh.id) } onMouseOut={() => hoveredCard()}
-                                        > {cedh.name}<ButtonModif onClick={() => returnCedh()} 
-                                        style={{marginTop: '-20px'}}  /> </h3>
-                                      {detailsCard && detailsCard.id === cedh.id && (
-                                            <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${cedh.image}` : cedh.image} alt="Card-image"/>
-                                        )} 
-                                </div> 
+                                    <div className="deck-content">
+                                         <img className="user-avatar-desktop" style={{backgroundColor: 'white'}}
+                                          src={image && image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/> 
                                 
-                                  <div className='card-line-cedh-attribut'>
-                                      <h4 className='new-deck-line-title'> Format : </h4>
-                                      <p className='new-deck-format'>{format} </p>
-                                      <ButtonModif onClick={() => returnFormat()} /> 
-                                  </div>  
+                                        <div className="deck-selected-attributs" style={{minWidth: '70%'}} >
 
-                                  <div className='card-line-cedh-attribut'>
-                                      <h4 className='new-deck-line-title' > Couleurs : </h4> 
-                                      {colors && colors.length > 0 && (
-                                        <div className='new-deck-colors-mapping' >
-                                          {colors.map((color, index)  => (
-                                          <img key={index} src={getColorPics(color)} className="new-deck-colors-imgs" alt={color}/>                                
-                                          ))}
+                                                                <div className='new-deck-title-container'>
+                                                                  <h1 className='deck-name-desktop'>{name}</h1>
+                                                                  <div className='button-modif-name-container-desktop'>
+                                                                    <ButtonModif onClick={() => returnName()} style={{marginTop: '-10px'}}/>
+                                                                  </div>
+                                                                </div>
+
+                                                                  <div className='card-line-cedh-attribut'>
+                                                                        <h4 className='deck-selected-line-title' > Commandant : </h4>
+                                                                        <h3 className='new-deck-cedh' onMouseEnter={() => hoveredCard(cedh.id) } onMouseOut={() => hoveredCard()}
+                                                                          > {cedh.name}<ButtonModif onClick={() => returnCedh()} 
+                                                                          style={{marginTop: '-20px'}}  /> </h3>
+                                                                        
+                                                                  </div> 
+
+
+                                                                  <div className='card-line-attribut'>
+                                                                      <h4 className='deck-selected-line-title'> Format : </h4>
+                                                                      <p className='deck-selected-format' style={{marginTop: '-5px'}}>{format} </p>
+                                                                       <ButtonModif onClick={() => returnFormat()} />
+                                                                  </div>  
+                                
+                                                                  <div className='card-line-attribut'>
+                                                                      <h4 className='deck-selected-line-title' > Couleurs : </h4> 
+                                                                      {colors && colors.length > 0 && (
+                                                                        <div className='new-deck-colors-mapping' >
+                                                                          {colors.map((color, index)  => (
+                                                                            <img key={index} src={getColorPics(color)} className="new-deck-colors-imgs" alt={color}/>                                
+                                                                          ))}
+                                                                        </div>
+                                                                      )}                                                      
+                                                                  </div>               
                                         </div>
-                                      )}
-                                     
-                                  </div> 
-                                </div>
-                                  
-                          </div>  
-                        <div className='valid-form-container'>      
-                          <button className='valid-popup' disabled={displayLoading} onClick={() => createCedh()}><h4 className='valid-popup-title'>Créer le deck</h4></button> 
-                        </div>    
-              </div>
-    
-              <h2 className='deck-card-mobile-name'>{name} <ButtonModif onClick={() => returnName()} style={{marginLeft : '10px', marginTop : '5px'}} /></h2>
-              <div className="deck-card-mobile" >
-                                  <div className="img-container">
-                                                        <img className="new-deck-img-mobile" src={image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
-                                  </div>
-          
-              
-                <div className="new-deck-body-mobile" >
 
-                    <div className='card-line-attribut' style={{gap:'0px'}}>
-                                                  <h4 className='format' style={{marginRight:'10px'}}>Commandant :</h4>
-                                                  <h2 className='card-cedh'><strong>{cedh.name} <ButtonModif style={{marginTop : '-10px'}} onClick={() => returnCedh()} /></strong></h2>
-                    </div>
-                                                             
-                    <div className='card-line-attribut'>                        
-                                                  <h4 className='color'> Couleurs : </h4> 
-                                                  {colors && colors.length > 0 && (
-                                                      <div className='mapping-color'>
-                                                        {colors.map((color, index)  => (
-                                                      <img key={index} src={getColorPics(color)} className="color-img-new-deck" alt={color}/>                                
-                                                  ))}
-                                                      </div>
-                                                  )} 
-                    </div>
-                    <div className='card-line-attribut'>              
-                                                  <h4 className='format'> Format : </h4> 
-                                                  <h4 className='card-format' style={{ position: 'relative' }}>{format}</h4>
-                                                  <ButtonModif onClick={() => returnFormat()} />
-                    </div>
-                                                                                                    
-                     <button style={{marginBottom: '5%', marginTop: '5%', paddingLeft: '2%', paddingRight: '2%'}}
-                     disabled={displayLoading} className="valid-popup" onClick={() => createCedh()} ><h4 className='valid-popup-title'>Créer le deck</h4></button>                                          
-                  </div> 
-              </div> 
+                                        {detailsCard && detailsCard.id === cedh.id && (
+                                                                              <img style={{
+                                        position: "absolute",
+                                        left: "55%",      
+                                        top: "5%"}}
+                                                                              className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${cedh.image}` : cedh.image} alt="Card-image"/>
+                                                                          )} 
+                                                                  
+                                    </div>   
+                  
+            </div>
+
+            {/*La carte format medium*/}            
+                <div className="deck-selected-card-medium" style={{
+                                backgroundImage: image
+                                    ? `
+                                        linear-gradient(
+                                            to top,
+                                            rgba(255,255,255,0.7) 0%,
+                                            rgba(255,255,255,0.3) 100%
+                                        ),
+                                        linear-gradient(
+                                            rgba(255,255,255,0.35),
+                                            rgba(255,255,255,0.35)
+                                        ),
+                                        url(${
+                                            image.startsWith('/uploads/')
+                                                ? `https://mtg-spring-maj.fly.dev${image}`
+                                                : image
+                                        })
+                                    `
+                                    : 'none',
+                                backgroundColor: '#EBEBEB',
+                                backgroundBlendMode: 'normal, normal, luminosity',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                                color: '#333',
+                                position: 'relative',
+                                overflow: 'hidden',
+                                marginTop: '-3%'
+                            }}>      
+                            <ButtonModif style={{
+                                        position: "absolute",
+                                        left: "46%",      
+                                        top: "23%",
+                                        transform: "translateY(-50%)",
+                                      }} onClick={() => returnName()} />
+                                    <div className="img-container" style={{marginTop: '2%'}}>
+                                                          <img className="new-deck-img-mobile" style={{backgroundColor: 'white'}} 
+                                                          src={image && image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
+                                    </div>
+                                    <div className="card-medium-body" >
+
+                                      <div className='deck-selected-card-medium-name-container'>
+                                        <h2 className='deck-selected-card-medium-name'>{name} 
+                                        </h2>
+                                         
+                                      </div> 
+
+                                      <div className='attribut-mobile-container' style={{flexDirection: 'column', alignItems: 'center'}}>
+                                                                        <h4 className='deck-selected-line-title' > Commandant : </h4>
+                                                                        <h3 className='new-deck-cedh' onMouseEnter={() => hoveredCard(cedh.id) } onMouseOut={() => hoveredCard()}
+                                                                          > {cedh.name}<ButtonModif onClick={() => returnCedh()} 
+                                                                          style={{marginTop: '-20px'}}  /> </h3>
+                                                                        {detailsCard && detailsCard.id === cedh.id && (
+                                                                                                          <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${cedh.image}` : cedh.image} alt="Card-image"/>
+                                                                                                      )} 
+                                                                        
+                                      </div>  
+                                                                
+                                        <div className='attribut-mobile-container'>
+                                                                        <h4 className='deck-selected-line-title'> Format : </h4>
+                                                                        <p className='deck-selected-format' style={{marginTop: '-5px'}}>{format} </p>
+                                                                        <ButtonModif onClick={() => returnFormat()} />
+                                        </div>  
+                                    
+                                        <div className='attribut-mobile-container'>
+                                                                        <h4 className='deck-selected-line-title' > Couleurs : </h4> 
+                                                                        {colors && colors.length > 0 && (
+                                                                            <div className='new-deck-colors-mapping' >
+                                                                            {colors.map((color, index)  => (
+                                                                            <img key={index} src={getColorPics(color)} className="new-deck-colors-imgs" alt={color}/>                                
+                                                                          ))}
+                                                                        </div>
+                                                                        )}                                                      
+                                        </div> 
+                
+                                   </div> 
+                </div>
+              
+              {/*La carte format mobile*/}
+              <div style={{
+                                backgroundImage: image
+                                    ? `
+                                        linear-gradient(
+                                            to top,
+                                            rgba(255,255,255,0.7) 0%,
+                                            rgba(255,255,255,0.3) 100%
+                                        ),
+                                        linear-gradient(
+                                            rgba(255,255,255,0.35),
+                                            rgba(255,255,255,0.35)
+                                        ),
+                                        url(${
+                                            image.startsWith('/uploads/')
+                                                ? `https://mtg-spring-maj.fly.dev${image}`
+                                                : image
+                                        })
+                                    `
+                                    : 'none',
+                                backgroundColor: '#EBEBEB',
+                                backgroundBlendMode: 'normal, normal, luminosity',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                                color: '#333',
+                                position: 'relative',
+                                overflow: 'hidden',
+                            }} className="deck-card-mobile" >
+                                    <ButtonModif style={{
+                                        position: "absolute",
+                                        left: "46%",      
+                                        top: "23%",
+                                        transform: "translateY(-50%)",
+                                      }} onClick={() => returnName()} />
+                                    <div className="img-container">
+                                                          <img className="hover-deck-card-img" src={image && image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${image}` : image} alt="Deck mtg"/>
+                                    </div>
+                
+                                    <div className="deck-hover-body" style={{marginTop: '10px'}}>
+
+                                                <h2 className='deck-selected-card-medium-name'>{name} 
+                                              </h2>
+
+                                              <div className='attribut-mobile-container' style={{flexDirection: 'column', alignItems: 'center'}}>
+                                                                        <h4 className='attribut-line-title' > Commandant : </h4>
+                                                                        
+                                                                        <h3 className='new-deck-cedh' onClick={()=> setDisplayZoomPopup(true)}
+                                                                          > {cedh.name}<ButtonModif onClick={() => returnCedh()} 
+                                                                          style={{marginTop: '-20px'}}  /> </h3>
+                                                                        {detailsCard && detailsCard.id === cedh.id && (
+                                                                              <img className="cedh-img-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${cedh.image}` : cedh.image} alt="Card-image"/>
+                                                                          )} 
+                                              </div>
+     
+                                                <div className='attribut-mobile-container'>                        
+                                                                    <h4 className='attribut-line-title' style={{marginTop: "2px"}}> Couleurs : </h4> 
+                                                                    {colors && colors.length > 0 && (
+                                                                        <div className='mapping-color'>
+                                                                          {colors.map((color, index)  => (
+                                                                        <img key={index} src={getColorPics(color)} className="color-img-select" style={{display:(displayColor(colors, color))}} alt={color}/>                                
+                                                                    ))}
+                                                                        </div>
+                                                                    )} 
+                                                                     <ButtonModif onClick={() => returnColors()} />
+                                                </div> 
+
+                                                <div className='attribut-mobile-container'>              
+                                                                    <h4 className='attribut-line-title' style={{marginTop: "4px"}}> Format : </h4> 
+                                                                    <h4 className='card-format' style={{ backgroundColor: 'green'}}>{format}</h4>
+                                                                     <ButtonModif onClick={() => returnFormat()} />
+                                                </div>
+                
+                                                                
+                                    </div> 
+              </div>   
+              
+              {/* Le popup de zoom sur la carte pour la partie mobile */}
+              {displayZoomPopup && (
+                                          <div className='popup-bckg'>                                
+                                              <img className="card-selected-image-zoom" src={cedh.image && cedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${cedh.image}` : cedh.image} alt="Card mtg"/>
+                                              <CgCloseO className='icon-close-popup' color='white' size={'5em'} onClick={()=> setDisplayZoomPopup(false)}/>
+                                          </div>
+                              )} 
+              
+
+              {/*Le bouton de création du deck*/}
+              <div className='valid-form-container' style={{padding: '0%'}}>      
+                  <button className='valid-popup' style={{border: '3px solid white'}} disabled={displayLoading} onClick={() => createCedh()}><h4>Créer le deck</h4></button> 
+              </div>
               
         </div>
 

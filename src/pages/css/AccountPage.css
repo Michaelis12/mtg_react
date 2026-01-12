@@ -85,9 +85,7 @@
     border-top-right-radius: 0px;
   }
 
-  .input-image {
-    margin-top: -80px;
-  }
+ 
 }
 
 
@@ -141,7 +139,6 @@
   .input-image {
     font-size: 0.7em;
     width: 100px;
-    margin-top: -60px;
   }
 
 }

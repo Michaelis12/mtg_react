@@ -566,8 +566,9 @@
         margin: 5px;
         gap: 0px;
     }
+
     .top-card-likeNumber, .top-deck-likeNumber {
-        font-size: 1em;
+        font-size: 1.2em;
         gap: 5px;
     }
 
@@ -579,6 +580,13 @@
         font-size: 0.6em;
     }
 
+}
+
+@media (max-width: 500px) {
+    .top-card-likeNumber, .top-deck-likeNumber {
+        font-size: 1em;
+        gap: 5px;
+    }
 }
 
 
@@ -686,7 +694,14 @@
         text-align: center;
     }
 
+@media (max-width: 500px) {
+    .top-deck-name { 
+      font-size: 1em;
+    }
+}
+
 .top-deck-db {
+    max-width: 70%;
     overflow: hidden;
     text-align: center;
     padding: 5%;
@@ -705,6 +720,12 @@
     cursor: pointer;
     transform: scale(0.9);
  }
+
+ @media (max-width: 500px) {
+    .top-deck-db {
+    font-size: 0.8em;
+    }
+}
 
 
 /* Le hover du deck*/

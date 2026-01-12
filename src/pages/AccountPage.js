@@ -746,10 +746,14 @@ const AccountPage = () => {
                                                 <div className="card-user-mobile"> 
                                                             <div className="header-card" style={{backgroundImage:`url(${BackgroundGif})`}}>
                                                                 <img src={displayAvatar()} className="user-avatar" alt="user-pp"/>
-                                                                <div className='input-image-container'>
-                                                                <input className='input-image' type="file"  accept="image/*"
-                                                                    style={{ opacity: !updateProfil ? 0 : 1 }}  onChange={(e) => selectImage(e)}/> 
-                                                                </div>
+                                                                <input className='input-image' type="file" 
+                                                                 accept="image/*"
+                                                                    style={{ opacity: !updateProfil ? 0 : 1,
+                                                                        position: "absolute",
+                                                                        top: "40%",
+                                                                        left: "50%",
+                                                                        transform: "translate(-50%, -50%)"
+                                                                    }}  onChange={(e) => selectImage(e)}/> 
 
                                                                 <textarea className="user-input-pseudo" id="pseudo" name="pseudo" rows="1"
                                                                     style={{color: 'black', backgroundColor: 'white'}}

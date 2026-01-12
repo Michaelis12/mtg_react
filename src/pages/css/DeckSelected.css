@@ -209,7 +209,7 @@
         flex-direction: column;
         justify-content : center;
         align-items : center;
-        gap: 5px;
+        gap: 15px;
     }
 
 
@@ -231,6 +231,15 @@
 
   .card-attribut-medium {
     font-size: 1.8em;
+  }
+
+
+  .deck-selected-card-medium-name-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
   }
 
 
@@ -290,28 +299,27 @@
         display: flex;
         flex-direction: column;
         background-color: white;
-        border-bottom-right-radius: 30px;
-        border-bottom-left-radius: 30px;
+        border-radius: 30px;
         border: 1px solid #000000;  
-        width: 70%;
-        margin-left: 15%;
+        width: 80%;
+        margin-left: 10%;
         margin-top: 0%;
+        padding: 15px;
         }
 
      .deck-selected-card-medium-name {
         display: flex;
+        gap: 5px;
         justify-content: center;
         background-color: #5D3B8C;
         color: white;
         width: 70%;
-        margin-left: 15%;
-        padding: 2%;
+        max-width: 70%;
+        overflow: hidden;
+        padding: 1%;
         text-align: center;
-        border-top-left-radius: 30px;
-        border-top-right-radius: 30px;
-        margin-top: 5%;
         margin-bottom: 0%;
-        font-size: 2.5em;
+        font-size: 2em;
     }
 
 }
@@ -319,8 +327,12 @@
 
 @media (max-width: 500px) {
 
-  .deck-selected-card-medium, .deck-selected-card-medium-name {
+  .deck-selected-card-medium {
     display: none;
+  }
+
+  .deck-selected-card-medium-name {
+    font-size: 1.5em;
   }
 
 

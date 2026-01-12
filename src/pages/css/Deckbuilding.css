@@ -301,6 +301,7 @@
     background-color: white;
     opacity: 1;
     padding-bottom: 2%;
+    position: relative;
 }
 
 @media (max-width: 1400px) {

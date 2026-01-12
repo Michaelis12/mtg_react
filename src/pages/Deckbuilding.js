@@ -1199,6 +1199,12 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
                                 type="file"
                                 accept="image/*" 
                                 onChange={(e) => selectImage(e)}
+                                style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)"
+                                }} 
                                 />
                                 <img className='deck-selected-img' src={newImage && newImage.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${newImage}` : newImage} alt="deck-img" />
                                 
@@ -1271,38 +1277,6 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer,
         {/*Mapping des cartes*/}
         <div className='map-deck-cards'> 
         
-
-        {/*Affichage du commandant*/}
-        {/*
-        { format === "commander" && (  
-        <div style={{width: '100%', display : 'flex', flexDirection: 'column', alignItems: 'center'}}>               
-            <div className='title-commandant-container'>
-            <TitleType title={"Commandant"}/>
-            </div>
-            <div className="cedh-background" id='creature-card' style={{ backgroundImage: `url(${backgroundCedh})`, 
-             backgroundSize: '100%',
-             backgroundPosition: 'center'}}>
-             <div className="cedh-details">
-                
-                <div className='cedh-link-desktop'>
-                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deckCedh.image}` : deckCedh.image} alt="creature-img" onClick={()=>navCedh(deckCedh.apiID)}
-                                                onMouseEnter={() => hoveredCard(deckCedh.id) } onMouseOut={() => hoveredCard()}/>
-                </div>
-
-                <div className='cedh-link-mobile'>
-                    <img className="cedh-img" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deckCedh.image}` : deckCedh.image} alt="creature-img" 
-                    onClick={()=>openZoomPopup(deckCedh)} />
-                </div>
-                                            
-                {detailsCard && detailsCard.id === deckCedh.id && (
-                                            <img className="card-img-zoom" src={deckCedh.image && deckCedh.image.startsWith('/uploads/') ? `https://mtg-spring-maj.fly.dev${deckCedh.image}` : deckCedh.image} alt="Card-image"
-                                            />
-                )}
-            </div>
-            </div>
-        </div>
-        )} 
-        */}
 
 
         {/*Affichage des cartes par types*/}        

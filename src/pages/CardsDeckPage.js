@@ -1501,13 +1501,15 @@ const CardsDeckPage = () => {
             <div className='title-cards-dispo-container'>
               <Title title='Cartes disponibles'/>
             </div>
-
+            
+            {/*
             <div className='cards-buttons-order-container'>
               <ButtonSelect className={"button-date"} onClick={() => displayAllCards()} text={"Toutes les cartes"}
               backgroundColor={getBgDate()} color={getColorDate()}/>
               <ButtonSelect className={"button-top"} onClick={() => displayTopCards()} text={"Les plus populaires"} 
               backgroundColor={getBgTop()} color={getColorTop()}/>
             </div>
+            */}
           
            {/*Mapping des cartes*/}
           <div className='display-objects-section'>

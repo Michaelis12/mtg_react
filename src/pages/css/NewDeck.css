@@ -90,7 +90,7 @@
     } 
 
     .input-image {
-      width: 40%;
+      max-width: 138px;
     }
 
     .deck-img {
@@ -264,7 +264,7 @@
     pointer-events: none; 
     height: 25vw;
     min-height: 400px;
-    z-index: 100;
+    z-index: 101;
     border-radius: 10px;
     opacity: 0;
   transform: scale(0.95);
@@ -448,7 +448,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 5%;
+    gap: 2rem;
+
   }
 
   .button-modif-name-container-desktop {
@@ -475,11 +476,6 @@
   }
   }
 
-  @media (max-width: 700px) {    
-  .final-card-group {
-    height: 100vh;
-  }
-}
   @media (max-width: 500px) {    
   .final-card-group {
     height: 80vh;
@@ -674,15 +670,24 @@
       font-size: 1.5rem;
       color: grey;
   }
-
-  .new-deck-cedh {
-    font-size: 2em;
-  }
 }
 
 @media (max-width: 700px) {
     .new-deck-line-title {
       font-size: 1.2rem;
+  }
+
+  .new-deck-cedh {
+    font-size: 1.5em;
+  }
+}
+
+
+@media (max-width: 500px) {
+  
+
+  .new-deck-cedh {
+    font-size: 1em;
   }
 }
 
@@ -951,10 +956,9 @@
     border-bottom-right-radius: 30px;
     border-bottom-left-radius: 30px;
     border: 1px solid #000000;  
-    width: 90%;
-    margin-left: 5%;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
+    width: 70%;
+    margin-left: 15%;
+    border-radius: 30px;
      padding-left: 0%;
     padding-right: 0%;
     padding-top: 20px;
@@ -1093,3 +1097,12 @@
     margin-top: 0px;
   }
   }
+
+    @media (max-width: 380px) {
+
+      .deck-card-mobile { 
+      width: 80%;
+      margin-left: 10%;
+  }
+
+    }
